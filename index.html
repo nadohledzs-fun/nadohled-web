@@ -6,7 +6,7 @@
     <title>NA DOHLED | Projekty s přesahem</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --color-cream: #F5F0E8;
@@ -17,8 +17,8 @@
             --color-charcoal: #2D2D2D;
             --color-warm-white: #FDFBF7;
             --color-gold: #D4A574;
-            --font-display: 'Playfair Display', Georgia, serif;
-            --font-body: 'Source Sans 3', 'Segoe UI', sans-serif;
+            --font-display: 'Quicksand', sans-serif;
+            --font-body: 'Quicksand', sans-serif;
         }
 
         * {
@@ -51,6 +51,27 @@
             opacity: 0.03;
             pointer-events: none;
             z-index: 1000;
+        }
+
+        /* Language Switcher */
+        .lang-switcher {
+            position: fixed;
+            top: 1.5rem;
+            right: 6rem;
+            z-index: 101;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .lang-switcher:hover {
+            transform: scale(1.1);
+        }
+
+        .lang-switcher svg {
+            width: 32px;
+            height: 22px;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
         /* Navigation */
@@ -91,6 +112,7 @@
             display: flex;
             gap: 2.5rem;
             list-style: none;
+            margin-right: 3rem;
         }
 
         .nav-links a {
@@ -429,7 +451,6 @@
             font-weight: 600;
         }
 
-        /* Custom backgrounds for each project */
         .project-nakavu .project-image {
             background: linear-gradient(135deg, #8B9D83 0%, #6B7D63 50%, #4A5D43 100%);
         }
@@ -513,7 +534,6 @@
         .project-link svg {
             width: 20px;
             height: 20px;
-            transition: transform 0.3s ease;
         }
 
         /* Contact Section */
@@ -580,7 +600,6 @@
             color: var(--color-gold);
         }
 
-        /* Footer */
         footer {
             padding: 3rem 2rem;
             background: #1a1a1a;
@@ -599,7 +618,76 @@
             margin-bottom: 0.5rem;
         }
 
-        /* Mobile Menu */
+        /* Locations Section */
+        .locations {
+            padding: 8rem 2rem;
+            background: var(--color-warm-white);
+        }
+
+        .locations-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .location-card {
+            background: var(--color-cream);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .location-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+
+        .location-info {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .location-info h3 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--color-charcoal);
+        }
+
+        .location-address {
+            font-size: 1.1rem;
+            color: var(--color-terracotta);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .location-note {
+            font-size: 0.9rem;
+            color: rgba(45, 45, 45, 0.6);
+            font-weight: 400;
+        }
+
+        .location-map {
+            width: 100%;
+            height: 250px;
+        }
+
+        .location-map iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 0 0 24px 24px;
+        }
+
+        @media (max-width: 768px) {
+            .locations-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .mobile-menu-btn {
             display: none;
             background: none;
@@ -614,7 +702,6 @@
             stroke: var(--color-charcoal);
         }
 
-        /* Responsive */
         @media (max-width: 968px) {
             .about-grid,
             .contact-grid {
@@ -648,6 +735,7 @@
                 padding: 2rem;
                 gap: 1.5rem;
                 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                margin-right: 0;
             }
 
             .nav-links.active {
@@ -658,12 +746,8 @@
                 display: block;
             }
 
-            .hero h1 {
-                font-size: clamp(2.5rem, 10vw, 4rem);
-            }
-
-            .hero-subtitle {
-                font-size: 1.1rem;
+            .lang-switcher {
+                right: 4.5rem;
             }
         }
 
@@ -679,20 +763,47 @@
                 text-align: center;
             }
 
-            .contact-grid {
-                grid-template-columns: 1fr;
+            .lang-switcher {
+                right: 4rem;
+                top: 1.2rem;
+            }
+
+            .lang-switcher svg {
+                width: 28px;
+                height: 19px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Language Switcher -->
+    <div class="lang-switcher" id="langSwitcher" title="Switch to English">
+        <svg id="flagEN" viewBox="0 0 60 30" style="display: block;">
+            <clipPath id="s"><path d="M0,0 v30 h60 v-30 z"/></clipPath>
+            <clipPath id="t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>
+            <g clip-path="url(#s)">
+                <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
+                <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
+                <path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#t)" stroke="#C8102E" stroke-width="4"/>
+                <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
+                <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
+            </g>
+        </svg>
+        <svg id="flagCZ" viewBox="0 0 6 4" style="display: none;">
+            <rect width="6" height="4" fill="#d7141a"/>
+            <rect width="6" height="2" fill="#fff"/>
+            <polygon points="0,0 0,4 3,2" fill="#11457e"/>
+        </svg>
+    </div>
+
     <!-- Navigation -->
     <nav id="navbar">
         <a href="#" class="logo">NA <span>DOHLED</span></a>
         <ul class="nav-links" id="navLinks">
-            <li><a href="#o-nas">O nás</a></li>
-            <li><a href="#projekty">Projekty</a></li>
-            <li><a href="#kontakt">Kontakt</a></li>
+            <li><a href="#o-nas" data-cs="O nás" data-en="About">O nás</a></li>
+            <li><a href="#projekty" data-cs="Projekty" data-en="Projects">Projekty</a></li>
+            <li><a href="#kde-nas-najdete" data-cs="Kde nás najdete" data-en="Locations">Kde nás najdete</a></li>
+            <li><a href="#kontakt" data-cs="Kontakt" data-en="Contact">Kontakt</a></li>
         </ul>
         <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -704,17 +815,17 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
-            <div class="hero-badge">Nezisková organizace</div>
+            <div class="hero-badge" data-cs="Nezisková organizace" data-en="Non-profit organization">Nezisková organizace</div>
             <h1>
-                Projekty
-                <span>s přesahem</span>
+                <span data-cs="Projekty" data-en="Projects">Projekty</span>
+                <span data-cs="s přesahem" data-en="with purpose">s přesahem</span>
             </h1>
-            <p class="hero-subtitle">
+            <p class="hero-subtitle" data-cs="Spojujeme komunitu, podporujeme rodiny a vytváříme místa, kde se lidé cítí jako doma. Každý náš projekt má hlubší smysl." data-en="We connect communities, support families, and create places where people feel at home. Every project we run has a deeper purpose.">
                 Spojujeme komunitu, podporujeme rodiny a vytváříme místa, kde se lidé cítí jako doma. Každý náš projekt má hlubší smysl.
             </p>
             <div class="hero-cta">
-                <a href="#projekty" class="btn btn-primary">Objevte naše projekty</a>
-                <a href="#kontakt" class="btn btn-secondary">Spojte se s námi</a>
+                <a href="#projekty" class="btn btn-primary" data-cs="Objevte naše projekty" data-en="Discover our projects">Objevte naše projekty</a>
+                <a href="#kontakt" class="btn btn-secondary" data-cs="Spojte se s námi" data-en="Get in touch">Spojte se s námi</a>
             </div>
         </div>
         <div class="scroll-indicator">
@@ -728,9 +839,9 @@
     <section class="about" id="o-nas">
         <div class="container">
             <div class="section-header">
-                <div class="section-label">O nás</div>
-                <h2 class="section-title">Tvoříme místa pro setkávání</h2>
-                <p class="section-description">
+                <div class="section-label" data-cs="O nás" data-en="About us">O nás</div>
+                <h2 class="section-title" data-cs="Tvoříme místa pro setkávání" data-en="We create spaces for connection">Tvoříme místa pro setkávání</h2>
+                <p class="section-description" data-cs="Jsme tým nadšenců, kteří věří, že komunita je základ všeho. Naše projekty vznikají z lásky k lidem a touhy přinášet radost do každodenního života." data-en="We are a team of enthusiasts who believe that community is the foundation of everything. Our projects are born from a love for people and a desire to bring joy to everyday life.">
                     Jsme tým nadšenců, kteří věří, že komunita je základ všeho. Naše projekty vznikají z lásky k lidem a touhy přinášet radost do každodenního života.
                 </p>
             </div>
@@ -741,8 +852,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                         </svg>
                     </div>
-                    <h3>Komunita</h3>
-                    <p>Budujeme prostory, kde se lidé setkávají, sdílejí a společně rostou.</p>
+                    <h3 data-cs="Komunita" data-en="Community">Komunita</h3>
+                    <p data-cs="Budujeme prostory, kde se lidé setkávají, sdílejí a společně rostou." data-en="We build spaces where people meet, share, and grow together.">Budujeme prostory, kde se lidé setkávají, sdílejí a společně rostou.</p>
                 </div>
                 <div class="about-card">
                     <div class="about-icon">
@@ -750,8 +861,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
                         </svg>
                     </div>
-                    <h3>Přesah</h3>
-                    <p>Každý náš projekt má hlubší smysl – pomáháme tam, kde je to potřeba.</p>
+                    <h3 data-cs="Přesah" data-en="Purpose">Přesah</h3>
+                    <p data-cs="Každý náš projekt má hlubší smysl – pomáháme tam, kde je to potřeba." data-en="Every project has a deeper meaning – we help where it's needed most.">Každý náš projekt má hlubší smysl – pomáháme tam, kde je to potřeba.</p>
                 </div>
                 <div class="about-card">
                     <div class="about-icon">
@@ -759,8 +870,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
                         </svg>
                     </div>
-                    <h3>Radost</h3>
-                    <p>Věříme, že malé věci dělají velké rozdíly – úsměv, dobrá káva, teplé jídlo.</p>
+                    <h3 data-cs="Radost" data-en="Joy">Radost</h3>
+                    <p data-cs="Věříme, že malé věci dělají velké rozdíly – úsměv, dobrá káva, teplé jídlo." data-en="We believe small things make big differences – a smile, good coffee, warm food.">Věříme, že malé věci dělají velké rozdíly – úsměv, dobrá káva, teplé jídlo.</p>
                 </div>
             </div>
         </div>
@@ -770,9 +881,9 @@
     <section class="projects" id="projekty">
         <div class="container">
             <div class="section-header">
-                <div class="section-label">Naše projekty</div>
-                <h2 class="section-title">Tři pilíře Na Dohled</h2>
-                <p class="section-description">
+                <div class="section-label" data-cs="Naše projekty" data-en="Our projects">Naše projekty</div>
+                <h2 class="section-title" data-cs="Tři pilíře Na Dohled" data-en="Three pillars of Na Dohled">Tři pilíře Na Dohled</h2>
+                <p class="section-description" data-cs="Každý projekt je unikátní, ale všechny spojuje společný cíl – být tu pro vás a vytvářet smysluplné zážitky." data-en="Each project is unique, but they all share a common goal – to be here for you and create meaningful experiences.">
                     Každý projekt je unikátní, ale všechny spojuje společný cíl – být tu pro vás a vytvářet smysluplné zážitky.
                 </p>
             </div>
@@ -786,23 +897,23 @@
                     </div>
                 </div>
                 <div class="project-content">
-                    <div class="project-badge">Kavárna</div>
+                    <div class="project-badge" data-cs="Kavárna" data-en="Café">Kavárna</div>
                     <h2>Na Kávu</h2>
-                    <p class="subtitle">Kavárna s přesahem v Lysé nad Labem</p>
-                    <p>
+                    <p class="subtitle" data-cs="Kavárna s přesahem v Lysé nad Labem" data-en="A café with purpose in Lysá nad Labem">Kavárna s přesahem v Lysé nad Labem</p>
+                    <p data-cs="Kavárna Na Kávu vznikla z lásky k dobré kávě, květinám a řemeslným výrobkům. Nabízíme výběrovou kávu z českých pražíren DAK Coffee Roasters a Chroasta, čerstvé pečivo z řemeslných pekáren a domácí dobroty." data-en="Na Kávu café was born from a love of good coffee, flowers, and artisan products. We offer specialty coffee from Czech roasters DAK Coffee Roasters and Chroasta, fresh pastries from craft bakeries, and homemade treats.">
                         Kavárna Na Kávu vznikla z lásky k dobré kávě, květinám a řemeslným výrobkům. Nabízíme výběrovou kávu z českých pražíren DAK Coffee Roasters a Chroasta, čerstvé pečivo z řemeslných pekáren a domácí dobroty.
                     </p>
-                    <p>
+                    <p data-cs="Provozujeme dvě pobočky – útulný prostor v Poděbradově ulici a komunitní gastrokontejner v areálu Čechovka, kde během léta připravujeme tematické programy pro děti a celé rodiny." data-en="We run two locations – a cozy space on Poděbradova Street and a community gastro-container in the Čechovka park, where we organize themed programs for children and families during summer.">
                         Provozujeme dvě pobočky – útulný prostor v Poděbradově ulici a komunitní gastrokontejner v areálu Čechovka, kde během léta připravujeme tematické programy pro děti a celé rodiny.
                     </p>
                     <div class="project-features">
-                        <span class="feature-tag">Výběrová káva</span>
-                        <span class="feature-tag">Řemeslné pečivo</span>
-                        <span class="feature-tag">Program pro děti</span>
-                        <span class="feature-tag">Květiny & doplňky</span>
+                        <span class="feature-tag" data-cs="Výběrová káva" data-en="Specialty coffee">Výběrová káva</span>
+                        <span class="feature-tag" data-cs="Řemeslné pečivo" data-en="Craft pastries">Řemeslné pečivo</span>
+                        <span class="feature-tag" data-cs="Program pro děti" data-en="Kids programs">Program pro děti</span>
+                        <span class="feature-tag" data-cs="Květiny & doplňky" data-en="Flowers & gifts">Květiny & doplňky</span>
                     </div>
                     <a href="https://www.facebook.com/nakavulysa" target="_blank" class="project-link">
-                        Sledujte nás
+                        <span data-cs="Sledujte nás" data-en="Follow us">Sledujte nás</span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                         </svg>
@@ -819,23 +930,23 @@
                     </div>
                 </div>
                 <div class="project-content">
-                    <div class="project-badge">Rozvoz</div>
+                    <div class="project-badge" data-cs="Rozvoz" data-en="Delivery">Rozvoz</div>
                     <h2>Divine Delivery</h2>
-                    <p class="subtitle">Božský rozvoz teplého jídla</p>
-                    <p>
+                    <p class="subtitle" data-cs="Božský rozvoz teplého jídla" data-en="Divine hot food delivery">Božský rozvoz teplého jídla</p>
+                    <p data-cs="Nejsme obyčejný rozvoz. Divine Delivery dbá na doručení opravdu teplého jídla včas – proto používáme speciální vyhřívané boxy. Věříme, že každé jídlo si zaslouží dorazit v perfektní kondici." data-en="We're not your ordinary delivery service. Divine Delivery ensures truly hot food arrives on time – that's why we use special heated boxes. We believe every meal deserves to arrive in perfect condition.">
                         Nejsme obyčejný rozvoz. Divine Delivery dbá na doručení opravdu teplého jídla včas – proto používáme speciální vyhřívané boxy. Věříme, že každé jídlo si zaslouží dorazit v perfektní kondici.
                     </p>
-                    <p>
+                    <p data-cs="Působíme na Nymbursku, Mladoboleslavsku a Praze-východ. Rozvážíme z vybraných restaurací včetně sushi a dalších specialit. S námi je to rychlé – skoro jako zjevení!" data-en="We operate in the Nymburk, Mladá Boleslav, and Prague-East regions. We deliver from selected restaurants including sushi and other specialties. With us, it's fast – almost like a revelation!">
                         Působíme na Nymbursku, Mladoboleslavsku a Praze-východ. Rozvážíme z vybraných restaurací včetně sushi a dalších specialit. S námi je to rychlé – skoro jako zjevení!
                     </p>
                     <div class="project-features">
-                        <span class="feature-tag">Vyhřívané boxy</span>
-                        <span class="feature-tag">Nymbursko</span>
-                        <span class="feature-tag">Mladoboleslavsko</span>
-                        <span class="feature-tag">Praha-východ</span>
+                        <span class="feature-tag" data-cs="Vyhřívané boxy" data-en="Heated boxes">Vyhřívané boxy</span>
+                        <span class="feature-tag" data-cs="Nymbursko" data-en="Nymburk region">Nymbursko</span>
+                        <span class="feature-tag" data-cs="Mladoboleslavsko" data-en="Mladá Boleslav region">Mladoboleslavsko</span>
+                        <span class="feature-tag" data-cs="Praha-východ" data-en="Prague-East">Praha-východ</span>
                     </div>
                     <a href="https://www.divinedelivery.cz" target="_blank" class="project-link">
-                        Objednat rozvoz
+                        <span data-cs="Objednat rozvoz" data-en="Order delivery">Objednat rozvoz</span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                         </svg>
@@ -852,23 +963,23 @@
                     </div>
                 </div>
                 <div class="project-content">
-                    <div class="project-badge">Herna & Kavárna</div>
+                    <div class="project-badge" data-cs="Herna & Kavárna" data-en="Playroom & Café">Herna & Kavárna</div>
                     <h2>Smyslárium</h2>
-                    <p class="subtitle">Sensory-play hernička s kavárnou v Milovicích</p>
-                    <p>
+                    <p class="subtitle" data-cs="Sensory-play hernička s kavárnou v Milovicích" data-en="Sensory-play room with café in Milovice">Sensory-play hernička s kavárnou v Milovicích</p>
+                    <p data-cs="Smyslárium je jedinečné místo, kde děti mohou poznávat svět a rozvíjet své smysly prostřednictvím sensory-play aktivit. Zatímco si děti hrají a objevují, rodiče si mohou vychutnat výbornou kávu v klidu." data-en="Smyslárium is a unique place where children can explore the world and develop their senses through sensory-play activities. While the kids play and discover, parents can enjoy excellent coffee in peace.">
                         Smyslárium je jedinečné místo, kde děti mohou poznávat svět a rozvíjet své smysly prostřednictvím sensory-play aktivit. Zatímco si děti hrají a objevují, rodiče si mohou vychutnat výbornou kávu v klidu.
                     </p>
-                    <p>
+                    <p data-cs="Sensory play je forma hry zaměřená na stimulaci všech pěti smyslů – děti si hrají s různými materiály a texturami, což podporuje jejich kreativitu, jemnou motoriku i kognitivní rozvoj." data-en="Sensory play is a form of play focused on stimulating all five senses – children play with various materials and textures, which supports their creativity, fine motor skills, and cognitive development.">
                         Sensory play je forma hry zaměřená na stimulaci všech pěti smyslů – děti si hrají s různými materiály a texturami, což podporuje jejich kreativitu, jemnou motoriku i kognitivní rozvoj.
                     </p>
                     <div class="project-features">
                         <span class="feature-tag">Sensory play</span>
-                        <span class="feature-tag">Rozvoj smyslů</span>
-                        <span class="feature-tag">Kavárna pro rodiče</span>
+                        <span class="feature-tag" data-cs="Rozvoj smyslů" data-en="Sensory development">Rozvoj smyslů</span>
+                        <span class="feature-tag" data-cs="Kavárna pro rodiče" data-en="Café for parents">Kavárna pro rodiče</span>
                         <span class="feature-tag">Milovice</span>
                     </div>
                     <a href="https://www.facebook.com/people/Smyslárium-Milovice/61578928778606" target="_blank" class="project-link">
-                        Více informací
+                        <span data-cs="Více informací" data-en="More info">Více informací</span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                         </svg>
@@ -878,13 +989,64 @@
         </div>
     </section>
 
+    <!-- Locations Section -->
+    <section class="locations" id="kde-nas-najdete">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label" data-cs="Kde nás najdete" data-en="Where to find us">Kde nás najdete</div>
+                <h2 class="section-title" data-cs="Navštivte nás" data-en="Visit us">Navštivte nás</h2>
+                <p class="section-description" data-cs="Těšíme se na vás na našich pobočkách v Milovicích a v Lysé nad Labem." data-en="We look forward to seeing you at our locations in Milovice and Lysá nad Labem.">
+                    Těšíme se na vás na našich pobočkách v Milovicích a v Lysé nad Labem.
+                </p>
+            </div>
+            <div class="locations-grid">
+                <div class="location-card">
+                    <div class="location-info">
+                        <h3 data-cs="Smyslárium & Na Kávu" data-en="Smyslárium & Na Kávu">Smyslárium & Na Kávu</h3>
+                        <p class="location-address">Višňová 510, Milovice</p>
+                        <p class="location-note" data-cs="Celoroční provoz" data-en="Year-round operation">Celoroční provoz</p>
+                    </div>
+                    <div class="location-map">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2553.8!2d14.8869!3d50.2261!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470c0a1f0c5a5555%3A0x0!2sVi%C5%A1%C5%88ov%C3%A1%20510%2C%20Milovice!5e0!3m2!1scs!2scz!4v1699999999999!5m2!1scs!2scz"
+                            width="100%" 
+                            height="250" 
+                            style="border:0; border-radius: 16px;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+                <div class="location-card">
+                    <div class="location-info">
+                        <h3 data-cs="Park Čechovka" data-en="Čechovka Park">Park Čechovka</h3>
+                        <p class="location-address">Čechova 218, Lysá nad Labem</p>
+                        <p class="location-note" data-cs="Sezónní provoz (jaro–podzim)" data-en="Seasonal operation (spring–autumn)">Sezónní provoz (jaro–podzim)</p>
+                    </div>
+                    <div class="location-map">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2553.5!2d14.8333!3d50.2019!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470c0a5a5a5a5a5a%3A0x0!2s%C4%8Cechova%20218%2C%20Lys%C3%A1%20nad%20Labem!5e0!3m2!1scs!2scz!4v1699999999999!5m2!1scs!2scz"
+                            width="100%" 
+                            height="250" 
+                            style="border:0; border-radius: 16px;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Contact Section -->
     <section class="contact" id="kontakt">
         <div class="container">
             <div class="section-header">
-                <div class="section-label">Kontakt</div>
-                <h2 class="section-title">Spojte se s námi</h2>
-                <p class="section-description">
+                <div class="section-label" data-cs="Kontakt" data-en="Contact">Kontakt</div>
+                <h2 class="section-title" data-cs="Spojte se s námi" data-en="Get in touch">Spojte se s námi</h2>
+                <p class="section-description" data-cs="Máte dotaz, nápad nebo chcete spolupracovat? Rádi se s vámi spojíme." data-en="Have a question, idea, or want to collaborate? We'd love to hear from you.">
                     Máte dotaz, nápad nebo chcete spolupracovat? Rádi se s vámi spojíme.
                 </p>
             </div>
@@ -900,7 +1062,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
                     </svg>
-                    <h4>Telefon</h4>
+                    <h4 data-cs="Telefon" data-en="Phone">Telefon</h4>
                     <a href="tel:+420770138462">+420 770 138 462</a>
                 </div>
                 <div class="contact-item">
@@ -908,8 +1070,8 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                     </svg>
-                    <h4>Působíme</h4>
-                    <p>Lysá nad Labem, Milovice a okolí</p>
+                    <h4 data-cs="Působíme" data-en="We operate in">Působíme</h4>
+                    <p data-cs="Lysá nad Labem, Milovice a okolí" data-en="Lysá nad Labem, Milovice and surroundings">Lysá nad Labem, Milovice a okolí</p>
                 </div>
             </div>
         </div>
@@ -919,11 +1081,38 @@
     <footer>
         <a href="#" class="logo">NA <span>DOHLED</span></a>
         <p>Marek Švácha · IČO: 07220294</p>
-        <p>© 2025 Na Dohled. Všechna práva vyhrazena.</p>
+        <p data-cs="© 2025 Na Dohled. Všechna práva vyhrazena." data-en="© 2025 Na Dohled. All rights reserved.">© 2025 Na Dohled. Všechna práva vyhrazena.</p>
     </footer>
 
     <script>
-        // Navbar scroll effect
+        let currentLang = 'cs';
+
+        const langSwitcher = document.getElementById('langSwitcher');
+        const flagEN = document.getElementById('flagEN');
+        const flagCZ = document.getElementById('flagCZ');
+
+        langSwitcher.addEventListener('click', () => {
+            if (currentLang === 'cs') {
+                currentLang = 'en';
+                flagEN.style.display = 'none';
+                flagCZ.style.display = 'block';
+                langSwitcher.title = 'Přepnout do češtiny';
+                document.documentElement.lang = 'en';
+                document.title = 'NA DOHLED | Projects with purpose';
+            } else {
+                currentLang = 'cs';
+                flagCZ.style.display = 'none';
+                flagEN.style.display = 'block';
+                langSwitcher.title = 'Switch to English';
+                document.documentElement.lang = 'cs';
+                document.title = 'NA DOHLED | Projekty s přesahem';
+            }
+            
+            document.querySelectorAll('[data-cs][data-en]').forEach(el => {
+                el.textContent = el.getAttribute(`data-${currentLang}`);
+            });
+        });
+
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
@@ -933,7 +1122,6 @@
             }
         });
 
-        // Mobile menu toggle
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const navLinks = document.getElementById('navLinks');
         
@@ -941,14 +1129,12 @@
             navLinks.classList.toggle('active');
         });
 
-        // Close mobile menu when clicking a link
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
             });
         });
 
-        // Intersection Observer for project cards
         const observerOptions = {
             threshold: 0.2,
             rootMargin: '0px 0px -50px 0px'
@@ -966,7 +1152,6 @@
             observer.observe(card);
         });
 
-        // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
