@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NA DOHLED | Projekty s přesahem</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-cream: #F5F0E8;
+            --color-sage: #8B9D83;
+            --color-sage-dark: #6B7D63;
+            --color-terracotta: #C4846C;
+            --color-terracotta-dark: #A66B52;
+            --color-charcoal: #2D2D2D;
+            --color-warm-white: #FDFBF7;
+            --color-gold: #D4A574;
+            --font-display: 'Playfair Display', Georgia, serif;
+            --font-body: 'Source Sans 3', 'Segoe UI', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-cream);
+            color: var(--color-charcoal);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Noise texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: linear-gradient(to bottom, rgba(245, 240, 232, 0.98), rgba(245, 240, 232, 0));
+            transition: all 0.4s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(245, 240, 232, 0.98);
+            box-shadow: 0 2px 30px rgba(0, 0, 0, 0.06);
+            padding: 1rem 3rem;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-charcoal);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+        }
+
+        .logo span {
+            color: var(--color-terracotta);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--color-charcoal);
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--color-terracotta);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 6rem 2rem;
+            position: relative;
+            background: var(--color-cream);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 80%, rgba(139, 157, 131, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(196, 132, 108, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(212, 165, 116, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: rgba(139, 157, 131, 0.15);
+            border: 1px solid rgba(139, 157, 131, 0.3);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-sage-dark);
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .hero h1 span {
+            display: block;
+            background: linear-gradient(135deg, var(--color-terracotta), var(--color-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.35rem;
+            color: rgba(45, 45, 45, 0.75);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            font-weight: 300;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--color-terracotta);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-terracotta-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(196, 132, 108, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-charcoal);
+            border: 2px solid rgba(45, 45, 45, 0.2);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--color-charcoal);
+            background: rgba(45, 45, 45, 0.05);
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator svg {
+            width: 30px;
+            height: 30px;
+            stroke: var(--color-sage);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* About Section */
+        .about {
+            padding: 8rem 2rem;
+            background: var(--color-warm-white);
+            position: relative;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-sage);
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-description {
+            font-size: 1.15rem;
+            color: rgba(45, 45, 45, 0.7);
+            max-width: 700px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .about-card {
+            background: var(--color-cream);
+            padding: 2.5rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .about-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+        }
+
+        .about-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--color-sage), var(--color-sage-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .about-icon svg {
+            width: 32px;
+            height: 32px;
+            stroke: white;
+        }
+
+        .about-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .about-card p {
+            color: rgba(45, 45, 45, 0.7);
+            font-size: 0.95rem;
+        }
+
+        /* Projects Section */
+        .projects {
+            padding: 8rem 2rem;
+            background: var(--color-cream);
+        }
+
+        .project-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 8rem;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .project-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .project-card:nth-child(even) {
+            direction: rtl;
+        }
+
+        .project-card:nth-child(even) > * {
+            direction: ltr;
+        }
+
+        .project-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .project-image {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            background: linear-gradient(135deg, var(--color-sage), var(--color-terracotta));
+        }
+
+        .project-image::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: inherit;
+            opacity: 0.9;
+        }
+
+        .project-image-inner {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            color: white;
+            text-align: center;
+        }
+
+        .project-image-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-image-text {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        /* Custom backgrounds for each project */
+        .project-nakavu .project-image {
+            background: linear-gradient(135deg, #8B9D83 0%, #6B7D63 50%, #4A5D43 100%);
+        }
+
+        .project-divine .project-image {
+            background: linear-gradient(135deg, #D4A574 0%, #C4846C 50%, #A66B52 100%);
+        }
+
+        .project-smyslarium .project-image {
+            background: linear-gradient(135deg, #9B8BA0 0%, #7B6B80 50%, #5B4B60 100%);
+        }
+
+        .project-content {
+            padding: 1rem;
+        }
+
+        .project-badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: rgba(139, 157, 131, 0.15);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--color-sage-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .project-content h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .project-content .subtitle {
+            font-size: 1.1rem;
+            color: var(--color-terracotta);
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+
+        .project-content p {
+            color: rgba(45, 45, 45, 0.75);
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+
+        .project-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-tag {
+            padding: 0.5rem 1rem;
+            background: rgba(45, 45, 45, 0.05);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--color-charcoal);
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--color-terracotta);
+            text-decoration: none;
+            font-weight: 600;
+            transition: gap 0.3s ease;
+        }
+
+        .project-link:hover {
+            gap: 1rem;
+        }
+
+        .project-link svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 8rem 2rem;
+            background: var(--color-charcoal);
+            color: white;
+            text-align: center;
+        }
+
+        .contact .section-label {
+            color: var(--color-gold);
+        }
+
+        .contact .section-title {
+            color: white;
+        }
+
+        .contact .section-description {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 4rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-item {
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .contact-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .contact-item svg {
+            width: 40px;
+            height: 40px;
+            stroke: var(--color-gold);
+            margin-bottom: 1rem;
+        }
+
+        .contact-item h4 {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-item p, .contact-item a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .contact-item a:hover {
+            color: var(--color-gold);
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            background: #1a1a1a;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        footer .logo {
+            color: white;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        footer p {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-btn svg {
+            width: 28px;
+            height: 28px;
+            stroke: var(--color-charcoal);
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .about-grid,
+            .contact-grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .project-card {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .project-card:nth-child(even) {
+                direction: ltr;
+            }
+
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--color-cream);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.5rem;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: clamp(2.5rem, 10vw, 4rem);
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 280px;
+                text-align: center;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <a href="#" class="logo">NA <span>DOHLED</span></a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#o-nas">O nás</a></li>
+            <li><a href="#projekty">Projekty</a></li>
+            <li><a href="#kontakt">Kontakt</a></li>
+        </ul>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+        </button>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">Nezisková organizace</div>
+            <h1>
+                Projekty
+                <span>s přesahem</span>
+            </h1>
+            <p class="hero-subtitle">
+                Spojujeme komunitu, podporujeme rodiny a vytváříme místa, kde se lidé cítí jako doma. Každý náš projekt má hlubší smysl.
+            </p>
+            <div class="hero-cta">
+                <a href="#projekty" class="btn btn-primary">Objevte naše projekty</a>
+                <a href="#kontakt" class="btn btn-secondary">Spojte se s námi</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+            </svg>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="o-nas">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">O nás</div>
+                <h2 class="section-title">Tvoříme místa pro setkávání</h2>
+                <p class="section-description">
+                    Jsme tým nadšenců, kteří věří, že komunita je základ všeho. Naše projekty vznikají z lásky k lidem a touhy přinášet radost do každodenního života.
+                </p>
+            </div>
+            <div class="about-grid">
+                <div class="about-card">
+                    <div class="about-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                        </svg>
+                    </div>
+                    <h3>Komunita</h3>
+                    <p>Budujeme prostory, kde se lidé setkávají, sdílejí a společně rostou.</p>
+                </div>
+                <div class="about-card">
+                    <div class="about-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                        </svg>
+                    </div>
+                    <h3>Přesah</h3>
+                    <p>Každý náš projekt má hlubší smysl – pomáháme tam, kde je to potřeba.</p>
+                </div>
+                <div class="about-card">
+                    <div class="about-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
+                        </svg>
+                    </div>
+                    <h3>Radost</h3>
+                    <p>Věříme, že malé věci dělají velké rozdíly – úsměv, dobrá káva, teplé jídlo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="projects" id="projekty">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Naše projekty</div>
+                <h2 class="section-title">Tři pilíře Na Dohled</h2>
+                <p class="section-description">
+                    Každý projekt je unikátní, ale všechny spojuje společný cíl – být tu pro vás a vytvářet smysluplné zážitky.
+                </p>
+            </div>
+
+            <!-- Na Kávu -->
+            <div class="project-card project-nakavu">
+                <div class="project-image">
+                    <div class="project-image-inner">
+                        <div class="project-image-icon">☕</div>
+                        <div class="project-image-text">Na Kávu</div>
+                    </div>
+                </div>
+                <div class="project-content">
+                    <div class="project-badge">Kavárna</div>
+                    <h2>Na Kávu</h2>
+                    <p class="subtitle">Kavárna s přesahem v Lysé nad Labem</p>
+                    <p>
+                        Kavárna Na Kávu vznikla z lásky k dobré kávě, květinám a řemeslným výrobkům. Nabízíme výběrovou kávu z českých pražíren DAK Coffee Roasters a Chroasta, čerstvé pečivo z řemeslných pekáren a domácí dobroty.
+                    </p>
+                    <p>
+                        Provozujeme dvě pobočky – útulný prostor v Poděbradově ulici a komunitní gastrokontejner v areálu Čechovka, kde během léta připravujeme tematické programy pro děti a celé rodiny.
+                    </p>
+                    <div class="project-features">
+                        <span class="feature-tag">Výběrová káva</span>
+                        <span class="feature-tag">Řemeslné pečivo</span>
+                        <span class="feature-tag">Program pro děti</span>
+                        <span class="feature-tag">Květiny & doplňky</span>
+                    </div>
+                    <a href="https://www.facebook.com/nakavulysa" target="_blank" class="project-link">
+                        Sledujte nás
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Divine Delivery -->
+            <div class="project-card project-divine">
+                <div class="project-image">
+                    <div class="project-image-inner">
+                        <div class="project-image-icon">🚗</div>
+                        <div class="project-image-text">Divine Delivery</div>
+                    </div>
+                </div>
+                <div class="project-content">
+                    <div class="project-badge">Rozvoz</div>
+                    <h2>Divine Delivery</h2>
+                    <p class="subtitle">Božský rozvoz teplého jídla</p>
+                    <p>
+                        Nejsme obyčejný rozvoz. Divine Delivery dbá na doručení opravdu teplého jídla včas – proto používáme speciální vyhřívané boxy. Věříme, že každé jídlo si zaslouží dorazit v perfektní kondici.
+                    </p>
+                    <p>
+                        Působíme na Nymbursku, Mladoboleslavsku a Praze-východ. Rozvážíme z vybraných restaurací včetně sushi a dalších specialit. S námi je to rychlé – skoro jako zjevení!
+                    </p>
+                    <div class="project-features">
+                        <span class="feature-tag">Vyhřívané boxy</span>
+                        <span class="feature-tag">Nymbursko</span>
+                        <span class="feature-tag">Mladoboleslavsko</span>
+                        <span class="feature-tag">Praha-východ</span>
+                    </div>
+                    <a href="https://www.divinedelivery.cz" target="_blank" class="project-link">
+                        Objednat rozvoz
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Smyslárium -->
+            <div class="project-card project-smyslarium">
+                <div class="project-image">
+                    <div class="project-image-inner">
+                        <div class="project-image-icon">🎨</div>
+                        <div class="project-image-text">Smyslárium</div>
+                    </div>
+                </div>
+                <div class="project-content">
+                    <div class="project-badge">Herna & Kavárna</div>
+                    <h2>Smyslárium</h2>
+                    <p class="subtitle">Sensory-play hernička s kavárnou v Milovicích</p>
+                    <p>
+                        Smyslárium je jedinečné místo, kde děti mohou poznávat svět a rozvíjet své smysly prostřednictvím sensory-play aktivit. Zatímco si děti hrají a objevují, rodiče si mohou vychutnat výbornou kávu v klidu.
+                    </p>
+                    <p>
+                        Sensory play je forma hry zaměřená na stimulaci všech pěti smyslů – děti si hrají s různými materiály a texturami, což podporuje jejich kreativitu, jemnou motoriku i kognitivní rozvoj.
+                    </p>
+                    <div class="project-features">
+                        <span class="feature-tag">Sensory play</span>
+                        <span class="feature-tag">Rozvoj smyslů</span>
+                        <span class="feature-tag">Kavárna pro rodiče</span>
+                        <span class="feature-tag">Milovice</span>
+                    </div>
+                    <a href="https://www.facebook.com/people/Smyslárium-Milovice/61578928778606" target="_blank" class="project-link">
+                        Více informací
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="kontakt">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Kontakt</div>
+                <h2 class="section-title">Spojte se s námi</h2>
+                <p class="section-description">
+                    Máte dotaz, nápad nebo chcete spolupracovat? Rádi se s vámi spojíme.
+                </p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                    </svg>
+                    <h4>E-mail</h4>
+                    <a href="mailto:nadohledzs@gmail.com">nadohledzs@gmail.com</a>
+                </div>
+                <div class="contact-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                    </svg>
+                    <h4>Telefon</h4>
+                    <a href="tel:+420770138462">+420 770 138 462</a>
+                </div>
+                <div class="contact-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                    </svg>
+                    <h4>Působíme</h4>
+                    <p>Lysá nad Labem, Milovice a okolí</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <a href="#" class="logo">NA <span>DOHLED</span></a>
+        <p>Marek Švácha · IČO: 07220294</p>
+        <p>© 2025 Na Dohled. Všechna práva vyhrazena.</p>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Intersection Observer for project cards
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.project-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
