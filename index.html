@@ -468,7 +468,7 @@
         }
 
         .project-content {
-            padding: 1rem;
+            padding: 2rem;
         }
 
         .project-badge {
@@ -525,14 +525,20 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            color: var(--color-terracotta);
+            color: white;
+            background: var(--color-terracotta);
             text-decoration: none;
             font-weight: 600;
-            transition: gap 0.3s ease;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
         }
 
         .project-link:hover {
+            background: var(--color-terracotta-dark);
             gap: 1rem;
+            transform: translateX(5px);
         }
 
         .project-link svg {
