@@ -284,6 +284,130 @@
             }
         }
 
+        /* Services Section */
+        .services-section {
+            padding: 4rem 2rem;
+            background: var(--color-cream);
+        }
+
+        .services-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .services-section h2 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--color-charcoal);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .service-card.party {
+            border-top: 4px solid #E91E63;
+        }
+
+        .service-card.kindergarten {
+            border-top: 4px solid var(--project-color);
+        }
+
+        .service-card.bakery {
+            border-top: 4px solid #D4A574;
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--color-charcoal);
+        }
+
+        .service-card p {
+            font-size: 0.95rem;
+            color: rgba(45, 45, 45, 0.7);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .service-price {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--project-color-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .service-note {
+            font-size: 0.85rem !important;
+            color: rgba(45, 45, 45, 0.6) !important;
+            margin-bottom: 0.5rem !important;
+        }
+
+        .service-reservation {
+            font-size: 0.85rem !important;
+            color: var(--project-color-dark) !important;
+            font-weight: 600 !important;
+        }
+
+        .messenger-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #0084FF, #00C6FF);
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+
+        .messenger-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 132, 255, 0.4);
+        }
+
+        .messenger-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+        }
+
         /* Social Links */
         .social-section {
             padding: 4rem 2rem;
@@ -491,18 +615,70 @@
                 <h3 data-cs="Kavárna Na Kávu" data-en="Na Kávu Café">Kavárna Na Kávu</h3>
                 <div class="hours-grid">
                     <div class="hours-row">
-                        <span class="day" data-cs="Neděle – Čtvrtek" data-en="Sunday – Thursday">Neděle – Čtvrtek</span>
-                        <span class="time">8:00 – 21:00</span>
+                        <span class="day" data-cs="Úterý – Pátek" data-en="Tuesday – Friday">Úterý – Pátek</span>
+                        <span class="time">8:00 – 18:00</span>
                     </div>
                     <div class="hours-row">
-                        <span class="day" data-cs="Pátek – Sobota" data-en="Friday – Saturday">Pátek – Sobota</span>
-                        <span class="time">8:00 – 21:30</span>
+                        <span class="day" data-cs="Sobota" data-en="Saturday">Sobota</span>
+                        <span class="time">10:00 – 18:00</span>
+                    </div>
+                    <div class="hours-row">
+                        <span class="day" data-cs="Neděle" data-en="Sunday">Neděle</span>
+                        <span class="time">10:00 – 17:00</span>
+                    </div>
+                    <div class="hours-row">
+                        <span class="day" data-cs="Pondělí" data-en="Monday">Pondělí</span>
+                        <span class="time closed" data-cs="Zavřeno" data-en="Closed">Zavřeno</span>
                     </div>
                 </div>
                 <div class="cafe-note">
                     <p data-cs="Kavárna je samostatná – vstup do herničky není povinný. Přijďte si vychutnat kávu i bez dětí!" data-en="The café is independent – playroom entry is not required. Come enjoy coffee even without kids!">
                         Kavárna je samostatná – vstup do herničky není povinný. Přijďte si vychutnat kávu i bez dětí!
                     </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services-section">
+        <div class="services-container">
+            <h2 data-cs="Speciální nabídka" data-en="Special offers">Speciální nabídka</h2>
+            
+            <div class="services-grid">
+                <div class="service-card party">
+                    <div class="service-icon">🎉</div>
+                    <h3 data-cs="Pronájem na oslavy" data-en="Party rental">Pronájem na oslavy</h3>
+                    <p data-cs="Uspořádejte nezapomenutelnou oslavu pro vaše děti! Pronájem zahrnuje Smyslárium i kavárnu Na Kávu s možností cateringu." data-en="Organize an unforgettable party for your kids! Rental includes Smyslárium and Na Kávu café with catering option.">
+                        Uspořádejte nezapomenutelnou oslavu pro vaše děti! Pronájem zahrnuje Smyslárium i kavárnu Na Kávu s možností cateringu.
+                    </p>
+                    <div class="service-price">2 000 Kč</div>
+                    <p class="service-note" data-cs="Smyslárium + Na Kávu s cateringem" data-en="Smyslárium + Na Kávu with catering">Smyslárium + Na Kávu s cateringem</p>
+                    <p class="service-reservation" data-cs="Nutná rezervace předem" data-en="Reservation required">Nutná rezervace předem</p>
+                </div>
+                
+                <div class="service-card kindergarten">
+                    <div class="service-icon">👶</div>
+                    <h3 data-cs="Pronájem pro školky" data-en="Kindergarten rental">Pronájem pro školky</h3>
+                    <p data-cs="Nabízíme pronájem herničky Smyslárium pro mateřské školy a dětské skupiny. Ideální pro výlety a společné aktivity." data-en="We offer Smyslárium playroom rental for kindergartens and children's groups. Ideal for trips and group activities.">
+                        Nabízíme pronájem herničky Smyslárium pro mateřské školy a dětské skupiny. Ideální pro výlety a společné aktivity.
+                    </p>
+                    <div class="service-price" data-cs="500 Kč / hodina" data-en="500 CZK / hour">500 Kč / hodina</div>
+                    <p class="service-reservation" data-cs="Nutná rezervace předem" data-en="Reservation required">Nutná rezervace předem</p>
+                </div>
+                
+                <div class="service-card bakery">
+                    <div class="service-icon">🥐</div>
+                    <h3 data-cs="Řemeslné pečivo na objednávku" data-en="Artisan pastries to order">Řemeslné pečivo na objednávku</h3>
+                    <p data-cs="Objednejte si čerstvé řemeslné pečivo z kavárny Na Kávu předem přes Messenger. Ideální na snídaně, oslavy nebo jen tak." data-en="Order fresh artisan pastries from Na Kávu café in advance via Messenger. Perfect for breakfasts, celebrations or just because.">
+                        Objednejte si čerstvé řemeslné pečivo z kavárny Na Kávu předem přes Messenger. Ideální na snídaně, oslavy nebo jen tak.
+                    </p>
+                    <a href="https://m.me/nakavulysa" target="_blank" class="messenger-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.477 2 2 6.145 2 11.243c0 2.936 1.444 5.544 3.696 7.246V22l3.378-1.858c.902.25 1.856.384 2.926.384 5.523 0 10-4.145 10-9.243C22 6.145 17.523 2 12 2zm1.016 12.436l-2.545-2.718-4.97 2.718 5.467-5.803 2.609 2.718 4.906-2.718-5.467 5.803z"/>
+                        </svg>
+                        <span data-cs="Objednat přes Messenger" data-en="Order via Messenger">Objednat přes Messenger</span>
+                    </a>
                 </div>
             </div>
         </div>
