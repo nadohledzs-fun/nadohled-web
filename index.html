@@ -55,12 +55,11 @@
 
         /* Language Switcher */
         .lang-switcher {
-            position: fixed;
-            top: 1.5rem;
-            right: 6rem;
-            z-index: 101;
             cursor: pointer;
             transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            margin-left: 1.5rem;
         }
 
         .lang-switcher:hover {
@@ -72,6 +71,12 @@
             height: 22px;
             border-radius: 4px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         /* Navigation */
@@ -112,7 +117,6 @@
             display: flex;
             gap: 2.5rem;
             list-style: none;
-            margin-right: 3rem;
         }
 
         .nav-links a {
@@ -747,7 +751,13 @@
             }
 
             .lang-switcher {
-                right: 4.5rem;
+                margin-left: 0;
+                margin-right: 0.5rem;
+            }
+
+            .lang-switcher svg {
+                width: 28px;
+                height: 19px;
             }
         }
 
@@ -762,40 +772,10 @@
                 max-width: 280px;
                 text-align: center;
             }
-
-            .lang-switcher {
-                right: 4rem;
-                top: 1.2rem;
-            }
-
-            .lang-switcher svg {
-                width: 28px;
-                height: 19px;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- Language Switcher -->
-    <div class="lang-switcher" id="langSwitcher" title="Switch to English">
-        <svg id="flagEN" viewBox="0 0 60 30" style="display: block;">
-            <clipPath id="s"><path d="M0,0 v30 h60 v-30 z"/></clipPath>
-            <clipPath id="t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>
-            <g clip-path="url(#s)">
-                <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
-                <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
-                <path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#t)" stroke="#C8102E" stroke-width="4"/>
-                <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
-                <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
-            </g>
-        </svg>
-        <svg id="flagCZ" viewBox="0 0 6 4" style="display: none;">
-            <rect width="6" height="4" fill="#d7141a"/>
-            <rect width="6" height="2" fill="#fff"/>
-            <polygon points="0,0 0,4 3,2" fill="#11457e"/>
-        </svg>
-    </div>
-
     <!-- Navigation -->
     <nav id="navbar">
         <a href="#" class="logo">NA <span>DOHLED</span></a>
@@ -805,11 +785,32 @@
             <li><a href="#kde-nas-najdete" data-cs="Kde nás najdete" data-en="Locations">Kde nás najdete</a></li>
             <li><a href="#kontakt" data-cs="Kontakt" data-en="Contact">Kontakt</a></li>
         </ul>
-        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
-        </button>
+        <div class="nav-right">
+            <!-- Language Switcher -->
+            <div class="lang-switcher" id="langSwitcher" title="Switch to English">
+                <svg id="flagEN" viewBox="0 0 60 30" style="display: block;">
+                    <clipPath id="s"><path d="M0,0 v30 h60 v-30 z"/></clipPath>
+                    <clipPath id="t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>
+                    <g clip-path="url(#s)">
+                        <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
+                        <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
+                        <path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#t)" stroke="#C8102E" stroke-width="4"/>
+                        <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
+                        <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
+                    </g>
+                </svg>
+                <svg id="flagCZ" viewBox="0 0 6 4" style="display: none;">
+                    <rect width="6" height="4" fill="#d7141a"/>
+                    <rect width="6" height="2" fill="#fff"/>
+                    <polygon points="0,0 0,4 3,2" fill="#11457e"/>
+                </svg>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+            </button>
+        </div>
     </nav>
 
     <!-- Hero Section -->
@@ -899,12 +900,12 @@
                 <div class="project-content">
                     <div class="project-badge" data-cs="Kavárna" data-en="Café">Kavárna</div>
                     <h2>Na Kávu</h2>
-                    <p class="subtitle" data-cs="Kavárna s přesahem v Lysé nad Labem" data-en="A café with purpose in Lysá nad Labem">Kavárna s přesahem v Lysé nad Labem</p>
+                    <p class="subtitle" data-cs="Kavárna s přesahem" data-en="A café with purpose">Kavárna s přesahem</p>
                     <p data-cs="Kavárna Na Kávu vznikla z lásky k dobré kávě, květinám a řemeslným výrobkům. Nabízíme výběrovou kávu z českých pražíren DAK Coffee Roasters a Chroasta, čerstvé pečivo z řemeslných pekáren a domácí dobroty." data-en="Na Kávu café was born from a love of good coffee, flowers, and artisan products. We offer specialty coffee from Czech roasters DAK Coffee Roasters and Chroasta, fresh pastries from craft bakeries, and homemade treats.">
                         Kavárna Na Kávu vznikla z lásky k dobré kávě, květinám a řemeslným výrobkům. Nabízíme výběrovou kávu z českých pražíren DAK Coffee Roasters a Chroasta, čerstvé pečivo z řemeslných pekáren a domácí dobroty.
                     </p>
-                    <p data-cs="Provozujeme dvě pobočky – útulný prostor v Poděbradově ulici a komunitní gastrokontejner v areálu Čechovka, kde během léta připravujeme tematické programy pro děti a celé rodiny." data-en="We run two locations – a cozy space on Poděbradova Street and a community gastro-container in the Čechovka park, where we organize themed programs for children and families during summer.">
-                        Provozujeme dvě pobočky – útulný prostor v Poděbradově ulici a komunitní gastrokontejner v areálu Čechovka, kde během léta připravujeme tematické programy pro děti a celé rodiny.
+                    <p data-cs="Najdete nás ve Smysláriu v Milovicích a přes sezónu také v komunitním gastrokontejneru v parku Čechovka v Lysé nad Labem, kde připravujeme tematické programy pro děti a celé rodiny." data-en="You can find us at Smyslárium in Milovice and during the season also in a community gastro-container in Čechovka park in Lysá nad Labem, where we organize themed programs for children and families.">
+                        Najdete nás ve Smysláriu v Milovicích a přes sezónu také v komunitním gastrokontejneru v parku Čechovka v Lysé nad Labem, kde připravujeme tematické programy pro děti a celé rodiny.
                     </p>
                     <div class="project-features">
                         <span class="feature-tag" data-cs="Výběrová káva" data-en="Specialty coffee">Výběrová káva</span>
@@ -912,8 +913,8 @@
                         <span class="feature-tag" data-cs="Program pro děti" data-en="Kids programs">Program pro děti</span>
                         <span class="feature-tag" data-cs="Květiny & doplňky" data-en="Flowers & gifts">Květiny & doplňky</span>
                     </div>
-                    <a href="https://www.facebook.com/nakavulysa" target="_blank" class="project-link">
-                        <span data-cs="Sledujte nás" data-en="Follow us">Sledujte nás</span>
+                    <a href="nakavu.html" class="project-link">
+                        <span data-cs="Více o Na Kávu" data-en="More about Na Kávu">Více o Na Kávu</span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                         </svg>
@@ -945,8 +946,8 @@
                         <span class="feature-tag" data-cs="Mladoboleslavsko" data-en="Mladá Boleslav region">Mladoboleslavsko</span>
                         <span class="feature-tag" data-cs="Praha-východ" data-en="Prague-East">Praha-východ</span>
                     </div>
-                    <a href="https://www.divinedelivery.cz" target="_blank" class="project-link">
-                        <span data-cs="Objednat rozvoz" data-en="Order delivery">Objednat rozvoz</span>
+                    <a href="divine-delivery.html" class="project-link">
+                        <span data-cs="Více o Divine Delivery" data-en="More about Divine Delivery">Více o Divine Delivery</span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                         </svg>
@@ -978,8 +979,8 @@
                         <span class="feature-tag" data-cs="Kavárna pro rodiče" data-en="Café for parents">Kavárna pro rodiče</span>
                         <span class="feature-tag">Milovice</span>
                     </div>
-                    <a href="https://www.facebook.com/people/Smyslárium-Milovice/61578928778606" target="_blank" class="project-link">
-                        <span data-cs="Více informací" data-en="More info">Více informací</span>
+                    <a href="smyslarium.html" class="project-link">
+                        <span data-cs="Více o Smysláriu" data-en="More about Smyslárium">Více o Smysláriu</span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                         </svg>
@@ -1056,7 +1057,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                     </svg>
                     <h4>E-mail</h4>
-                    <a href="mailto:nadohledzs@gmail.com">nadohledzs@gmail.com</a>
+                    <a href="/cdn-cgi/l/email-protection#a3cdc2c7cccbcfc6c7d9d0e3c4cec2cacf8dc0ccce"><span class="__cf_email__" data-cfemail="a6c8c7c2c9cecac3c2dcd5e6c1cbc7cfca88c5c9cb">[email&#160;protected]</span></a>
                 </div>
                 <div class="contact-item">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -1084,7 +1085,7 @@
         <p data-cs="© 2025 Na Dohled. Všechna práva vyhrazena." data-en="© 2025 Na Dohled. All rights reserved.">© 2025 Na Dohled. Všechna práva vyhrazena.</p>
     </footer>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         let currentLang = 'cs';
 
         const langSwitcher = document.getElementById('langSwitcher');
@@ -1156,14 +1157,4 @@
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-    </script>
-</body>
-</html>
+            

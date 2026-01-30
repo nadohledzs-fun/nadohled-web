@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smyslárium | Sensory-play herna</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-cream: #F5F0E8;
+            --color-sage: #8B9D83;
+            --color-sage-dark: #6B7D63;
+            --color-terracotta: #C4846C;
+            --color-terracotta-dark: #A66B52;
+            --color-charcoal: #2D2D2D;
+            --color-warm-white: #FDFBF7;
+            --color-gold: #D4A574;
+            --font-display: 'Quicksand', sans-serif;
+            --font-body: 'Quicksand', sans-serif;
+            --project-color: #9B8BA0;
+            --project-color-dark: #7B6B80;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-cream);
+            color: var(--color-charcoal);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(245, 240, 232, 0.98);
+            box-shadow: 0 2px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-charcoal);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+        }
+
+        .logo span {
+            color: var(--color-terracotta);
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--color-charcoal);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: var(--project-color);
+        }
+
+        .back-link svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            background: linear-gradient(135deg, #9B8BA0 0%, #7B6B80 50%, #5B4B60 100%);
+            color: white;
+        }
+
+        .hero-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 600px;
+            font-weight: 300;
+        }
+
+        /* Content Section */
+        .content {
+            padding: 5rem 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .content h2 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--project-color-dark);
+        }
+
+        .content p {
+            font-size: 1.1rem;
+            color: rgba(45, 45, 45, 0.8);
+            margin-bottom: 1.5rem;
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .feature-tag {
+            padding: 0.6rem 1.2rem;
+            background: rgba(155, 139, 160, 0.2);
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--project-color-dark);
+        }
+
+        /* Info Section - Opening Hours & Prices */
+        .info-section {
+            padding: 4rem 2rem;
+            background: var(--color-warm-white);
+        }
+
+        .info-container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .info-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--color-charcoal);
+        }
+
+        .hours-grid {
+            margin-bottom: 1.5rem;
+        }
+
+        .hours-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .hours-row:last-child {
+            border-bottom: none;
+        }
+
+        .day {
+            font-weight: 500;
+            color: var(--color-charcoal);
+        }
+
+        .time {
+            font-weight: 600;
+            color: var(--project-color-dark);
+        }
+
+        .time.closed {
+            color: #c0392b;
+        }
+
+        .price-info {
+            background: rgba(155, 139, 160, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .price-info h4 {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--color-charcoal);
+        }
+
+        .price-info p {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--project-color-dark);
+            margin: 0;
+        }
+
+        .price-note {
+            font-size: 0.9rem !important;
+            font-weight: 400 !important;
+            color: rgba(45, 45, 45, 0.7) !important;
+            margin-top: 0.5rem !important;
+        }
+
+        .cafe-note {
+            background: rgba(139, 157, 131, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .cafe-note p {
+            font-size: 0.95rem;
+            color: rgba(45, 45, 45, 0.8);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .info-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Social Links */
+        .social-section {
+            padding: 4rem 2rem;
+            background: var(--color-warm-white);
+            text-align: center;
+        }
+
+        .social-section h2 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: var(--color-charcoal);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            background: white;
+            border-radius: 50px;
+            text-decoration: none;
+            color: var(--color-charcoal);
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .social-link.facebook:hover {
+            background: #1877F2;
+            color: white;
+        }
+
+        .social-link.instagram:hover {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            color: white;
+        }
+
+        .social-link svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Location Section */
+        .location {
+            padding: 4rem 2rem;
+            background: var(--color-cream);
+            text-align: center;
+        }
+
+        .location-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .location h2 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: var(--color-charcoal);
+        }
+
+        .location-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .location-info {
+            padding: 2rem;
+        }
+
+        .location-info h3 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .location-info p {
+            color: var(--project-color-dark);
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .location-info .note {
+            font-size: 0.95rem;
+            color: rgba(45, 45, 45, 0.6);
+            margin-top: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            background: var(--color-charcoal);
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        footer .logo {
+            color: white;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .social-links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .social-link {
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">NA <span>DOHLED</span></a>
+        <a href="index.html" class="back-link">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+            </svg>
+            <span data-cs="Zpět na hlavní stránku" data-en="Back to homepage">Zpět na hlavní stránku</span>
+        </a>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-icon">🎨</div>
+        <h1>Smyslárium</h1>
+        <p class="hero-subtitle" data-cs="Sensory-play hernička s kavárnou v Milovicích" data-en="Sensory-play room with café in Milovice">Sensory-play hernička s kavárnou v Milovicích</p>
+    </section>
+
+    <section class="content">
+        <h2 data-cs="O nás" data-en="About us">O nás</h2>
+        <p data-cs="Smyslárium je jedinečné místo, kde děti mohou poznávat svět a rozvíjet své smysly prostřednictvím sensory-play aktivit. Zatímco si děti hrají a objevují, rodiče si mohou vychutnat výbornou kávu v klidu." data-en="Smyslárium is a unique place where children can explore the world and develop their senses through sensory-play activities. While the kids play and discover, parents can enjoy excellent coffee in peace.">
+            Smyslárium je jedinečné místo, kde děti mohou poznávat svět a rozvíjet své smysly prostřednictvím sensory-play aktivit. Zatímco si děti hrají a objevují, rodiče si mohou vychutnat výbornou kávu v klidu.
+        </p>
+        <p data-cs="Sensory play je forma hry zaměřená na stimulaci všech pěti smyslů – děti si hrají s různými materiály a texturami, což podporuje jejich kreativitu, jemnou motoriku i kognitivní rozvoj." data-en="Sensory play is a form of play focused on stimulating all five senses – children play with various materials and textures, which supports their creativity, fine motor skills, and cognitive development.">
+            Sensory play je forma hry zaměřená na stimulaci všech pěti smyslů – děti si hrají s různými materiály a texturami, což podporuje jejich kreativitu, jemnou motoriku i kognitivní rozvoj.
+        </p>
+        <div class="features">
+            <span class="feature-tag">Sensory play</span>
+            <span class="feature-tag" data-cs="Rozvoj smyslů" data-en="Sensory development">Rozvoj smyslů</span>
+            <span class="feature-tag" data-cs="Kavárna pro rodiče" data-en="Café for parents">Kavárna pro rodiče</span>
+            <span class="feature-tag" data-cs="Kreativní aktivity" data-en="Creative activities">Kreativní aktivity</span>
+        </div>
+    </section>
+
+    <!-- Opening Hours & Prices -->
+    <section class="info-section">
+        <div class="info-container">
+            <div class="info-card">
+                <div class="info-icon">🎨</div>
+                <h3 data-cs="Hernička Smyslárium" data-en="Smyslárium Playroom">Hernička Smyslárium</h3>
+                <div class="hours-grid">
+                    <div class="hours-row">
+                        <span class="day" data-cs="Úterý – Pátek" data-en="Tuesday – Friday">Úterý – Pátek</span>
+                        <span class="time">8:00 – 18:00</span>
+                    </div>
+                    <div class="hours-row">
+                        <span class="day" data-cs="Sobota" data-en="Saturday">Sobota</span>
+                        <span class="time">10:00 – 18:00</span>
+                    </div>
+                    <div class="hours-row">
+                        <span class="day" data-cs="Neděle" data-en="Sunday">Neděle</span>
+                        <span class="time">10:00 – 17:00</span>
+                    </div>
+                    <div class="hours-row">
+                        <span class="day" data-cs="Pondělí" data-en="Monday">Pondělí</span>
+                        <span class="time closed" data-cs="Zavřeno" data-en="Closed">Zavřeno</span>
+                    </div>
+                </div>
+                <div class="price-info">
+                    <h4 data-cs="Vstupné" data-en="Admission">Vstupné</h4>
+                    <p data-cs="120 Kč / dítě" data-en="120 CZK / child">120 Kč / dítě</p>
+                    <p class="price-note" data-cs="Každé další dítě za dobrovolné vstupné" data-en="Each additional child for voluntary admission">Každé další dítě za dobrovolné vstupné</p>
+                </div>
+            </div>
+            <div class="info-card">
+                <div class="info-icon">☕</div>
+                <h3 data-cs="Kavárna Na Kávu" data-en="Na Kávu Café">Kavárna Na Kávu</h3>
+                <div class="hours-grid">
+                    <div class="hours-row">
+                        <span class="day" data-cs="Neděle – Čtvrtek" data-en="Sunday – Thursday">Neděle – Čtvrtek</span>
+                        <span class="time">8:00 – 21:00</span>
+                    </div>
+                    <div class="hours-row">
+                        <span class="day" data-cs="Pátek – Sobota" data-en="Friday – Saturday">Pátek – Sobota</span>
+                        <span class="time">8:00 – 21:30</span>
+                    </div>
+                </div>
+                <div class="cafe-note">
+                    <p data-cs="Kavárna je samostatná – vstup do herničky není povinný. Přijďte si vychutnat kávu i bez dětí!" data-en="The café is independent – playroom entry is not required. Come enjoy coffee even without kids!">
+                        Kavárna je samostatná – vstup do herničky není povinný. Přijďte si vychutnat kávu i bez dětí!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="social-section">
+        <h2 data-cs="Sledujte nás" data-en="Follow us">Sledujte nás</h2>
+        <div class="social-links">
+            <a href="https://www.facebook.com/people/Smyslárium-Milovice/61578928778606" target="_blank" class="social-link facebook">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+                Facebook
+            </a>
+            <a href="https://www.instagram.com/smyslarium_milovice" target="_blank" class="social-link instagram">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+                Instagram
+            </a>
+        </div>
+    </section>
+
+    <section class="location">
+        <div class="location-container">
+            <h2 data-cs="Kde nás najdete" data-en="Where to find us">Kde nás najdete</h2>
+            <div class="location-card">
+                <div class="location-info">
+                    <h3>Smyslárium</h3>
+                    <p>Višňová 510, Milovice</p>
+                    <p class="note" data-cs="Celoroční provoz" data-en="Year-round operation">Celoroční provoz</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <a href="index.html" class="logo">NA <span>DOHLED</span></a>
+        <p>© 2025 Na Dohled.</p>
+    </footer>
+</body>
+</html>

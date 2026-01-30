@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divine Delivery | Božský rozvoz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-cream: #F5F0E8;
+            --color-sage: #8B9D83;
+            --color-sage-dark: #6B7D63;
+            --color-terracotta: #C4846C;
+            --color-terracotta-dark: #A66B52;
+            --color-charcoal: #2D2D2D;
+            --color-warm-white: #FDFBF7;
+            --color-gold: #D4A574;
+            --font-display: 'Quicksand', sans-serif;
+            --font-body: 'Quicksand', sans-serif;
+            --project-color: #D4A574;
+            --project-color-dark: #A66B52;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-cream);
+            color: var(--color-charcoal);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(245, 240, 232, 0.98);
+            box-shadow: 0 2px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-charcoal);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+        }
+
+        .logo span {
+            color: var(--color-terracotta);
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--color-charcoal);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: var(--project-color);
+        }
+
+        .back-link svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            background: linear-gradient(135deg, #D4A574 0%, #C4846C 50%, #A66B52 100%);
+            color: white;
+        }
+
+        .hero-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 600px;
+            font-weight: 300;
+        }
+
+        /* Content Section */
+        .content {
+            padding: 5rem 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .content h2 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--project-color-dark);
+        }
+
+        .content p {
+            font-size: 1.1rem;
+            color: rgba(45, 45, 45, 0.8);
+            margin-bottom: 1.5rem;
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .feature-tag {
+            padding: 0.6rem 1.2rem;
+            background: rgba(212, 165, 116, 0.2);
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--project-color-dark);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 4rem 2rem;
+            background: var(--project-color);
+            text-align: center;
+            color: white;
+        }
+
+        .cta-section h2 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.2rem 2.5rem;
+            background: white;
+            border-radius: 50px;
+            text-decoration: none;
+            color: var(--project-color-dark);
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .cta-button svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Social Links */
+        .social-section {
+            padding: 4rem 2rem;
+            background: var(--color-warm-white);
+            text-align: center;
+        }
+
+        .social-section h2 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: var(--color-charcoal);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            background: white;
+            border-radius: 50px;
+            text-decoration: none;
+            color: var(--color-charcoal);
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .social-link.facebook:hover {
+            background: #1877F2;
+            color: white;
+        }
+
+        .social-link.instagram:hover {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            color: white;
+        }
+
+        .social-link.website:hover {
+            background: var(--project-color);
+            color: white;
+        }
+
+        .social-link svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Restaurants Section */
+        .restaurants {
+            padding: 5rem 2rem;
+            background: var(--color-cream);
+        }
+
+        .restaurants-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .restaurants h2 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-align: center;
+            color: var(--color-charcoal);
+        }
+
+        .restaurants-intro {
+            text-align: center;
+            color: rgba(45, 45, 45, 0.7);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+        }
+
+        .restaurants-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .restaurant-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .restaurant-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .restaurant-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .restaurant-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--color-charcoal);
+        }
+
+        .restaurant-card p {
+            font-size: 0.9rem;
+            color: rgba(45, 45, 45, 0.7);
+            line-height: 1.5;
+        }
+
+        @media (max-width: 900px) {
+            .restaurants-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .restaurants-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            background: var(--color-charcoal);
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        footer .logo {
+            color: white;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .social-links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .social-link {
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">NA <span>DOHLED</span></a>
+        <a href="index.html" class="back-link">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+            </svg>
+            <span data-cs="Zpět na hlavní stránku" data-en="Back to homepage">Zpět na hlavní stránku</span>
+        </a>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-icon">🚗</div>
+        <h1>Divine Delivery</h1>
+        <p class="hero-subtitle" data-cs="Božský rozvoz teplého jídla" data-en="Divine hot food delivery">Božský rozvoz teplého jídla</p>
+    </section>
+
+    <section class="content">
+        <h2 data-cs="O nás" data-en="About us">O nás</h2>
+        <p data-cs="Nejsme obyčejný rozvoz. Divine Delivery dbá na doručení opravdu teplého jídla včas – proto používáme speciální vyhřívané boxy. Věříme, že každé jídlo si zaslouží dorazit v perfektní kondici." data-en="We're not your ordinary delivery service. Divine Delivery ensures truly hot food arrives on time – that's why we use special heated boxes. We believe every meal deserves to arrive in perfect condition.">
+            Nejsme obyčejný rozvoz. Divine Delivery dbá na doručení opravdu teplého jídla včas – proto používáme speciální vyhřívané boxy. Věříme, že každé jídlo si zaslouží dorazit v perfektní kondici.
+        </p>
+        <p data-cs="Působíme na Nymbursku, Mladoboleslavsku a Praze-východ. Rozvážíme z vybraných restaurací včetně sushi a dalších specialit. S námi je to rychlé – skoro jako zjevení!" data-en="We operate in the Nymburk, Mladá Boleslav, and Prague-East regions. We deliver from selected restaurants including sushi and other specialties. With us, it's fast – almost like a revelation!">
+            Působíme na Nymbursku, Mladoboleslavsku a Praze-východ. Rozvážíme z vybraných restaurací včetně sushi a dalších specialit. S námi je to rychlé – skoro jako zjevení!
+        </p>
+        <div class="features">
+            <span class="feature-tag" data-cs="Vyhřívané boxy" data-en="Heated boxes">Vyhřívané boxy</span>
+            <span class="feature-tag" data-cs="Nymbursko" data-en="Nymburk region">Nymbursko</span>
+            <span class="feature-tag" data-cs="Mladoboleslavsko" data-en="Mladá Boleslav region">Mladoboleslavsko</span>
+            <span class="feature-tag" data-cs="Praha-východ" data-en="Prague-East">Praha-východ</span>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <h2 data-cs="Máte hlad?" data-en="Hungry?">Máte hlad?</h2>
+        <p data-cs="Objednejte si jídlo z vašich oblíbených restaurací" data-en="Order food from your favorite restaurants">Objednejte si jídlo z vašich oblíbených restaurací</p>
+        <a href="https://www.divinedelivery.cz/restaurace" target="_blank" class="cta-button">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+            </svg>
+            <span data-cs="Objednat nyní" data-en="Order now">Objednat nyní</span>
+        </a>
+    </section>
+
+    <!-- Restaurants Section -->
+    <section class="restaurants">
+        <div class="restaurants-container">
+            <h2 data-cs="Partnerské restaurace" data-en="Partner restaurants">Partnerské restaurace</h2>
+            <p class="restaurants-intro" data-cs="Rozvážíme z těchto vybraných restaurací v regionu" data-en="We deliver from these selected restaurants in the region">Rozvážíme z těchto vybraných restaurací v regionu</p>
+            
+            <div class="restaurants-grid">
+                <div class="restaurant-card">
+                    <div class="restaurant-icon">🍽️</div>
+                    <h3>Restaurace Bílý Páv</h3>
+                    <p data-cs="Zavedená restaurace v Benátkách nad Jizerou nabízející mezinárodní kuchyni i české speciality. Šéfkuchař vybírá to nejlepší ze sezónních surovin." data-en="Established restaurant in Benátky nad Jizerou offering international cuisine and Czech specialties. The chef selects the best seasonal ingredients.">Zavedená restaurace v Benátkách nad Jizerou nabízející mezinárodní kuchyni i české speciality. Šéfkuchař vybírá to nejlepší ze sezónních surovin.</p>
+                </div>
+                
+                <div class="restaurant-card">
+                    <div class="restaurant-icon">🍕</div>
+                    <h3>Pizzeria Adelante</h3>
+                    <p data-cs="Italská restaurace v Benátkách nad Jizerou s kapacitou 50 míst. Nabízí pizzy, těstoviny a italské speciality. K dispozici letní zahrádka s grilem." data-en="Italian restaurant in Benátky nad Jizerou with 50-seat capacity. Offers pizzas, pasta and Italian specialties. Summer garden with grill available.">Italská restaurace v Benátkách nad Jizerou s kapacitou 50 míst. Nabízí pizzy, těstoviny a italské speciality. K dispozici letní zahrádka s grilem.</p>
+                </div>
+                
+                <div class="restaurant-card">
+                    <div class="restaurant-icon">🍺</div>
+                    <h3>Pivovar Tahoun</h3>
+                    <p data-cs="Řemeslný pivovar ve Všejanech s restaurací. Vaří poctivý český ležák a moderní piva. Nabízí také výborná jídla včetně hovězího vývaru a štrůdlu." data-en="Craft brewery in Všejany with restaurant. Brews honest Czech lager and modern beers. Also offers excellent food including beef broth and strudel.">Řemeslný pivovar ve Všejanech s restaurací. Vaří poctivý český ležák a moderní piva. Nabízí také výborná jídla včetně hovězího vývaru a štrůdlu.</p>
+                </div>
+                
+                <div class="restaurant-card">
+                    <div class="restaurant-icon">🥡</div>
+                    <h3>Šupito Presto</h3>
+                    <p data-cs="Rychlé občerstvení s nabídkou chutných jídel pro ty, kdo nemají čas, ale nechtějí slevit z kvality." data-en="Fast food with delicious meals for those who don't have time but don't want to compromise on quality.">Rychlé občerstvení s nabídkou chutných jídel pro ty, kdo nemají čas, ale nechtějí slevit z kvality.</p>
+                </div>
+                
+                <div class="restaurant-card">
+                    <div class="restaurant-icon">🥙</div>
+                    <h3>Kebab Benátky</h3>
+                    <p data-cs="Autentický turecký kebab v Benátkách nad Jizerou. Čerstvé ingredience a tradiční recepty." data-en="Authentic Turkish kebab in Benátky nad Jizerou. Fresh ingredients and traditional recipes.">Autentický turecký kebab v Benátkách nad Jizerou. Čerstvé ingredience a tradiční recepty.</p>
+                </div>
+                
+                <div class="restaurant-card">
+                    <div class="restaurant-icon">🍔</div>
+                    <h3>McDonald's</h3>
+                    <p data-cs="Oblíbený fast food s širokou nabídkou burgerů, hranolků a dalších klasik. Rychle a spolehlivě." data-en="Popular fast food with a wide selection of burgers, fries and other classics. Fast and reliable.">Oblíbený fast food s širokou nabídkou burgerů, hranolků a dalších klasik. Rychle a spolehlivě.</p>
+                </div>
+                
+                <div class="restaurant-card">
+                    <div class="restaurant-icon">☕</div>
+                    <h3>Kavárna Na Kávu</h3>
+                    <p data-cs="Výběrová káva z českých pražíren, čerstvé pečivo a domácí dobroty. Součást projektu Na Dohled." data-en="Specialty coffee from Czech roasters, fresh pastries and homemade treats. Part of the Na Dohled project.">Výběrová káva z českých pražíren, čerstvé pečivo a domácí dobroty. Součást projektu Na Dohled.</p>
+                </div>
+                
+                <div class="restaurant-card">
+                    <div class="restaurant-icon">🥙</div>
+                    <h3>Kebab House Armádní</h3>
+                    <p data-cs="Originální hovězí a kuřecí turecký kebab. Tradiční chuť a kvalitní suroviny." data-en="Original beef and chicken Turkish kebab. Traditional taste and quality ingredients.">Originální hovězí a kuřecí turecký kebab. Tradiční chuť a kvalitní suroviny.</p>
+                </div>
+                
+                <div class="restaurant-card">
+                    <div class="restaurant-icon">☕</div>
+                    <h3>Restaurace Clock Café</h3>
+                    <p data-cs="Stylová kavárna a restaurace s příjemnou atmosférou a širokou nabídkou jídel i nápojů." data-en="Stylish café and restaurant with pleasant atmosphere and wide selection of food and drinks.">Stylová kavárna a restaurace s příjemnou atmosférou a širokou nabídkou jídel i nápojů.</p>
+                </div>
+                
+                <div class="restaurant-card">
+                    <div class="restaurant-icon">🍔</div>
+                    <h3>Burger King</h3>
+                    <p data-cs="Flame-grilled burgery a další fast food klasiky. Ikonická chuť přímo k vám domů." data-en="Flame-grilled burgers and other fast food classics. Iconic taste delivered to your door.">Flame-grilled burgery a další fast food klasiky. Ikonická chuť přímo k vám domů.</p>
+                </div>
+                
+                <div class="restaurant-card">
+                    <div class="restaurant-icon">🍜</div>
+                    <h3>Viet Thai Bistro</h3>
+                    <p data-cs="Autentická vietnamská a thajská kuchyně. Čerstvé suroviny, aromatické koření a tradiční recepty." data-en="Authentic Vietnamese and Thai cuisine. Fresh ingredients, aromatic spices and traditional recipes.">Autentická vietnamská a thajská kuchyně. Čerstvé suroviny, aromatické koření a tradiční recepty.</p>
+                </div>
+                
+                <div class="restaurant-card">
+                    <div class="restaurant-icon">🥩</div>
+                    <h3>Maso na Place</h3>
+                    <p data-cs="Kvalitní maso a masné speciality. Pro milovníky poctivého řeznického řemesla." data-en="Quality meat and meat specialties. For lovers of honest butcher's craft.">Kvalitní maso a masné speciality. Pro milovníky poctivého řeznického řemesla.</p>
+                </div>
+                
+                <div class="restaurant-card">
+                    <div class="restaurant-icon">🍣</div>
+                    <h3>Vietnamská a Sushi restaurace Dallas</h3>
+                    <p data-cs="Kombinace vietnamské kuchyně a čerstvého sushi. Široký výběr asijských specialit." data-en="Combination of Vietnamese cuisine and fresh sushi. Wide selection of Asian specialties.">Kombinace vietnamské kuchyně a čerstvého sushi. Široký výběr asijských specialit.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="social-section">
+        <h2 data-cs="Spojte se s námi" data-en="Connect with us">Spojte se s námi</h2>
+        <div class="social-links">
+            <a href="https://www.divinedelivery.cz" target="_blank" class="social-link website">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+                </svg>
+                divinedelivery.cz
+            </a>
+            <a href="https://www.facebook.com/divinedelivery.cz" target="_blank" class="social-link facebook">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+                Facebook
+            </a>
+            <a href="https://www.instagram.com/divinedelivery.cz" target="_blank" class="social-link instagram">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+                Instagram
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <a href="index.html" class="logo">NA <span>DOHLED</span></a>
+        <p>© 2025 Na Dohled.</p>
+    </footer>
+</body>
+</html>
