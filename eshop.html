@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-shop | NA DOHLED</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-cream: #F5F0E8;
+            --color-sage: #8B9D83;
+            --color-terracotta: #C4846C;
+            --color-charcoal: #2D2D2D;
+            --color-gold: #D4A574;
+            --font-display: 'Quicksand', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-display);
+            background-color: var(--color-cream);
+            color: var(--color-charcoal);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-charcoal);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: var(--color-terracotta);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .back-link {
+            color: var(--color-charcoal);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--color-terracotta);
+        }
+
+        .cart-btn {
+            position: relative;
+            background: var(--color-terracotta);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .cart-btn:hover {
+            background: #A66B52;
+            transform: translateY(-2px);
+        }
+
+        .cart-count {
+            background: white;
+            color: var(--color-terracotta);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Language Switcher */
+        .lang-switch {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .lang-btn {
+            background: none;
+            border: 2px solid var(--color-charcoal);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 500;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .lang-btn.active {
+            background: var(--color-charcoal);
+            color: white;
+        }
+
+        .lang-btn:hover:not(.active) {
+            background: rgba(45,45,45,0.1);
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--color-sage) 0%, var(--color-terracotta) 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Categories Navigation */
+        .categories-nav {
+            background: white;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 70px;
+            z-index: 999;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .categories-list {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            background: var(--color-cream);
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .category-btn:hover, .category-btn.active {
+            background: var(--color-terracotta);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title .icon {
+            font-size: 2.5rem;
+        }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        }
+
+        .product-image {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            position: relative;
+        }
+
+        .product-image.bakery { background: linear-gradient(135deg, #E8D5B7, #D4A574); }
+        .product-image.merch { background: linear-gradient(135deg, #C4846C, #A66B52); }
+        .product-image.sweets { background: linear-gradient(135deg, #E8B8C4, #D4899B); }
+        .product-image.beer { background: linear-gradient(135deg, #D4A574, #B8864C); }
+        .product-image.amway-artistry { background: linear-gradient(135deg, #D4A5C9, #B88AAF); }
+        .product-image.amway-xs { background: linear-gradient(135deg, #7CB9E8, #5A9BD4); }
+        .product-image.amway-nutrilite { background: linear-gradient(135deg, #90C695, #6BAD70); }
+        .product-image.amway-bodykey { background: linear-gradient(135deg, #F4A460, #D2893D); }
+        .product-image.amway-home { background: linear-gradient(135deg, #87CEEB, #5FAFD4); }
+
+        .product-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--color-terracotta);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-options {
+            margin-bottom: 1rem;
+        }
+
+        .product-options select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .product-options select:focus {
+            outline: none;
+            border-color: var(--color-terracotta);
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--color-terracotta);
+        }
+
+        .product-price small {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: #999;
+        }
+
+        .add-to-cart {
+            background: var(--color-sage);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .add-to-cart:hover {
+            background: #6B7D63;
+            transform: scale(1.1);
+        }
+
+        /* Cart Sidebar */
+        .cart-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .cart-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            max-width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 2001;
+            transition: right 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-sidebar.active {
+            right: 0;
+        }
+
+        .cart-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-header h2 {
+            font-size: 1.3rem;
+        }
+
+        .close-cart {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s;
+        }
+
+        .close-cart:hover {
+            color: var(--color-charcoal);
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .cart-item-option {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .cart-item-price {
+            font-weight: 600;
+            color: var(--color-terracotta);
+        }
+
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .qty-btn {
+            width: 28px;
+            height: 28px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .qty-btn:hover {
+            background: var(--color-cream);
+        }
+
+        .qty-value {
+            width: 40px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .remove-item {
+            background: none;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+
+        .remove-item:hover {
+            color: #e74c3c;
+        }
+
+        .cart-empty {
+            text-align: center;
+            padding: 3rem;
+            color: #999;
+        }
+
+        .cart-empty .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .cart-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            background: var(--color-terracotta);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checkout-btn:hover {
+            background: #A66B52;
+        }
+
+        .checkout-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Info Banner */
+        .info-banner {
+            background: var(--color-sage);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .info-banner .icon {
+            font-size: 3rem;
+        }
+
+        .info-banner h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .info-banner p {
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--color-charcoal);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer p {
+            opacity: 0.7;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--color-charcoal);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            z-index: 3000;
+            transition: transform 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .toast.active {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast .icon {
+            color: #2ecc71;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .categories-nav {
+                top: auto;
+                position: relative;
+            }
+
+            .cart-sidebar {
+                width: 100%;
+            }
+
+            .info-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="na-dohled.html" class="logo">NA <span>DOHLED</span> | E-shop</a>
+            <div class="header-actions">
+                <a href="na-dohled.html" class="back-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    <span data-cs="Zpět na web" data-en="Back to website">Zpět na web</span>
+                </a>
+                <div class="lang-switch">
+                    <button class="lang-btn active" onclick="switchLanguage('cs')">CZ</button>
+                    <button class="lang-btn" onclick="switchLanguage('en')">EN</button>
+                </div>
+                <button class="cart-btn" onclick="toggleCart()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    <span data-cs="Košík" data-en="Cart">Košík</span>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1 data-cs="🛒 Náš E-shop" data-en="🛒 Our E-shop">🛒 Náš E-shop</h1>
+        <p data-cs="Pečivo, makronky, řemeslné pivo Volt, merch a kvalitní produkty Amway – vše na jednom místě" data-en="Bakery, macarons, craft beer Volt, merch and quality Amway products – all in one place">Pečivo, makronky, řemeslné pivo Volt, merch a kvalitní produkty Amway – vše na jednom místě</p>
+    </section>
+
+    <!-- Categories Navigation -->
+    <nav class="categories-nav">
+        <div class="categories-list">
+            <button class="category-btn active" onclick="filterCategory('all')" data-cs="Vše" data-en="All">Vše</button>
+            <button class="category-btn" onclick="filterCategory('bakery')" data-cs="Pečivo" data-en="Bakery">Pečivo</button>
+            <button class="category-btn" onclick="filterCategory('sweets')" data-cs="Sladkosti" data-en="Sweets">Sladkosti</button>
+            <button class="category-btn" onclick="filterCategory('beer')" data-cs="Pivo Volt" data-en="Volt Beer">Pivo Volt</button>
+            <button class="category-btn" onclick="filterCategory('merch')" data-cs="Merch" data-en="Merch">Merch</button>
+            <button class="category-btn" onclick="filterCategory('amway')" data-cs="Amway" data-en="Amway">Amway</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Info Banner -->
+        <div class="info-banner">
+            <div class="icon">📦</div>
+            <div>
+                <h3 data-cs="Osobní odběr zdarma" data-en="Free pickup">Osobní odběr zdarma</h3>
+                <p data-cs="Vyzvědněte si objednávku v kavárně Na Kávu ve Smysláriu, Milovice" data-en="Pick up your order at Na Kávu café in Smyslárium, Milovice">Vyzvědněte si objednávku v kavárně Na Kávu ve Smysláriu, Milovice</p>
+            </div>
+        </div>
+
+        <!-- Bakery Section -->
+        <section id="bakery" class="product-section" data-category="bakery">
+            <h2 class="section-title"><span class="icon">🍞</span> <span data-cs="Pečivo" data-en="Bakery">Pečivo</span></h2>
+            <div class="product-grid">
+                <div class="product-card" data-name="Kváskový chléb" data-price="95" data-category="bakery">
+                    <div class="product-image bakery">🍞</div>
+                    <div class="product-info">
+                        <h3 class="product-name" data-cs="Kváskový chléb" data-en="Sourdough Bread">Kváskový chléb</h3>
+                        <p class="product-description" data-cs="Tradiční kváskový chléb z řemeslné pekárny" data-en="Traditional sourdough bread from craft bakery">Tradiční kváskový chléb z řemeslné pekárny</p>
+                        <div class="product-footer">
+                            <span class="product-price">95 Kč</span>
+                            <button class="add-to-cart" onclick="addToCart('Kváskový chléb', 95, '🍞', 'bakery')">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card" data-name="Žitný chléb" data-price="85" data-category="bakery">
+                    <div class="product-image bakery">🥖</div>
+                    <div class="product-info">
+                        <h3 class="product-name" data-cs="Žitný chléb" data-en="Rye Bread">Žitný chléb</h3>
+                        <p class="product-description" data-cs="Voňavý žitný chléb s křupavou kůrkou" data-en="Fragrant rye bread with crispy crust">Voňavý žitný chléb s křupavou kůrkou</p>
+                        <div class="product-footer">
+                            <span class="product-price">85 Kč</span>
+                            <button class="add-to-cart" onclick="addToCart('Žitný chléb', 85, '🥖', 'bakery')">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sweets Section -->
+        <section id="sweets" class="product-section" data-category="sweets">
+            <h2 class="section-title"><span class="icon">🍬</span> <span data-cs="Sladkosti" data-en="Sweets">Sladkosti</span></h2>
+            <div class="product-grid">
+                <div class="product-card" data-name="Řemeslné makronky" data-price="390" data-category="sweets">
+                    <div class="product-image sweets">🍪</div>
+                    <div class="product-info">
+                        <h3 class="product-name" data-cs="Řemeslné makronky (10 ks)" data-en="Artisan Macarons (10 pcs)">Řemeslné makronky (10 ks)</h3>
+                        <p class="product-description" data-cs="Ruční výroba, různé příchutě dle nabídky" data-en="Handmade, various flavors available">Ruční výroba, různé příchutě dle nabídky</p>
+                        <div class="product-options">
+                            <select id="macaronFlavor">
+                                <option value="mix" data-cs="Mix příchutí" data-en="Mixed flavors">Mix příchutí</option>
+                                <option value="chocolate" data-cs="Čokoláda" data-en="Chocolate">Čokoláda</option>
+                                <option value="vanilla" data-cs="Vanilka" data-en="Vanilla">Vanilka</option>
+                                <option value="pistachio" data-cs="Pistácie" data-en="Pistachio">Pistácie</option>
+                                <option value="raspberry" data-cs="Malina" data-en="Raspberry">Malina</option>
+                                <option value="caramel" data-cs="Karamel" data-en="Caramel">Karamel</option>
+                            </select>
+                        </div>
+                        <div class="product-footer">
+                            <span class="product-price">390 Kč</span>
+                            <button class="add-to-cart" onclick="addToCartWithOption('Řemeslné makronky', 390, '🍪', 'sweets', 'macaronFlavor')">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Beer Section -->
+        <section id="beer" class="product-section" data-category="beer">
+            <h2 class="section-title"><span class="icon">🍺</span> <span data-cs="Řemeslné pivo Volt" data-en="Craft Beer Volt">Řemeslné pivo Volt</span></h2>
+            <div class="product-grid">
+                <div class="product-card" data-name="Volt IPA Adaptér 11°" data-price="115" data-category="beer">
+                    <div class="product-image beer">🍺</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Volt IPA Adaptér 11°</h3>
+                        <p class="product-description" data-cs="Svrchně kvašené světlé pivo, 0,75l, 4,5%" data-en="Top-fermented light beer, 0.75l, 4.5%">Svrchně kvašené světlé pivo, 0,75l, 4,5%</p>
+                        <div class="product-footer">
+                            <span class="product-price">115 Kč</span>
+                            <button class="add-to-cart" onclick="addToCart('Volt IPA Adaptér 11°', 115, '🍺', 'beer')">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card" data-name="Volt IPA Baterka 15°" data-price="129" data-category="beer">
+                    <div class="product-image beer">🍺</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Volt IPA Baterka 15°</h3>
+                        <p class="product-description" data-cs="Silnější IPA s výrazným chmelovým aroma, 0,75l, 6,2%" data-en="Stronger IPA with pronounced hop aroma, 0.75l, 6.2%">Silnější IPA s výrazným chmelovým aroma, 0,75l, 6,2%</p>
+                        <div class="product-footer">
+                            <span class="product-price">129 Kč</span>
+                            <button class="add-to-cart" onclick="addToCart('Volt IPA Baterka 15°', 129, '🍺', 'beer')">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card" data-name="Volt APA Protinožec 12°" data-price="139" data-category="beer">
+                    <div class="product-image beer">🍻</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Volt APA Protinožec 12°</h3>
+                        <p class="product-description" data-cs="American Pale Ale, 0,75l, 5%" data-en="American Pale Ale, 0.75l, 5%">American Pale Ale, 0,75l, 5%</p>
+                        <div class="product-footer">
+                            <span class="product-price">139 Kč</span>
+                            <button class="add-to-cart" onclick="addToCart('Volt APA Protinožec 12°', 139, '🍻', 'beer')">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card" data-name="Volt Ležák Zdroj 12°" data-price="139" data-category="beer">
+                    <div class="product-image beer">🍺</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Volt Ležák Zdroj 12°</h3>
+                        <p class="product-description" data-cs="Klasický český ležák, 0,75l, 5%" data-en="Classic Czech lager, 0.75l, 5%">Klasický český ležák, 0,75l, 5%</p>
+                        <div class="product-footer">
+                            <span class="product-price">139 Kč</span>
+                            <button class="add-to-cart" onclick="addToCart('Volt Ležák Zdroj 12°', 139, '🍺', 'beer')">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card" data-name="Volt Ležák Pozitron 11°" data-price="129" data-category="beer">
+                    <div class="product-image beer">🍺</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Volt Ležák Pozitron 11°</h3>
+                        <p class="product-description" data-cs="Světlý ležák 11°, 0,75l, 4,5%" data-en="Light lager 11°, 0.75l, 4.5%">Světlý ležák 11°, 0,75l, 4,5%</p>
+                        <div class="product-footer">
+                            <span class="product-price">129 Kč</span>
+                            <button class="add-to-cart" onclick="addToCart('Volt Ležák Pozitron 11°', 129, '🍺', 'beer')">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card" data-name="Volt Kyseláč Elektrolít" data-price="165" data-category="beer">
+                    <div class="product-image beer">🍹</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Volt Kyseláč Elektrolít 9°</h3>
+                        <p class="product-description" data-cs="Ovocný kyseláč, 0,75l, různé příchutě" data-en="Fruit sour ale, 0.75l, various flavors">Ovocný kyseláč, 0,75l, různé příchutě</p>
+                        <div class="product-options">
+                            <select id="sourFlavor">
+                                <option value="malina" data-cs="Malina" data-en="Raspberry">Malina</option>
+                                <option value="visne" data-cs="Višeň" data-en="Cherry">Višeň</option>
+                                <option value="mango" data-cs="Mango" data-en="Mango">Mango</option>
+                                <option value="maracuja" data-cs="Maracuja" data-en="Passion fruit">Maracuja</option>
+                            </select>
+                        </div>
+                        <div class="product-footer">
+                            <span class="product-price">165 Kč</span>
+                            <button class="add-to-cart" onclick="addToCartWithOption('Volt Kyseláč Elektrolít', 165, '🍹', 'beer', 'sourFlavor')">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Merch Section -->
+        <section id="merch" class="product-section" data-category="merch">
+            <h2 class="section-title"><span class="icon">👕</span> <span data-cs="Merch" data-en="Merch">Merch</span></h2>
+            <div class="product-grid">
+                <div class="product-card" data-name="Tričko Divine Delivery" data-price="450" data-category="merch">
+                    <div class="product-image merch">👕</div>
+                    <div class="product-info">
+                        <h3 class="product-name" data-cs="Tričko Divine Delivery" data-en="Divine Delivery T-shirt">Tričko Divine Delivery</h3>
+                        <p class="product-description" data-cs="100% bavlna, kvalitní potisk" data-en="100% cotton, quality print">100% bavlna, kvalitní potisk</p>
+                        <div class="product-options">
+                            <select id="ddShirtType" style="margin-bottom: 0.5rem;">
+                                <option value="muzske" data-cs="Mužské" data-en="Men's">Mužské</option>
+                                <option value="zenske" data-cs="Ženské" data-en="Women's">Ženské</option>
+                            </select>
+                            <select id="ddShirtSize">
+                                <option value="XS">XS</option>
+                                <option value="S">S</option>
+                                <option value="M" selected>M</option>
+                                <option value="L">L</option>
+                            </select>
+                        </div>
+                        <div class="product-footer">
+                            <span class="product-price">450 Kč</span>
+                            <button class="add-to-cart" onclick="addToCartShirt('Tričko Divine Delivery', 450, '👕', 'merch', 'ddShirtType', 'ddShirtSize')">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card" data-name="Tričko Na Kávu" data-price="450" data-category="merch">
+                    <div class="product-image merch" style="background: linear-gradient(135deg, var(--color-sage), #6B7D63);">☕</div>
+                    <div class="product-info">
+                        <h3 class="product-name" data-cs="Tričko Na Kávu" data-en="Na Kávu T-shirt">Tričko Na Kávu</h3>
+                        <p class="product-description" data-cs="100% bavlna, kvalitní potisk" data-en="100% cotton, quality print">100% bavlna, kvalitní potisk</p>
+                        <div class="product-options">
+                            <select id="nkShirtType" style="margin-bottom: 0.5rem;">
+                                <option value="muzske" data-cs="Mužské" data-en="Men's">Mužské</option>
+                                <option value="zenske" data-cs="Ženské" data-en="Women's">Ženské</option>
+                            </select>
+                            <select id="nkShirtSize">
+                                <option value="XS">XS</option>
+                                <option value="S">S</option>
+                                <option value="M" selected>M</option>
+                                <option value="L">L</option>
+                            </select>
+                        </div>
+                        <div class="product-footer">
+                            <span class="product-price">450 Kč</span>
+                            <button class="add-to-cart" onclick="addToCartShirt('Tričko Na Kávu', 450, '☕', 'merch', 'nkShirtType', 'nkShirtSize')">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Amway Section -->
+        <section id="amway" class="product-section" data-category="amway">
+            <h2 class="section-title"><span class="icon">✨</span> <span data-cs="Amway produkty" data-en="Amway Products">Amway produkty</span></h2>
+            
+            <!-- Artistry -->
+            <h3 style="margin: 2rem 0 1rem; color: var(--color-terracotta);">Artistry™ - Krása</h3>
+            <div class="product-grid">
+                <div class="product-card" data-name="Artistry Derma-Architect Booster v gelu" data-price="685" data-category="amway">
+                    <div class="product-image amway-artistry">💄</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Artistry Derma-Architect™ Booster v gelu</h3>
+                        <p class="product-description" data-cs="Gelový booster pro péči o pleť" data-en="Gel booster for skin care">Gelový booster pro péči o pleť</p>
+                        <div class="product-footer">
+                            <span class="product-price">685 Kč</span>
+                            <button class="add-to-cart" onclick="addToCart('Artistry Derma-Architect Booster', 685, '💄', 'amway-artistry')">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- XS -->
+            <h3 style="margin: 2rem 0 1rem; color: var(--color-terracotta);">XS™ - Energie</h3>
+            <div class="product-grid">
+                <div class="product-card" data-name="XS Power Drink 12x250ml" data-price="750" data-category="amway">
+                    <div class="product-image amway-xs">⚡</div>
+                    <div class="product-info">
+                        <h3 class="product-name">XS™ Power Drink (12x250ml)</h3>
+                        <p class="product-description" data-cs="Energetický nápoj bez cukru, různé příchutě" data-en="Sugar-free energy drink, various flavors">Energetický nápoj bez cukru, různé příchutě</p>
+                        <div class="product-options">
+                            <select id="xsFlavor">
+                                <option value="wild-berry" data-cs="Lesní plody" data-en="Wild Berry">Lesní plody</option>
+                                <option value="tropical" data-cs="Tropické ovoce" data-en="Tropical">Tropické ovoce</option>
+                                <option value="orange" data-cs="Pomeranč Kumquat" data-en="Orange Kumquat">Pomeranč Kumquat</option>
+                            </select>
+                        </div>
+                        <div class="product-footer">
+                            <span class="product-price">750 Kč</span>
+                            <button class="add-to-cart" onclick="addToCartWithOption('XS Power Drink 12x250ml', 750, '⚡', 'amway-xs', 'xsFlavor')">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card" data-name="XS Pre-Workout Drink" data-price="1045" data-category="amway">
+                    <div class="product-image amway-xs">💪</div>
+                    <div class="product-info">
+                        <h3 class="product-name">XS™ Pre-Workout Drink</h3>
+                        <p class="product-description" data-cs="Nápoj před tréninkem, 15 sáčků" data-en="Pre-workout drink, 15 sticks">Nápoj před tréninkem, 15 sáčků</p>
+                        <div class="product-footer">
+                            <span class="product-price">1 045 Kč</span>
+                            <button class="add-to-cart" onclick="addToCart('XS Pre-Workout Drink', 1045, '💪', 'amway-xs')">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nutrilite -->
+            <h3 style="margin: 2rem 0 1rem; color: var(--color-terracotta);">Nutrilite™ - Výživa</h3>
+            <div class="product-grid">
+                <div class="product-card" data-name="Daily Nutrilite" data-price="1000" data-category="amway">
+                    <div class="product-image amway-nutrilite">💊</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Daily Nutrilite™</h3>
+                        <p class="product-description" data-cs="Denní multivitamin, 90 tablet" data-en="Daily multivitamin, 90 tablets">Denní multivitamin, 90 tablet</p>
+                        <div class="product-footer">
+                            <span class="product-price">1 000 Kč</span>
+                            <button class="add-to-cart" onclick="addToCart('Daily Nutrilite', 1000, '💊', 'amway-nutrilite')">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card" data-name="Chewable Multivitamin Nutrilite" data-price="840" data-category="amway">
+                    <div class="product-image amway-nutrilite">🍊</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Chewable Multivitamin Nutrilite™</h3>
+                        <p class="product-description" data-cs="Žvýkací multivitamin, pomerančová příchuť, 120 tablet" data-en="Chewable multivitamin, orange flavor, 120 tablets">Žvýkací multivitamin, pomerančová příchuť, 120 tablet</p>
+                        <div class="product-footer">
+                            <span class="product-price">840 Kč</span>
+                            <button class="add-to-cart" onclick="addToCart('Chewable Multivitamin Nutrilite', 840, '🍊', 'amway-nutrilite')">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card" data-name="Double X Nutrilite" data-price="1935" data-category="amway">
+                    <div class="product-image amway-nutrilite">🌿</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Double X™ Nutrilite™</h3>
+                        <p class="product-description" data-cs="Prémiový multivitamin s fytonutrienty, 186 tablet" data-en="Premium multivitamin with phytonutrients, 186 tablets">Prémiový multivitamin s fytonutrienty, 186 tablet</p>
+                        <div class="product-footer">
+                            <span class="product-price">1 935 Kč</span>
+                            <button class="add-to-cart" onclick="addToCart('Double X Nutrilite', 1935, '🌿', 'amway-nutrilite')">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card" data-name="All Plant Protein Nutrilite" data-price="1190" data-category="amway">
+                    <div class="product-image amway-nutrilite">🥗</div>
+                    <div class="product-info">
+                        <h3 class="product-name">All Plant Protein Nutrilite™</h3>
+                        <p class="product-description" data-cs="Rostlinný protein v prášku" data-en="Plant-based protein powder">Rostlinný protein v prášku</p>
+                        <div class="product-footer">
+                            <span class="product-price">1 190 Kč</span>
+                            <button class="add-to-cart" onclick="addToCart('All Plant Protein Nutrilite', 1190, '🥗', 'amway-nutrilite')">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card" data-name="Beauty You Glow Nutrilite" data-price="810" data-category="amway">
+                    <div class="product-image amway-nutrilite">✨</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Beauty You Glow Nutrilite™</h3>
+                        <p class="product-description" data-cs="Želé tablety pro krásu, lesní ovoce" data-en="Beauty gummy tablets, forest fruit">Želé tablety pro krásu, lesní ovoce</p>
+                        <div class="product-footer">
+                            <span class="product-price">810 Kč</span>
+                            <button class="add-to-cart" onclick="addToCart('Beauty You Glow Nutrilite', 810, '✨', 'amway-nutrilite')">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bodykey -->
+            <h3 style="margin: 2rem 0 1rem; color: var(--color-terracotta);">Bodykey by Nutrilite™ - Kontrola hmotnosti</h3>
+            <div class="product-grid">
+                <div class="product-card" data-name="Bodykey Tyčinka hořká čokoláda" data-price="1390" data-category="amway">
+                    <div class="product-image amway-bodykey">🍫</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Bodykey™ Tyčinka - hořká čokoláda</h3>
+                        <p class="product-description" data-cs="Náhrada jídla, balení 14 tyčinek" data-en="Meal replacement, pack of 14 bars">Náhrada jídla, balení 14 tyčinek</p>
+                        <div class="product-footer">
+                            <span class="product-price">1 390 Kč</span>
+                            <button class="add-to-cart" onclick="addToCart('Bodykey Tyčinka hořká čokoláda', 1390, '🍫', 'amway-bodykey')">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card" data-name="Bodykey Tyčinka tropické ovoce" data-price="1390" data-category="amway">
+                    <div class="product-image amway-bodykey">🥭</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Bodykey™ Tyčinka - tropické ovoce</h3>
+                        <p class="product-description" data-cs="Náhrada jídla, balení 14 tyčinek" data-en="Meal replacement, pack of 14 bars">Náhrada jídla, balení 14 tyčinek</p>
+                        <div class="product-footer">
+                            <span class="product-price">1 390 Kč</span>
+                            <button class="add-to-cart" onclick="addToCart('Bodykey Tyčinka tropické ovoce', 1390, '🥭', 'amway-bodykey')">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card" data-name="Bodykey Shaker" data-price="310" data-category="amway">
+                    <div class="product-image amway-bodykey">🥤</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Bodykey™ Shaker</h3>
+                        <p class="product-description" data-cs="Praktický shaker se 4 přihrádkami" data-en="Practical shaker with 4 compartments">Praktický shaker se 4 přihrádkami</p>
+                        <div class="product-footer">
+                            <span class="product-price">310 Kč</span>
+                            <button class="add-to-cart" onclick="addToCart('Bodykey Shaker', 310, '🥤', 'amway-bodykey')">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Amway Home -->
+            <h3 style="margin: 2rem 0 1rem; color: var(--color-terracotta);">Amway Home™ - Domácnost</h3>
+            <div class="product-grid">
+                <div class="product-card" data-name="L.O.C. Víceúčelový čistič 1L" data-price="295" data-category="amway">
+                    <div class="product-image amway-home">🧴</div>
+                    <div class="product-info">
+                        <h3 class="product-name">L.O.C.™ Víceúčelový čistič</h3>
+                        <p class="product-description" data-cs="Koncentrovaný ekologický čistič, 1 litr" data-en="Concentrated eco-friendly cleaner, 1 liter">Koncentrovaný ekologický čistič, 1 litr</p>
+                        <div class="product-footer">
+                            <span class="product-price">295 Kč</span>
+                            <button class="add-to-cart" onclick="addToCart('L.O.C. Víceúčelový čistič 1L', 295, '🧴', 'amway-home')">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card" data-name="L.O.C. Čistič koupelen" data-price="220" data-category="amway">
+                    <div class="product-image amway-home">🚿</div>
+                    <div class="product-info">
+                        <h3 class="product-name">L.O.C.™ Čistič koupelen</h3>
+                        <p class="product-description" data-cs="Účinný čistič pro koupelny, 500 ml" data-en="Effective bathroom cleaner, 500 ml">Účinný čistič pro koupelny, 500 ml</p>
+                        <div class="product-footer">
+                            <span class="product-price">220 Kč</span>
+                            <button class="add-to-cart" onclick="addToCart('L.O.C. Čistič koupelen', 220, '🚿', 'amway-home')">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card" data-name="L.O.C. Kuchyňský čistič" data-price="210" data-category="amway">
+                    <div class="product-image amway-home">🍳</div>
+                    <div class="product-info">
+                        <h3 class="product-name">L.O.C.™ Kuchyňský čistič</h3>
+                        <p class="product-description" data-cs="Čistič pro kuchyně, 500 ml" data-en="Kitchen cleaner, 500 ml">Čistič pro kuchyně, 500 ml</p>
+                        <div class="product-footer">
+                            <span class="product-price">210 Kč</span>
+                            <button class="add-to-cart" onclick="addToCart('L.O.C. Kuchyňský čistič', 210, '🍳', 'amway-home')">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card" data-name="Dish Drops prostředek na nádobí" data-price="315" data-category="amway">
+                    <div class="product-image amway-home">🍽️</div>
+                    <div class="product-info">
+                        <h3 class="product-name">Dish Drops™ prostředek na nádobí</h3>
+                        <p class="product-description" data-cs="Koncentrovaný prostředek na mytí nádobí" data-en="Concentrated dishwashing liquid">Koncentrovaný prostředek na mytí nádobí</p>
+                        <div class="product-footer">
+                            <span class="product-price">315 Kč</span>
+                            <button class="add-to-cart" onclick="addToCart('Dish Drops prostředek na nádobí', 315, '🍽️', 'amway-home')">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2026 NA DOHLED, z.s. | <span data-cs="Všechna práva vyhrazena" data-en="All rights reserved">Všechna práva vyhrazena</span></p>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-overlay" onclick="toggleCart()"></div>
+    <div class="cart-sidebar">
+        <div class="cart-header">
+            <h2 data-cs="Váš košík" data-en="Your cart">Váš košík</h2>
+            <button class="close-cart" onclick="toggleCart()">×</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty">
+                <div class="icon">🛒</div>
+                <p data-cs="Košík je prázdný" data-en="Cart is empty">Košík je prázdný</p>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span data-cs="Celkem:" data-en="Total:">Celkem:</span>
+                <span id="cartTotal">0 Kč</span>
+            </div>
+            <button class="checkout-btn" id="checkoutBtn" onclick="checkout()" disabled data-cs="Odeslat objednávku" data-en="Submit order">Odeslat objednávku</button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <span class="icon">✓</span>
+        <span data-cs="Přidáno do košíku" data-en="Added to cart">Přidáno do košíku</span>
+    </div>
+
+    <script>
+        let cart = [];
+        let currentLang = 'cs';
+
+        // Language Switch
+        function switchLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.toLowerCase().includes(lang));
+            });
+            
+            document.querySelectorAll('[data-cs][data-en]').forEach(el => {
+                if (el.tagName === 'OPTION') {
+                    el.textContent = el.dataset[lang];
+                } else {
+                    el.textContent = el.dataset[lang];
+                }
+            });
+            
+            updateCartDisplay();
+        }
+
+        // Category Filter
+        function filterCategory(category) {
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.product-section').forEach(section => {
+                if (category === 'all') {
+                    section.style.display = 'block';
+                } else if (category === 'amway') {
+                    section.style.display = section.dataset.category === 'amway' ? 'block' : 'none';
+                } else {
+                    section.style.display = section.dataset.category === category ? 'block' : 'none';
+                }
+            });
+        }
+
+        // Cart Functions
+        function addToCart(name, price, icon, imageClass, option = '') {
+            const item = {
+                id: Date.now(),
+                name: name,
+                price: price,
+                icon: icon,
+                imageClass: imageClass,
+                option: option,
+                quantity: 1
+            };
+            
+            // Check if item already exists
+            const existingIndex = cart.findIndex(i => i.name === name && i.option === option);
+            if (existingIndex > -1) {
+                cart[existingIndex].quantity++;
+            } else {
+                cart.push(item);
+            }
+            
+            updateCartDisplay();
+            showToast();
+        }
+
+        function addToCartWithOption(name, price, icon, imageClass, selectId) {
+            const select = document.getElementById(selectId);
+            const option = select.options[select.selectedIndex].text;
+            addToCart(name, price, icon, imageClass, option);
+        }
+
+        function addToCartShirt(name, price, icon, imageClass, typeId, sizeId) {
+            const type = document.getElementById(typeId).options[document.getElementById(typeId).selectedIndex].text;
+            const size = document.getElementById(sizeId).value;
+            const option = `${type}, ${size}`;
+            addToCart(name, price, icon, imageClass, option);
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCartDisplay();
+        }
+
+        function updateQuantity(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity <= 0) {
+                    removeFromCart(id);
+                } else {
+                    updateCartDisplay();
+                }
+            }
+        }
+
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cartItems');
+            const cartCount = document.getElementById('cartCount');
+            const cartTotal = document.getElementById('cartTotal');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            cartCount.textContent = totalItems;
+            cartTotal.textContent = totalPrice.toLocaleString('cs-CZ') + ' Kč';
+            checkoutBtn.disabled = cart.length === 0;
+
+            if (cart.length === 0) {
+                const emptyText = currentLang === 'cs' ? 'Košík je prázdný' : 'Cart is empty';
+                cartItems.innerHTML = `
+                    <div class="cart-empty">
+                        <div class="icon">🛒</div>
+                        <p>${emptyText}</p>
+                    </div>
+                `;
+            } else {
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <div class="cart-item-image ${item.imageClass}">${item.icon}</div>
+                        <div class="cart-item-details">
+                            <div class="cart-item-name">${item.name}</div>
+                            ${item.option ? `<div class="cart-item-option">${item.option}</div>` : ''}
+                            <div class="cart-item-price">${item.price.toLocaleString('cs-CZ')} Kč</div>
+                            <div class="cart-item-quantity">
+                                <button class="qty-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                                <span class="qty-value">${item.quantity}</span>
+                                <button class="qty-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                            </div>
+                        </div>
+                        <button class="remove-item" onclick="removeFromCart(${item.id})">×</button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function toggleCart() {
+            document.querySelector('.cart-overlay').classList.toggle('active');
+            document.querySelector('.cart-sidebar').classList.toggle('active');
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('active');
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 2000);
+        }
+
+        function checkout() {
+            const items = cart.map(item => {
+                let text = `${item.quantity}x ${item.name}`;
+                if (item.option) text += ` (${item.option})`;
+                text += ` - ${(item.price * item.quantity).toLocaleString('cs-CZ')} Kč`;
+                return text;
+            }).join('%0D%0A');
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            const subject = currentLang === 'cs' 
+                ? 'Nová objednávka z e-shopu Na Dohled'
+                : 'New order from Na Dohled e-shop';
+            
+            const body = currentLang === 'cs'
+                ? `Dobrý den,%0D%0A%0D%0Arád/a bych objednal/a následující produkty:%0D%0A%0D%0A${items}%0D%0A%0D%0ACelkem: ${total.toLocaleString('cs-CZ')} Kč%0D%0A%0D%0AMoje kontaktní údaje:%0D%0AJméno: %0D%0ATelefon: %0D%0AEmail: %0D%0AAdresa pro doručení / Osobní odběr: %0D%0A%0D%0ADěkuji za vyřízení objednávky.`
+                : `Hello,%0D%0A%0D%0AI would like to order the following products:%0D%0A%0D%0A${items}%0D%0A%0D%0ATotal: ${total.toLocaleString('cs-CZ')} CZK%0D%0A%0D%0AMy contact details:%0D%0AName: %0D%0APhone: %0D%0AEmail: %0D%0ADelivery address / Pickup: %0D%0A%0D%0AThank you for processing my order.`;
+
+            // Open email client with pre-filled data
+            window.location.href = `mailto:nadohledzs@gmail.com?cc=divinedeliverycz@gmail.com,nakavulysa@gmail.com&subject=${encodeURIComponent(subject)}&body=${body}`;
+        }
+
+        // Initialize
+        updateCartDisplay();
+    </script>
+</body>
+</html>
