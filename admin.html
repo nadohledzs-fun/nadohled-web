@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | NA DOHLED E-shop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .admin-header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .admin-logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .admin-nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .admin-nav a {
+            color: #888;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .admin-nav a:hover,
+        .admin-nav a.active {
+            color: #fff;
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        /* Main Layout */
+        .admin-container {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #111;
+            padding: 1.5rem;
+            border-right: 1px solid #222;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-section h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: #888;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            color: #fff;
+            background: rgba(102, 126, 234, 0.15);
+        }
+
+        .sidebar-menu a.active {
+            border-left: 3px solid #667eea;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        .page-subtitle {
+            color: #888;
+            margin-top: 0.25rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #222;
+            color: #fff;
+            border: 1px solid #333;
+        }
+
+        .btn-secondary:hover {
+            background: #333;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #222;
+        }
+
+        .stat-card h4 {
+            color: #888;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-change {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .stat-change.positive {
+            color: #28a745;
+        }
+
+        .stat-change.negative {
+            color: #dc3545;
+        }
+
+        /* Table */
+        .table-container {
+            background: #111;
+            border-radius: 12px;
+            border: 1px solid #222;
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #222;
+        }
+
+        .table-search {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .search-input {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: #fff;
+            font-family: inherit;
+            width: 250px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .filter-select {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: #fff;
+            font-family: inherit;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid #222;
+        }
+
+        th {
+            background: #0a0a0a;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .product-cell {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .product-image {
+            width: 50px;
+            height: 50px;
+            background: #1a1a1a;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .product-info h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .product-info span {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+        }
+
+        .badge-warning {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        .badge-danger {
+            background: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+        }
+
+        .stock-input {
+            width: 80px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 0.5rem;
+            color: #fff;
+            text-align: center;
+            font-family: inherit;
+        }
+
+        .stock-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .action-btn.edit {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+        }
+
+        .action-btn.edit:hover {
+            background: rgba(102, 126, 234, 0.4);
+        }
+
+        .action-btn.delete {
+            background: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+        }
+
+        .action-btn.delete:hover {
+            background: rgba(220, 53, 69, 0.4);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #111;
+            border-radius: 16px;
+            border: 1px solid #333;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid #222;
+        }
+
+        .modal-header h2 {
+            font-size: 1.25rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #ccc;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: #fff;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding: 1.5rem;
+            border-top: 1px solid #222;
+        }
+
+        /* Variants Section */
+        .variants-section {
+            background: #0a0a0a;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .variant-row {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            align-items: center;
+        }
+
+        .variant-row input {
+            flex: 1;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 0.5rem;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .variant-remove {
+            background: rgba(220, 53, 69, 0.2);
+            border: none;
+            color: #dc3545;
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .add-variant-btn {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px dashed #28a745;
+            color: #28a745;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-family: inherit;
+            margin-top: 0.5rem;
+        }
+
+        .add-variant-btn:hover {
+            background: rgba(40, 167, 69, 0.3);
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 2000;
+        }
+
+        .toast {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast.success {
+            border-left: 4px solid #28a745;
+        }
+
+        .toast.error {
+            border-left: 4px solid #dc3545;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .table-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .table-search {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            th, td {
+                padding: 0.75rem;
+                font-size: 0.85rem;
+            }
+
+            .product-image {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="admin-header">
+        <div class="admin-logo">
+            <h1>🛠️ NA DOHLED Admin</h1>
+        </div>
+        <nav class="admin-nav">
+            <a href="eshop.html">← Zpět do e-shopu</a>
+            <a href="na-dohled.html">← Hlavní web</a>
+        </nav>
+    </header>
+
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h3>Správa</h3>
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="active" data-section="products">📦 Produkty</a></li>
+                    <li><a href="#" data-section="inventory">📊 Skladové zásoby</a></li>
+                    <li><a href="#" data-section="categories">🏷️ Kategorie</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <h3>Export</h3>
+                <ul class="sidebar-menu">
+                    <li><a href="#" onclick="exportProducts()">📄 Export CSV</a></li>
+                    <li><a href="#" onclick="exportJSON()">📋 Export JSON</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4>Celkem produktů</h4>
+                    <div class="stat-value" id="total-products">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Skladem</h4>
+                    <div class="stat-value" id="in-stock">0</div>
+                    <div class="stat-change positive">Dostupné produkty</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Nízké zásoby</h4>
+                    <div class="stat-value" id="low-stock">0</div>
+                    <div class="stat-change negative">Méně než 5 ks</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Vyprodáno</h4>
+                    <div class="stat-value" id="out-of-stock">0</div>
+                    <div class="stat-change negative">0 ks skladem</div>
+                </div>
+            </div>
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Správa produktů</h1>
+                    <p class="page-subtitle">Přidávejte, upravujte a spravujte produkty v e-shopu</p>
+                </div>
+                <button class="btn btn-primary" onclick="openModal('add')">
+                    <span>➕</span> Přidat produkt
+                </button>
+            </div>
+
+            <!-- Products Table -->
+            <div class="table-container">
+                <div class="table-header">
+                    <div class="table-search">
+                        <input type="text" class="search-input" placeholder="Hledat produkty..." id="search-input" oninput="filterProducts()">
+                        <select class="filter-select" id="category-filter" onchange="filterProducts()">
+                            <option value="all">Všechny kategorie</option>
+                            <option value="bakery">Pečivo</option>
+                            <option value="sweets">Sladkosti</option>
+                            <option value="beer">Pivo</option>
+                            <option value="merch">Merch</option>
+                            <option value="amway">Amway</option>
+                        </select>
+                    </div>
+                    <div class="table-actions">
+                        <button class="btn btn-secondary btn-sm" onclick="saveAllStock()">
+                            💾 Uložit zásoby
+                        </button>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Produkt</th>
+                            <th>Kategorie</th>
+                            <th>Cena</th>
+                            <th>Skladem</th>
+                            <th>Status</th>
+                            <th>Akce</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-table">
+                        <!-- Products will be rendered here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div class="modal-overlay" id="product-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modal-title">Přidat produkt</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="product-form">
+                    <input type="hidden" id="product-id">
+                    
+                    <div class="form-group">
+                        <label>Název produktu *</label>
+                        <input type="text" id="product-name" required placeholder="Např. Kváskový chléb">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Kategorie *</label>
+                            <select id="product-category" required>
+                                <option value="">Vyberte kategorii</option>
+                                <option value="bakery">Pečivo</option>
+                                <option value="sweets">Sladkosti</option>
+                                <option value="beer">Pivo</option>
+                                <option value="merch">Merch</option>
+                                <option value="amway">Amway</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Podkategorie</label>
+                            <input type="text" id="product-subcategory" placeholder="Např. Artistry, XS...">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Cena (Kč) *</label>
+                            <input type="number" id="product-price" required min="0" placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Skladem (ks)</label>
+                            <input type="number" id="product-stock" min="0" value="0" placeholder="0">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Popis</label>
+                        <textarea id="product-description" placeholder="Krátký popis produktu..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Emoji ikona</label>
+                        <input type="text" id="product-emoji" placeholder="🍞" maxlength="4">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Varianty (volitelné)</label>
+                        <div class="variants-section" id="variants-container">
+                            <!-- Variant rows will be added here -->
+                        </div>
+                        <button type="button" class="add-variant-btn" onclick="addVariantRow()">+ Přidat variantu</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Zrušit</button>
+                <button class="btn btn-primary" onclick="saveProduct()">Uložit produkt</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" id="delete-modal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>Smazat produkt?</h2>
+                <button class="modal-close" onclick="closeDeleteModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Opravdu chcete smazat produkt <strong id="delete-product-name"></strong>?</p>
+                <p style="color: #888; margin-top: 0.5rem;">Tuto akci nelze vrátit zpět.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">Zrušit</button>
+                <button class="btn btn-danger" onclick="confirmDelete()">Smazat</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+        // Default products database
+        const defaultProducts = [
+            // Pečivo
+            { id: 1, name: 'Kváskový chléb', category: 'bakery', price: 95, stock: 20, emoji: '🍞', variants: [] },
+            { id: 2, name: 'Žitný chléb', category: 'bakery', price: 85, stock: 15, emoji: '🥖', variants: [] },
+            
+            // Sladkosti
+            { id: 3, name: 'Řemeslné makronky (10 ks)', category: 'sweets', price: 390, stock: 10, emoji: '🧁', 
+              variants: ['Vanilka', 'Čokoláda', 'Pistácie', 'Malina', 'Karamel', 'Citrón'] },
+            
+            // Pivo Volt
+            { id: 4, name: 'IPA Adaptér 0.75L', category: 'beer', price: 115, stock: 30, emoji: '🍺', variants: [] },
+            { id: 5, name: 'IPA Baterka 0.75L', category: 'beer', price: 129, stock: 25, emoji: '🍺', variants: [] },
+            { id: 6, name: 'APA Protinožec 0.75L', category: 'beer', price: 139, stock: 20, emoji: '🍺', variants: [] },
+            { id: 7, name: 'Ležák Zdroj 0.75L', category: 'beer', price: 139, stock: 35, emoji: '🍻', variants: [] },
+            { id: 8, name: 'Ležák Pozitron 0.75L', category: 'beer', price: 129, stock: 28, emoji: '🍻', variants: [] },
+            { id: 9, name: 'Kyseláč Elektrolít 0.75L', category: 'beer', price: 165, stock: 15, emoji: '🍺', 
+              variants: ['Citron', 'Grep', 'Pomeranč', 'Malina'] },
+            
+            // Merch
+            { id: 10, name: 'Tričko Divine Delivery', category: 'merch', price: 450, stock: 50, emoji: '👕', 
+              variants: ['Pánské XS', 'Pánské S', 'Pánské M', 'Pánské L', 'Dámské XS', 'Dámské S', 'Dámské M', 'Dámské L'] },
+            { id: 11, name: 'Tričko Na Kávu', category: 'merch', price: 450, stock: 45, emoji: '👕', 
+              variants: ['Pánské XS', 'Pánské S', 'Pánské M', 'Pánské L', 'Dámské XS', 'Dámské S', 'Dámské M', 'Dámské L'] },
+            
+            // Amway - Artistry
+            { id: 12, name: 'Artistry Derma-Architect Booster', category: 'amway', subcategory: 'Artistry', price: 685, stock: 8, emoji: '✨', variants: [] },
+            
+            // Amway - XS
+            { id: 13, name: 'XS Power Drink 12x250ml', category: 'amway', subcategory: 'XS', price: 750, stock: 12, emoji: '⚡', variants: [] },
+            { id: 14, name: 'XS Pre-Workout', category: 'amway', subcategory: 'XS', price: 1045, stock: 6, emoji: '💪', variants: [] },
+            
+            // Amway - Nutrilite
+            { id: 15, name: 'Nutrilite Daily', category: 'amway', subcategory: 'Nutrilite', price: 1000, stock: 10, emoji: '💊', variants: [] },
+            { id: 16, name: 'Nutrilite Chewable Multivitamin', category: 'amway', subcategory: 'Nutrilite', price: 840, stock: 8, emoji: '🍬', variants: [] },
+            { id: 17, name: 'Nutrilite Double X', category: 'amway', subcategory: 'Nutrilite', price: 1935, stock: 5, emoji: '💊', variants: [] },
+            { id: 18, name: 'Nutrilite All Plant Protein', category: 'amway', subcategory: 'Nutrilite', price: 1190, stock: 7, emoji: '🥛', variants: [] },
+            { id: 19, name: 'Nutrilite Beauty You Glow', category: 'amway', subcategory: 'Nutrilite', price: 810, stock: 9, emoji: '✨', variants: [] },
+            
+            // Amway - Bodykey
+            { id: 20, name: 'Bodykey Tyčinky', category: 'amway', subcategory: 'Bodykey', price: 1390, stock: 6, emoji: '🍫', variants: [] },
+            { id: 21, name: 'Bodykey Shaker', category: 'amway', subcategory: 'Bodykey', price: 310, stock: 15, emoji: '🥤', variants: [] },
+            
+            // Amway - Home
+            { id: 22, name: 'L.O.C. Čistič na podlahy', category: 'amway', subcategory: 'Amway Home', price: 315, stock: 12, emoji: '🧹', variants: [] },
+            { id: 23, name: 'L.O.C. Čistič koupelen', category: 'amway', subcategory: 'Amway Home', price: 265, stock: 10, emoji: '🚿', variants: [] },
+            { id: 24, name: 'L.O.C. Univerzální čistič', category: 'amway', subcategory: 'Amway Home', price: 210, stock: 14, emoji: '🧴', variants: [] },
+            { id: 25, name: 'Dish Drops Prostředek na nádobí', category: 'amway', subcategory: 'Amway Home', price: 315, stock: 20, emoji: '🍽️', variants: [] },
+        ];
+
+        // Category names
+        const categoryNames = {
+            bakery: 'Pečivo',
+            sweets: 'Sladkosti',
+            beer: 'Pivo',
+            merch: 'Merch',
+            amway: 'Amway'
+        };
+
+        // Load products from localStorage or use defaults
+        let products = JSON.parse(localStorage.getItem('nadohled_products')) || [...defaultProducts];
+        let deleteProductId = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+            updateStats();
+        });
+
+        // Render products table
+        function renderProducts() {
+            const tbody = document.getElementById('products-table');
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const categoryFilter = document.getElementById('category-filter').value;
+
+            let filtered = products.filter(p => {
+                const matchesSearch = p.name.toLowerCase().includes(searchTerm) || 
+                                     (p.subcategory && p.subcategory.toLowerCase().includes(searchTerm));
+                const matchesCategory = categoryFilter === 'all' || p.category === categoryFilter;
+                return matchesSearch && matchesCategory;
+            });
+
+            tbody.innerHTML = filtered.map(product => `
+                <tr data-id="${product.id}">
+                    <td>
+                        <div class="product-cell">
+                            <div class="product-image">${product.emoji || '📦'}</div>
+                            <div class="product-info">
+                                <h4>${product.name}</h4>
+                                <span>${product.subcategory || ''}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${categoryNames[product.category] || product.category}</td>
+                    <td><strong>${product.price} Kč</strong></td>
+                    <td>
+                        <input type="number" class="stock-input" value="${product.stock}" 
+                               min="0" onchange="updateStock(${product.id}, this.value)">
+                    </td>
+                    <td>${getStockBadge(product.stock)}</td>
+                    <td>
+                        <div class="actions">
+                            <button class="action-btn edit" onclick="openModal('edit', ${product.id})" title="Upravit">
+                                ✏️
+                            </button>
+                            <button class="action-btn delete" onclick="openDeleteModal(${product.id})" title="Smazat">
+                                🗑️
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Get stock status badge
+        function getStockBadge(stock) {
+            if (stock === 0) {
+                return '<span class="badge badge-danger">Vyprodáno</span>';
+            } else if (stock < 5) {
+                return '<span class="badge badge-warning">Nízké zásoby</span>';
+            }
+            return '<span class="badge badge-success">Skladem</span>';
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('total-products').textContent = products.length;
+            document.getElementById('in-stock').textContent = products.filter(p => p.stock > 0).length;
+            document.getElementById('low-stock').textContent = products.filter(p => p.stock > 0 && p.stock < 5).length;
+            document.getElementById('out-of-stock').textContent = products.filter(p => p.stock === 0).length;
+        }
+
+        // Filter products
+        function filterProducts() {
+            renderProducts();
+        }
+
+        // Update stock inline
+        function updateStock(productId, value) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                product.stock = parseInt(value) || 0;
+                saveProducts();
+                renderProducts();
+                updateStats();
+            }
+        }
+
+        // Save all stock changes
+        function saveAllStock() {
+            saveProducts();
+            showToast('Skladové zásoby byly uloženy!', 'success');
+        }
+
+        // Save products to localStorage
+        function saveProducts() {
+            localStorage.setItem('nadohled_products', JSON.stringify(products));
+        }
+
+        // Open modal
+        function openModal(mode, productId = null) {
+            const modal = document.getElementById('product-modal');
+            const title = document.getElementById('modal-title');
+            const form = document.getElementById('product-form');
+            
+            form.reset();
+            document.getElementById('variants-container').innerHTML = '';
+
+            if (mode === 'edit' && productId) {
+                const product = products.find(p => p.id === productId);
+                if (product) {
+                    title.textContent = 'Upravit produkt';
+                    document.getElementById('product-id').value = product.id;
+                    document.getElementById('product-name').value = product.name;
+                    document.getElementById('product-category').value = product.category;
+                    document.getElementById('product-subcategory').value = product.subcategory || '';
+                    document.getElementById('product-price').value = product.price;
+                    document.getElementById('product-stock').value = product.stock;
+                    document.getElementById('product-description').value = product.description || '';
+                    document.getElementById('product-emoji').value = product.emoji || '';
+                    
+                    // Load variants
+                    if (product.variants && product.variants.length > 0) {
+                        product.variants.forEach(v => addVariantRow(v));
+                    }
+                }
+            } else {
+                title.textContent = 'Přidat produkt';
+                document.getElementById('product-id').value = '';
+            }
+
+            modal.classList.add('active');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('product-modal').classList.remove('active');
+        }
+
+        // Add variant row
+        function addVariantRow(value = '') {
+            const container = document.getElementById('variants-container');
+            const row = document.createElement('div');
+            row.className = 'variant-row';
+            row.innerHTML = `
+                <input type="text" class="variant-input" value="${value}" placeholder="Např. Vanilka, Pánské M...">
+                <button type="button" class="variant-remove" onclick="this.parentElement.remove()">✕</button>
+            `;
+            container.appendChild(row);
+        }
+
+        // Save product
+        function saveProduct() {
+            const id = document.getElementById('product-id').value;
+            const name = document.getElementById('product-name').value.trim();
+            const category = document.getElementById('product-category').value;
+            const subcategory = document.getElementById('product-subcategory').value.trim();
+            const price = parseInt(document.getElementById('product-price').value) || 0;
+            const stock = parseInt(document.getElementById('product-stock').value) || 0;
+            const description = document.getElementById('product-description').value.trim();
+            const emoji = document.getElementById('product-emoji').value.trim();
+
+            if (!name || !category || price <= 0) {
+                showToast('Vyplňte všechna povinná pole!', 'error');
+                return;
+            }
+
+            // Get variants
+            const variantInputs = document.querySelectorAll('.variant-input');
+            const variants = Array.from(variantInputs)
+                .map(input => input.value.trim())
+                .filter(v => v.length > 0);
+
+            if (id) {
+                // Update existing product
+                const index = products.findIndex(p => p.id === parseInt(id));
+                if (index !== -1) {
+                    products[index] = {
+                        ...products[index],
+                        name, category, subcategory, price, stock, description, emoji, variants
+                    };
+                    showToast('Produkt byl aktualizován!', 'success');
+                }
+            } else {
+                // Add new product
+                const newId = Math.max(...products.map(p => p.id), 0) + 1;
+                products.push({
+                    id: newId, name, category, subcategory, price, stock, description, emoji, variants
+                });
+                showToast('Produkt byl přidán!', 'success');
+            }
+
+            saveProducts();
+            renderProducts();
+            updateStats();
+            closeModal();
+        }
+
+        // Open delete modal
+        function openDeleteModal(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                deleteProductId = productId;
+                document.getElementById('delete-product-name').textContent = product.name;
+                document.getElementById('delete-modal').classList.add('active');
+            }
+        }
+
+        // Close delete modal
+        function closeDeleteModal() {
+            document.getElementById('delete-modal').classList.remove('active');
+            deleteProductId = null;
+        }
+
+        // Confirm delete
+        function confirmDelete() {
+            if (deleteProductId) {
+                products = products.filter(p => p.id !== deleteProductId);
+                saveProducts();
+                renderProducts();
+                updateStats();
+                showToast('Produkt byl smazán!', 'success');
+                closeDeleteModal();
+            }
+        }
+
+        // Export to CSV
+        function exportProducts() {
+            const headers = ['ID', 'Název', 'Kategorie', 'Podkategorie', 'Cena', 'Skladem', 'Varianty'];
+            const rows = products.map(p => [
+                p.id,
+                p.name,
+                categoryNames[p.category] || p.category,
+                p.subcategory || '',
+                p.price,
+                p.stock,
+                (p.variants || []).join('; ')
+            ]);
+
+            let csv = headers.join(',') + '\n';
+            rows.forEach(row => {
+                csv += row.map(cell => `"${cell}"`).join(',') + '\n';
+            });
+
+            downloadFile(csv, 'nadohled-products.csv', 'text/csv');
+            showToast('CSV soubor byl stažen!', 'success');
+        }
+
+        // Export to JSON
+        function exportJSON() {
+            const json = JSON.stringify(products, null, 2);
+            downloadFile(json, 'nadohled-products.json', 'application/json');
+            showToast('JSON soubor byl stažen!', 'success');
+        }
+
+        // Download file helper
+        function downloadFile(content, filename, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <span>${type === 'success' ? '✅' : '❌'}</span>
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Reset to defaults
+        function resetToDefaults() {
+            if (confirm('Opravdu chcete obnovit výchozí produkty? Všechny změny budou ztraceny.')) {
+                products = [...defaultProducts];
+                saveProducts();
+                renderProducts();
+                updateStats();
+                showToast('Produkty byly obnoveny na výchozí!', 'success');
+            }
+        }
+    </script>
+</body>
+</html>

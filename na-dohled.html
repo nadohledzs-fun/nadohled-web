@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NA DOHLED | Projekty s přesahem</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-cream: #F5F0E8;
+            --color-sage: #8B9D83;
+            --color-sage-dark: #6B7D63;
+            --color-terracotta: #C4846C;
+            --color-terracotta-dark: #A66B52;
+            --color-charcoal: #2D2D2D;
+            --color-warm-white: #FDFBF7;
+            --color-gold: #D4A574;
+            --font-display: 'Quicksand', sans-serif;
+            --font-body: 'Quicksand', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-cream);
+            color: var(--color-charcoal);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Noise texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Language Switcher */
+        .lang-switcher {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            margin-left: 1.5rem;
+        }
+
+        .lang-switcher:hover {
+            transform: scale(1.1);
+        }
+
+        .lang-switcher svg {
+            width: 32px;
+            height: 22px;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: linear-gradient(to bottom, rgba(245, 240, 232, 0.98), rgba(245, 240, 232, 0));
+            transition: all 0.4s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(245, 240, 232, 0.98);
+            box-shadow: 0 2px 30px rgba(0, 0, 0, 0.06);
+            padding: 1rem 3rem;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-charcoal);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+        }
+
+        .logo span {
+            color: var(--color-terracotta);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--color-charcoal);
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--color-terracotta);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a.nav-eshop {
+            background: var(--color-terracotta);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a.nav-eshop::after {
+            display: none;
+        }
+
+        .nav-links a.nav-eshop:hover {
+            background: #A66B52;
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 6rem 2rem;
+            position: relative;
+            background: var(--color-cream);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 80%, rgba(139, 157, 131, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(196, 132, 108, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(212, 165, 116, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: rgba(139, 157, 131, 0.15);
+            border: 1px solid rgba(139, 157, 131, 0.3);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-sage-dark);
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .hero h1 span {
+            display: block;
+            background: linear-gradient(135deg, var(--color-terracotta), var(--color-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.35rem;
+            color: rgba(45, 45, 45, 0.75);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            font-weight: 300;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--color-terracotta);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-terracotta-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(196, 132, 108, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-charcoal);
+            border: 2px solid rgba(45, 45, 45, 0.2);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--color-charcoal);
+            background: rgba(45, 45, 45, 0.05);
+        }
+
+        .btn-eshop {
+            background: linear-gradient(135deg, var(--color-sage), #6B7D63);
+            color: white;
+            animation: pulse 2s infinite;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-eshop:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 157, 131, 0.4);
+            background: linear-gradient(135deg, #6B7D63, #5A6C53);
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(139, 157, 131, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(139, 157, 131, 0); }
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator svg {
+            width: 30px;
+            height: 30px;
+            stroke: var(--color-sage);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* About Section */
+        .about {
+            padding: 8rem 2rem;
+            background: var(--color-warm-white);
+            position: relative;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-sage);
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-description {
+            font-size: 1.15rem;
+            color: rgba(45, 45, 45, 0.7);
+            max-width: 700px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .about-card {
+            background: var(--color-cream);
+            padding: 2.5rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .about-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+        }
+
+        .about-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--color-sage), var(--color-sage-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .about-icon svg {
+            width: 32px;
+            height: 32px;
+            stroke: white;
+        }
+
+        .about-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .about-card p {
+            color: rgba(45, 45, 45, 0.7);
+            font-size: 0.95rem;
+        }
+
+        /* Projects Section */
+        .projects {
+            padding: 8rem 2rem;
+            background: var(--color-cream);
+        }
+
+        .project-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 8rem;
+        }
+
+        .project-card:nth-child(even) {
+            direction: rtl;
+        }
+
+        .project-card:nth-child(even) > * {
+            direction: ltr;
+        }
+
+        .project-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .project-image {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            background: linear-gradient(135deg, var(--color-sage), var(--color-terracotta));
+        }
+
+        .project-image::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: inherit;
+            opacity: 0.9;
+        }
+
+        .project-image-inner {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            color: white;
+            text-align: center;
+        }
+
+        .project-image-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-image-text {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .project-logo-svg {
+            width: 100%;
+            height: 100%;
+            max-width: 280px;
+            max-height: 180px;
+        }
+
+        .project-logo-img {
+            max-width: 100%;
+            max-height: 180px;
+            object-fit: contain;
+        }
+
+        /* Logo backgrounds - white/light for better contrast */
+        .nakavu-logo,
+        .smyslarium-logo,
+        .divine-logo {
+            background: rgba(255, 255, 255, 0.95) !important;
+            border-radius: 15px;
+            padding: 1rem;
+        }
+
+        .project-nakavu .project-image {
+            background: linear-gradient(135deg, #8B9D83 0%, #6B7D63 50%, #4A5D43 100%);
+        }
+
+        .project-divine .project-image {
+            background: linear-gradient(135deg, #D4A574 0%, #C4846C 50%, #A66B52 100%);
+        }
+
+        .project-smyslarium .project-image {
+            background: linear-gradient(135deg, #9B8BA0 0%, #7B6B80 50%, #5B4B60 100%);
+        }
+
+        .project-content {
+            padding: 2rem;
+        }
+
+        .project-badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: rgba(139, 157, 131, 0.15);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--color-sage-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .project-content h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .project-content .subtitle {
+            font-size: 1.1rem;
+            color: var(--color-terracotta);
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+
+        .project-content p {
+            color: rgba(45, 45, 45, 0.75);
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+
+        .project-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-tag {
+            padding: 0.5rem 1rem;
+            background: rgba(45, 45, 45, 0.05);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--color-charcoal);
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            background: var(--color-terracotta);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .project-link:hover {
+            background: var(--color-terracotta-dark);
+            gap: 1rem;
+            transform: translateX(5px);
+        }
+
+        .project-link svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 8rem 2rem;
+            background: var(--color-charcoal);
+            color: white;
+            text-align: center;
+        }
+
+        .contact .section-label {
+            color: var(--color-gold);
+        }
+
+        .contact .section-title {
+            color: white;
+        }
+
+        .contact .section-description {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 4rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-item {
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .contact-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .contact-item svg {
+            width: 40px;
+            height: 40px;
+            stroke: var(--color-gold);
+            margin-bottom: 1rem;
+        }
+
+        .contact-item h4 {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-item p, .contact-item a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .contact-item a:hover {
+            color: var(--color-gold);
+        }
+
+        footer {
+            padding: 3rem 2rem;
+            background: #1a1a1a;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        footer .logo {
+            color: white;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        footer p {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Locations Section */
+        .locations {
+            padding: 8rem 2rem;
+            background: var(--color-warm-white);
+        }
+
+        .locations-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .location-card {
+            background: var(--color-cream);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .location-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+
+        .location-info {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .location-info h3 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--color-charcoal);
+        }
+
+        .location-address {
+            font-size: 1.1rem;
+            color: var(--color-terracotta);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .location-note {
+            font-size: 0.9rem;
+            color: rgba(45, 45, 45, 0.6);
+            font-weight: 400;
+        }
+
+        .location-map {
+            width: 100%;
+            height: 250px;
+        }
+
+        .location-map iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 0 0 24px 24px;
+        }
+
+        @media (max-width: 768px) {
+            .locations-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu-btn svg {
+            width: 28px;
+            height: 28px;
+            stroke: var(--color-charcoal);
+        }
+
+        @media (max-width: 968px) {
+            .about-grid,
+            .contact-grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .project-card {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .project-card:nth-child(even) {
+                direction: ltr;
+            }
+
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--color-cream);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.5rem;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                margin-right: 0;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .lang-switcher {
+                margin-left: 0;
+                margin-right: 0.5rem;
+            }
+
+            .lang-switcher svg {
+                width: 28px;
+                height: 19px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 280px;
+                text-align: center;
+            }
+        }
+
+        /* Floating E-shop Button */
+        .floating-eshop {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, var(--color-sage), #6B7D63);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 5px 25px rgba(139, 157, 131, 0.5);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            animation: floatPulse 2s infinite;
+        }
+
+        .floating-eshop:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 35px rgba(139, 157, 131, 0.6);
+        }
+
+        @keyframes floatPulse {
+            0%, 100% { box-shadow: 0 5px 25px rgba(139, 157, 131, 0.5); }
+            50% { box-shadow: 0 5px 35px rgba(139, 157, 131, 0.8); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <a href="#" class="logo">NA <span>DOHLED</span></a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#o-nas" data-cs="O nás" data-en="About">O nás</a></li>
+            <li><a href="#projekty" data-cs="Projekty" data-en="Projects">Projekty</a></li>
+            <li><a href="#kde-nas-najdete" data-cs="Kde nás najdete" data-en="Locations">Kde nás najdete</a></li>
+            <li><a href="#kontakt" data-cs="Kontakt" data-en="Contact">Kontakt</a></li>
+            <li><a href="eshop.html" class="nav-eshop" data-cs="🛒 E-shop" data-en="🛒 E-shop">🛒 E-shop</a></li>
+        </ul>
+        <div class="nav-right">
+            <!-- Language Switcher -->
+            <div class="lang-switcher" id="langSwitcher" title="Switch to English">
+                <svg id="flagEN" viewBox="0 0 60 30" style="display: block;">
+                    <clipPath id="s"><path d="M0,0 v30 h60 v-30 z"/></clipPath>
+                    <clipPath id="t"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>
+                    <g clip-path="url(#s)">
+                        <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
+                        <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
+                        <path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#t)" stroke="#C8102E" stroke-width="4"/>
+                        <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
+                        <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
+                    </g>
+                </svg>
+                <svg id="flagCZ" viewBox="0 0 6 4" style="display: none;">
+                    <rect width="6" height="4" fill="#d7141a"/>
+                    <rect width="6" height="2" fill="#fff"/>
+                    <polygon points="0,0 0,4 3,2" fill="#11457e"/>
+                </svg>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge" data-cs="Nezisková organizace" data-en="Non-profit organization">Nezisková organizace</div>
+            <h1>
+                <span data-cs="Projekty" data-en="Projects">Projekty</span>
+                <span data-cs="s přesahem" data-en="with purpose">s přesahem</span>
+            </h1>
+            <p class="hero-subtitle" data-cs="Spojujeme komunitu, podporujeme rodiny a vytváříme místa, kde se lidé cítí jako doma. Každý náš projekt má hlubší smysl." data-en="We connect communities, support families, and create places where people feel at home. Every project we run has a deeper purpose.">
+                Spojujeme komunitu, podporujeme rodiny a vytváříme místa, kde se lidé cítí jako doma. Každý náš projekt má hlubší smysl.
+            </p>
+            <div class="hero-cta">
+                <a href="#projekty" class="btn btn-primary" data-cs="Objevte naše projekty" data-en="Discover our projects">Objevte naše projekty</a>
+                <a href="#kontakt" class="btn btn-secondary" data-cs="Spojte se s námi" data-en="Get in touch">Spojte se s námi</a>
+                <a href="eshop.html" class="btn btn-eshop" data-cs="🛒 Navštívit E-shop" data-en="🛒 Visit E-shop">🛒 Navštívit E-shop</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+            </svg>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="o-nas">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label" data-cs="O nás" data-en="About us">O nás</div>
+                <h2 class="section-title" data-cs="Tvoříme místa pro setkávání" data-en="We create spaces for connection">Tvoříme místa pro setkávání</h2>
+                <p class="section-description" data-cs="Jsme tým nadšenců, kteří věří, že komunita je základ všeho. Naše projekty vznikají z lásky k lidem a touhy přinášet radost do každodenního života." data-en="We are a team of enthusiasts who believe that community is the foundation of everything. Our projects are born from a love for people and a desire to bring joy to everyday life.">
+                    Jsme tým nadšenců, kteří věří, že komunita je základ všeho. Naše projekty vznikají z lásky k lidem a touhy přinášet radost do každodenního života.
+                </p>
+            </div>
+            <div class="about-grid">
+                <div class="about-card">
+                    <div class="about-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                        </svg>
+                    </div>
+                    <h3 data-cs="Komunita" data-en="Community">Komunita</h3>
+                    <p data-cs="Budujeme prostory, kde se lidé setkávají, sdílejí a společně rostou." data-en="We build spaces where people meet, share, and grow together.">Budujeme prostory, kde se lidé setkávají, sdílejí a společně rostou.</p>
+                </div>
+                <div class="about-card">
+                    <div class="about-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                        </svg>
+                    </div>
+                    <h3 data-cs="Přesah" data-en="Purpose">Přesah</h3>
+                    <p data-cs="Každý náš projekt má hlubší smysl – pomáháme tam, kde je to potřeba." data-en="Every project has a deeper meaning – we help where it's needed most.">Každý náš projekt má hlubší smysl – pomáháme tam, kde je to potřeba.</p>
+                </div>
+                <div class="about-card">
+                    <div class="about-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
+                        </svg>
+                    </div>
+                    <h3 data-cs="Radost" data-en="Joy">Radost</h3>
+                    <p data-cs="Věříme, že malé věci dělají velké rozdíly – úsměv, dobrá káva, teplé jídlo." data-en="We believe small things make big differences – a smile, good coffee, warm food.">Věříme, že malé věci dělají velké rozdíly – úsměv, dobrá káva, teplé jídlo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="projects" id="projekty">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label" data-cs="Naše projekty" data-en="Our projects">Naše projekty</div>
+                <h2 class="section-title" data-cs="Tři pilíře Na Dohled" data-en="Three pillars of Na Dohled">Tři pilíře Na Dohled</h2>
+                <p class="section-description" data-cs="Každý projekt je unikátní, ale všechny spojuje společný cíl – být tu pro vás a vytvářet smysluplné zážitky." data-en="Each project is unique, but they all share a common goal – to be here for you and create meaningful experiences.">
+                    Každý projekt je unikátní, ale všechny spojuje společný cíl – být tu pro vás a vytvářet smysluplné zážitky.
+                </p>
+            </div>
+
+            <!-- Na Kávu -->
+            <div class="project-card project-nakavu">
+                <div class="project-image">
+                    <div class="project-image-inner nakavu-logo">
+                        <img src="logo-nakavu.png" alt="na Kávu logo" class="project-logo-img">
+                    </div>
+                </div>
+                <div class="project-content">
+                    <div class="project-badge" data-cs="Kavárna" data-en="Café">Kavárna</div>
+                    <h2>Na Kávu</h2>
+                    <p class="subtitle" data-cs="Kavárna s přesahem" data-en="A café with purpose">Kavárna s přesahem</p>
+                    <p data-cs="Kavárna Na Kávu vznikla z lásky k dobré kávě, květinám a řemeslným výrobkům. Nabízíme výběrovou kávu z českých pražíren DAK Coffee Roasters a Chroasta, čerstvé pečivo z řemeslných pekáren a domácí dobroty." data-en="Na Kávu café was born from a love of good coffee, flowers, and artisan products. We offer specialty coffee from Czech roasters DAK Coffee Roasters and Chroasta, fresh pastries from craft bakeries, and homemade treats.">
+                        Kavárna Na Kávu vznikla z lásky k dobré kávě, květinám a řemeslným výrobkům. Nabízíme výběrovou kávu z českých pražíren DAK Coffee Roasters a Chroasta, čerstvé pečivo z řemeslných pekáren a domácí dobroty.
+                    </p>
+                    <p data-cs="Najdete nás ve Smysláriu v Milovicích a přes sezónu také v komunitním gastrokontejneru v parku Čechovka v Lysé nad Labem, kde připravujeme tematické programy pro děti a celé rodiny." data-en="You can find us at Smyslárium in Milovice and during the season also in a community gastro-container in Čechovka park in Lysá nad Labem, where we organize themed programs for children and families.">
+                        Najdete nás ve Smysláriu v Milovicích a přes sezónu také v komunitním gastrokontejneru v parku Čechovka v Lysé nad Labem, kde připravujeme tematické programy pro děti a celé rodiny.
+                    </p>
+                    <div class="project-features">
+                        <span class="feature-tag" data-cs="Výběrová káva" data-en="Specialty coffee">Výběrová káva</span>
+                        <span class="feature-tag" data-cs="Řemeslné pečivo" data-en="Craft pastries">Řemeslné pečivo</span>
+                        <span class="feature-tag" data-cs="Program pro děti" data-en="Kids programs">Program pro děti</span>
+                        <span class="feature-tag" data-cs="Květiny & doplňky" data-en="Flowers & gifts">Květiny & doplňky</span>
+                    </div>
+                    <a href="nakavu.html" class="project-link">
+                        <span data-cs="Více o Na Kávu" data-en="More about Na Kávu">Více o Na Kávu</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Divine Delivery -->
+            <div class="project-card project-divine">
+                <div class="project-image">
+                    <div class="project-image-inner divine-logo">
+                        <img src="logo-divine.png" alt="Divine Delivery logo" class="project-logo-img">
+                    </div>
+                </div>
+                <div class="project-content">
+                    <div class="project-badge" data-cs="Rozvoz" data-en="Delivery">Rozvoz</div>
+                    <h2>Divine Delivery</h2>
+                    <p class="subtitle" data-cs="Božský rozvoz teplého jídla" data-en="Divine hot food delivery">Božský rozvoz teplého jídla</p>
+                    <p data-cs="Nejsme obyčejný rozvoz. Divine Delivery dbá na doručení opravdu teplého jídla včas – proto používáme speciální vyhřívané boxy. Věříme, že každé jídlo si zaslouží dorazit v perfektní kondici." data-en="We're not your ordinary delivery service. Divine Delivery ensures truly hot food arrives on time – that's why we use special heated boxes. We believe every meal deserves to arrive in perfect condition.">
+                        Nejsme obyčejný rozvoz. Divine Delivery dbá na doručení opravdu teplého jídla včas – proto používáme speciální vyhřívané boxy. Věříme, že každé jídlo si zaslouží dorazit v perfektní kondici.
+                    </p>
+                    <p data-cs="Působíme na Nymbursku, Mladoboleslavsku a Praze-východ. Rozvážíme z vybraných restaurací včetně sushi a dalších specialit. S námi je to rychlé – skoro jako zjevení!" data-en="We operate in the Nymburk, Mladá Boleslav, and Prague-East regions. We deliver from selected restaurants including sushi and other specialties. With us, it's fast – almost like a revelation!">
+                        Působíme na Nymbursku, Mladoboleslavsku a Praze-východ. Rozvážíme z vybraných restaurací včetně sushi a dalších specialit. S námi je to rychlé – skoro jako zjevení!
+                    </p>
+                    <div class="project-features">
+                        <span class="feature-tag" data-cs="Vyhřívané boxy" data-en="Heated boxes">Vyhřívané boxy</span>
+                        <span class="feature-tag" data-cs="Nymbursko" data-en="Nymburk region">Nymbursko</span>
+                        <span class="feature-tag" data-cs="Mladoboleslavsko" data-en="Mladá Boleslav region">Mladoboleslavsko</span>
+                        <span class="feature-tag" data-cs="Praha-východ" data-en="Prague-East">Praha-východ</span>
+                    </div>
+                    <a href="divine-delivery.html" class="project-link">
+                        <span data-cs="Více o Divine Delivery" data-en="More about Divine Delivery">Více o Divine Delivery</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Smyslárium -->
+            <div class="project-card project-smyslarium">
+                <div class="project-image">
+                    <div class="project-image-inner smyslarium-logo">
+                        <img src="logo-smyslarium.png" alt="Smyslárium logo" class="project-logo-img">
+                    </div>
+                </div>
+                <div class="project-content">
+                    <div class="project-badge" data-cs="Herna & Kavárna" data-en="Playroom & Café">Herna & Kavárna</div>
+                    <h2>Smyslárium</h2>
+                    <p class="subtitle" data-cs="Sensory-play hernička s kavárnou v Milovicích" data-en="Sensory-play room with café in Milovice">Sensory-play hernička s kavárnou v Milovicích</p>
+                    <p data-cs="Smyslárium je jedinečné místo, kde děti mohou poznávat svět a rozvíjet své smysly prostřednictvím sensory-play aktivit. Zatímco si děti hrají a objevují, rodiče si mohou vychutnat výbornou kávu v klidu." data-en="Smyslárium is a unique place where children can explore the world and develop their senses through sensory-play activities. While the kids play and discover, parents can enjoy excellent coffee in peace.">
+                        Smyslárium je jedinečné místo, kde děti mohou poznávat svět a rozvíjet své smysly prostřednictvím sensory-play aktivit. Zatímco si děti hrají a objevují, rodiče si mohou vychutnat výbornou kávu v klidu.
+                    </p>
+                    <p data-cs="Sensory play je forma hry zaměřená na stimulaci všech pěti smyslů – děti si hrají s různými materiály a texturami, což podporuje jejich kreativitu, jemnou motoriku i kognitivní rozvoj." data-en="Sensory play is a form of play focused on stimulating all five senses – children play with various materials and textures, which supports their creativity, fine motor skills, and cognitive development.">
+                        Sensory play je forma hry zaměřená na stimulaci všech pěti smyslů – děti si hrají s různými materiály a texturami, což podporuje jejich kreativitu, jemnou motoriku i kognitivní rozvoj.
+                    </p>
+                    <div class="project-features">
+                        <span class="feature-tag">Sensory play</span>
+                        <span class="feature-tag" data-cs="Rozvoj smyslů" data-en="Sensory development">Rozvoj smyslů</span>
+                        <span class="feature-tag" data-cs="Kavárna pro rodiče" data-en="Café for parents">Kavárna pro rodiče</span>
+                        <span class="feature-tag">Milovice</span>
+                    </div>
+                    <a href="smyslarium.html" class="project-link">
+                        <span data-cs="Více o Smysláriu" data-en="More about Smyslárium">Více o Smysláriu</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Locations Section -->
+    <section class="locations" id="kde-nas-najdete">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label" data-cs="Kde nás najdete" data-en="Where to find us">Kde nás najdete</div>
+                <h2 class="section-title" data-cs="Navštivte nás" data-en="Visit us">Navštivte nás</h2>
+                <p class="section-description" data-cs="Těšíme se na vás na našich pobočkách v Milovicích a v Lysé nad Labem." data-en="We look forward to seeing you at our locations in Milovice and Lysá nad Labem.">
+                    Těšíme se na vás na našich pobočkách v Milovicích a v Lysé nad Labem.
+                </p>
+            </div>
+            <div class="locations-grid">
+                <div class="location-card">
+                    <div class="location-info">
+                        <h3 data-cs="Smyslárium & Na Kávu" data-en="Smyslárium & Na Kávu">Smyslárium & Na Kávu</h3>
+                        <p class="location-address">Višňová 510, Milovice</p>
+                        <p class="location-note" data-cs="Celoroční provoz" data-en="Year-round operation">Celoroční provoz</p>
+                    </div>
+                    <div class="location-map">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2553.8!2d14.8869!3d50.2261!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470c0a1f0c5a5555%3A0x0!2sVi%C5%A1%C5%88ov%C3%A1%20510%2C%20Milovice!5e0!3m2!1scs!2scz!4v1699999999999!5m2!1scs!2scz"
+                            width="100%" 
+                            height="250" 
+                            style="border:0; border-radius: 16px;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+                <div class="location-card">
+                    <div class="location-info">
+                        <h3 data-cs="Park Čechovka" data-en="Čechovka Park">Park Čechovka</h3>
+                        <p class="location-address">Čechova 218, Lysá nad Labem</p>
+                        <p class="location-note" data-cs="Sezónní provoz (jaro–podzim)" data-en="Seasonal operation (spring–autumn)">Sezónní provoz (jaro–podzim)</p>
+                    </div>
+                    <div class="location-map">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2553.5!2d14.8333!3d50.2019!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470c0a5a5a5a5a5a%3A0x0!2s%C4%8Cechova%20218%2C%20Lys%C3%A1%20nad%20Labem!5e0!3m2!1scs!2scz!4v1699999999999!5m2!1scs!2scz"
+                            width="100%" 
+                            height="250" 
+                            style="border:0; border-radius: 16px;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="kontakt">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label" data-cs="Kontakt" data-en="Contact">Kontakt</div>
+                <h2 class="section-title" data-cs="Spojte se s námi" data-en="Get in touch">Spojte se s námi</h2>
+                <p class="section-description" data-cs="Máte dotaz, nápad nebo chcete spolupracovat? Rádi se s vámi spojíme." data-en="Have a question, idea, or want to collaborate? We'd love to hear from you.">
+                    Máte dotaz, nápad nebo chcete spolupracovat? Rádi se s vámi spojíme.
+                </p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                    </svg>
+                    <h4>E-mail</h4>
+                    <a href="/cdn-cgi/l/email-protection#a3cdc2c7cccbcfc6c7d9d0e3c4cec2cacf8dc0ccce"><span class="__cf_email__" data-cfemail="a6c8c7c2c9cecac3c2dcd5e6c1cbc7cfca88c5c9cb">[email&#160;protected]</span></a>
+                </div>
+                <div class="contact-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                    </svg>
+                    <h4 data-cs="Telefon" data-en="Phone">Telefon</h4>
+                    <a href="tel:+420770138462">+420 770 138 462</a>
+                </div>
+                <div class="contact-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                    </svg>
+                    <h4 data-cs="Působíme" data-en="We operate in">Působíme</h4>
+                    <p data-cs="Lysá nad Labem, Milovice a okolí" data-en="Lysá nad Labem, Milovice and surroundings">Lysá nad Labem, Milovice a okolí</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <a href="#" class="logo">NA <span>DOHLED</span></a>
+        <p>Marek Švácha · IČO: 07220294</p>
+        <p data-cs="© 2025 Na Dohled. Všechna práva vyhrazena." data-en="© 2025 Na Dohled. All rights reserved.">© 2025 Na Dohled. Všechna práva vyhrazena.</p>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        let currentLang = 'cs';
+
+        const langSwitcher = document.getElementById('langSwitcher');
+        const flagEN = document.getElementById('flagEN');
+        const flagCZ = document.getElementById('flagCZ');
+
+        langSwitcher.addEventListener('click', () => {
+            if (currentLang === 'cs') {
+                currentLang = 'en';
+                flagEN.style.display = 'none';
+                flagCZ.style.display = 'block';
+                langSwitcher.title = 'Přepnout do češtiny';
+                document.documentElement.lang = 'en';
+                document.title = 'NA DOHLED | Projects with purpose';
+            } else {
+                currentLang = 'cs';
+                flagCZ.style.display = 'none';
+                flagEN.style.display = 'block';
+                langSwitcher.title = 'Switch to English';
+                document.documentElement.lang = 'cs';
+                document.title = 'NA DOHLED | Projekty s přesahem';
+            }
+            
+            document.querySelectorAll('[data-cs][data-en]').forEach(el => {
+                el.textContent = el.getAttribute(`data-${currentLang}`);
+            });
+        });
+
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.project-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+
+    <!-- Floating E-shop Button -->
+    <a href="eshop.html" class="floating-eshop">
+        🛒 <span data-cs="E-shop" data-en="E-shop">E-shop</span>
+    </a>
+</body>
+</html>
+            

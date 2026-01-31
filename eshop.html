@@ -81,6 +81,22 @@
             color: var(--color-terracotta);
         }
 
+        .admin-link {
+            color: var(--color-sage);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--color-sage);
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .admin-link:hover {
+            background: var(--color-sage);
+            color: white;
+        }
+
         .cart-btn {
             position: relative;
             background: var(--color-terracotta);
@@ -307,6 +323,45 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        /* Stock indicators */
+        .stock-indicator {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stock-indicator.in-stock {
+            background: rgba(40, 167, 69, 0.15);
+            color: #28a745;
+        }
+        
+        .stock-indicator.low-stock {
+            background: rgba(255, 193, 7, 0.15);
+            color: #e6a800;
+        }
+        
+        .stock-indicator.out-of-stock {
+            background: rgba(220, 53, 69, 0.15);
+            color: #dc3545;
+        }
+        
+        .add-to-cart:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .add-to-cart:disabled:hover {
+            background: #ccc;
+            transform: none;
         }
 
         .product-price {
@@ -630,6 +685,7 @@
         <div class="header-content">
             <a href="na-dohled.html" class="logo">NA <span>DOHLED</span> | E-shop</a>
             <div class="header-actions">
+                <a href="admin.html" class="admin-link" title="Administrace">🛠️ Admin</a>
                 <a href="na-dohled.html" class="back-link">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M19 12H5M12 19l-7-7 7-7"/>
@@ -1111,6 +1167,63 @@
     <script>
         let cart = [];
         let currentLang = 'cs';
+        
+        // Load products from admin localStorage
+        function getProductStock(productName) {
+            const products = JSON.parse(localStorage.getItem('nadohled_products')) || [];
+            const product = products.find(p => p.name.toLowerCase().includes(productName.toLowerCase()) || 
+                                                productName.toLowerCase().includes(p.name.toLowerCase()));
+            return product ? product.stock : 999; // Default to 999 if not found
+        }
+        
+        // Check stock and update UI
+        function updateStockIndicators() {
+            const products = JSON.parse(localStorage.getItem('nadohled_products')) || [];
+            document.querySelectorAll('.product-card').forEach(card => {
+                const productName = card.dataset.name;
+                if (productName) {
+                    const product = products.find(p => 
+                        p.name.toLowerCase().includes(productName.toLowerCase()) || 
+                        productName.toLowerCase().includes(p.name.toLowerCase())
+                    );
+                    
+                    if (product) {
+                        const addBtn = card.querySelector('.add-to-cart');
+                        const priceEl = card.querySelector('.product-price');
+                        
+                        // Update price if different
+                        if (priceEl && product.price) {
+                            priceEl.textContent = product.price + ' Kč';
+                        }
+                        
+                        // Stock indicator
+                        let stockIndicator = card.querySelector('.stock-indicator');
+                        if (!stockIndicator) {
+                            stockIndicator = document.createElement('span');
+                            stockIndicator.className = 'stock-indicator';
+                            if (priceEl) priceEl.parentNode.insertBefore(stockIndicator, priceEl);
+                        }
+                        
+                        if (product.stock === 0) {
+                            stockIndicator.textContent = currentLang === 'cs' ? 'Vyprodáno' : 'Sold out';
+                            stockIndicator.className = 'stock-indicator out-of-stock';
+                            if (addBtn) addBtn.disabled = true;
+                        } else if (product.stock < 5) {
+                            stockIndicator.textContent = currentLang === 'cs' ? `Posledních ${product.stock} ks` : `Last ${product.stock} pcs`;
+                            stockIndicator.className = 'stock-indicator low-stock';
+                            if (addBtn) addBtn.disabled = false;
+                        } else {
+                            stockIndicator.textContent = currentLang === 'cs' ? 'Skladem' : 'In stock';
+                            stockIndicator.className = 'stock-indicator in-stock';
+                            if (addBtn) addBtn.disabled = false;
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Initialize stock indicators on page load
+        document.addEventListener('DOMContentLoaded', updateStockIndicators);
 
         // Language Switch
         function switchLanguage(lang) {
@@ -1128,6 +1241,7 @@
             });
             
             updateCartDisplay();
+            updateStockIndicators();
         }
 
         // Category Filter
