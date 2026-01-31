@@ -20,6 +20,144 @@
             min-height: 100vh;
         }
 
+        /* Login Screen */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .login-overlay.hidden {
+            display: none;
+        }
+
+        .login-box {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid #333;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-logo h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-logo p {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .login-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #ccc;
+        }
+
+        .login-form input {
+            width: 100%;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 1rem;
+            color: #fff;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .login-form input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .login-form input::placeholder {
+            color: #555;
+        }
+
+        .login-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .login-error {
+            background: rgba(220, 53, 69, 0.15);
+            border: 1px solid #dc3545;
+            color: #dc3545;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .login-error.show {
+            display: block;
+        }
+
+        .back-to-shop {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .back-to-shop a {
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .back-to-shop a:hover {
+            color: #667eea;
+        }
+
+        /* Admin Content (hidden until login) */
+        .admin-wrapper {
+            display: none;
+        }
+
+        .admin-wrapper.visible {
+            display: block;
+        }
+
         /* Header */
         .admin-header {
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
@@ -658,58 +796,88 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="admin-header">
-        <div class="admin-logo">
-            <h1>🛠️ NA DOHLED Admin</h1>
+    <!-- Login Screen -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-box">
+            <div class="login-logo">
+                <h1>🛠️ NA DOHLED Admin</h1>
+                <p>Přihlaste se pro přístup do administrace</p>
+            </div>
+            <div class="login-error" id="loginError">
+                ❌ Nesprávné přihlašovací údaje
+            </div>
+            <form class="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="username">Uživatelské jméno</label>
+                    <input type="text" id="username" placeholder="Zadejte uživatelské jméno" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Heslo</label>
+                    <input type="password" id="password" placeholder="Zadejte heslo" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="login-btn">Přihlásit se</button>
+            </form>
+            <div class="back-to-shop">
+                <a href="eshop.html">← Zpět do e-shopu</a>
+            </div>
         </div>
-        <nav class="admin-nav">
-            <a href="eshop.html">← Zpět do e-shopu</a>
-            <a href="na-dohled.html">← Hlavní web</a>
-        </nav>
-    </header>
+    </div>
 
-    <div class="admin-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-section">
-                <h3>Správa</h3>
-                <ul class="sidebar-menu">
-                    <li><a href="#" class="active" data-section="products">📦 Produkty</a></li>
-                    <li><a href="#" data-section="inventory">📊 Skladové zásoby</a></li>
-                    <li><a href="#" data-section="categories">🏷️ Kategorie</a></li>
-                </ul>
+    <!-- Admin Content (hidden until login) -->
+    <div class="admin-wrapper" id="adminWrapper">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="admin-logo">
+                <h1>🛠️ NA DOHLED Admin</h1>
             </div>
-            <div class="sidebar-section">
-                <h3>Export</h3>
-                <ul class="sidebar-menu">
-                    <li><a href="#" onclick="exportProducts()">📄 Export CSV</a></li>
-                    <li><a href="#" onclick="exportJSON()">📋 Export JSON</a></li>
-                </ul>
-            </div>
-        </aside>
+            <nav class="admin-nav">
+                <a href="#" onclick="handleLogout()">🚪 Odhlásit se</a>
+                <a href="eshop.html">← Zpět do e-shopu</a>
+                <a href="na-dohled.html">← Hlavní web</a>
+            </nav>
+        </header>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Stats -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h4>Celkem produktů</h4>
-                    <div class="stat-value" id="total-products">0</div>
+        <div class="admin-container">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <h3>Správa</h3>
+                    <ul class="sidebar-menu">
+                        <li><a href="#" class="active" data-section="products">📦 Produkty</a></li>
+                        <li><a href="#" data-section="inventory">📊 Skladové zásoby</a></li>
+                        <li><a href="#" data-section="categories">🏷️ Kategorie</a></li>
+                    </ul>
                 </div>
-                <div class="stat-card">
-                    <h4>Skladem</h4>
-                    <div class="stat-value" id="in-stock">0</div>
-                    <div class="stat-change positive">Dostupné produkty</div>
+                <div class="sidebar-section">
+                    <h3>Export</h3>
+                    <ul class="sidebar-menu">
+                        <li><a href="#" onclick="exportProducts()">📄 Export CSV</a></li>
+                        <li><a href="#" onclick="exportJSON()">📋 Export JSON</a></li>
+                    </ul>
                 </div>
-                <div class="stat-card">
-                    <h4>Nízké zásoby</h4>
-                    <div class="stat-value" id="low-stock">0</div>
-                    <div class="stat-change negative">Méně než 5 ks</div>
-                </div>
-                <div class="stat-card">
-                    <h4>Vyprodáno</h4>
-                    <div class="stat-value" id="out-of-stock">0</div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>Celkem produktů</h4>
+                        <div class="stat-value" id="total-products">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Skladem</h4>
+                        <div class="stat-value" id="in-stock">0</div>
+                        <div class="stat-change positive">Dostupné produkty</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Nízké zásoby</h4>
+                        <div class="stat-value" id="low-stock">0</div>
+                        <div class="stat-change negative">Méně než 5 ks</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Vyprodáno</h4>
+                        <div class="stat-value" id="out-of-stock">0</div>
                     <div class="stat-change negative">0 ks skladem</div>
                 </div>
             </div>
@@ -855,8 +1023,68 @@
 
     <!-- Toast Container -->
     <div class="toast-container" id="toast-container"></div>
+    
+    </div> <!-- End of admin-wrapper -->
 
     <script>
+        // ==================== LOGIN SYSTEM ====================
+        const ADMIN_CREDENTIALS = {
+            username: 'admin',
+            // Simple hash for demo - in production use proper backend auth
+            passwordHash: 'S3J0ZWsuMTIzNDU=' // Base64 encoded
+        };
+        
+        // Check if already logged in
+        function checkAuth() {
+            const session = sessionStorage.getItem('nadohled_admin_session');
+            if (session === 'authenticated') {
+                showAdminPanel();
+            }
+        }
+        
+        // Handle login
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorEl = document.getElementById('loginError');
+            
+            // Verify credentials
+            if (username === ADMIN_CREDENTIALS.username && btoa(password) === ADMIN_CREDENTIALS.passwordHash) {
+                sessionStorage.setItem('nadohled_admin_session', 'authenticated');
+                errorEl.classList.remove('show');
+                showAdminPanel();
+            } else {
+                errorEl.classList.add('show');
+                document.getElementById('password').value = '';
+            }
+        }
+        
+        // Handle logout
+        function handleLogout() {
+            sessionStorage.removeItem('nadohled_admin_session');
+            document.getElementById('loginOverlay').classList.remove('hidden');
+            document.getElementById('adminWrapper').classList.remove('visible');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+        
+        // Show admin panel
+        function showAdminPanel() {
+            document.getElementById('loginOverlay').classList.add('hidden');
+            document.getElementById('adminWrapper').classList.add('visible');
+            renderProducts();
+            updateStats();
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+        });
+        
+        // ==================== PRODUCTS DATABASE ====================
+        
         // Default products database
         const defaultProducts = [
             // Pečivo
@@ -919,12 +1147,6 @@
         // Load products from localStorage or use defaults
         let products = JSON.parse(localStorage.getItem('nadohled_products')) || [...defaultProducts];
         let deleteProductId = null;
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            renderProducts();
-            updateStats();
-        });
 
         // Render products table
         function renderProducts() {
