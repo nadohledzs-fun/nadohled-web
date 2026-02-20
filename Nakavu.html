@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Na Kávu | Kavárna s přesahem | NA DOHLED</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-cream: #FDF8F3;
+            --color-coffee: #6F4E37;
+            --color-latte: #C4A484;
+            --color-espresso: #3C2415;
+            --color-milk: #FFF8F0;
+            --color-charcoal: #2D2D2D;
+            --color-warm-gray: #6B6B6B;
+            --color-accent: #D4A574;
+            --color-green: #7C9A6F;
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Quicksand', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-cream);
+            color: var(--color-charcoal);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(253, 248, 243, 0.95);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        nav.scrolled {
+            padding: 0.75rem 2rem;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-charcoal);
+            text-decoration: none;
+        }
+        .logo span { color: var(--color-coffee); }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        .nav-links a {
+            color: var(--color-charcoal);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--color-coffee); }
+        .nav-cta {
+            background: var(--color-coffee);
+            color: white !important;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+        .nav-cta:hover { background: var(--color-espresso); }
+
+        /* Language Switcher */
+        .lang-switcher {
+            display: flex;
+            gap: 0.25rem;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 0.25rem;
+            border-radius: 50px;
+            margin-left: 0.5rem;
+        }
+        .lang-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            background: transparent;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: scale(1.1);
+        }
+        .lang-btn.active {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-milk) 100%);
+        }
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--color-latte) 0%, var(--color-coffee) 100%);
+            border-radius: 0 0 0 150px;
+            z-index: 0;
+        }
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-text { padding-right: 2rem; }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--color-green);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+        .hero h1 em {
+            color: var(--color-coffee);
+            font-style: italic;
+        }
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--color-warm-gray);
+            margin-bottom: 2rem;
+            max-width: 500px;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-primary {
+            background: var(--color-coffee);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--color-espresso);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(111, 78, 55, 0.3);
+        }
+        .btn-secondary {
+            background: white;
+            color: var(--color-charcoal);
+            border: 2px solid var(--color-charcoal);
+        }
+        .btn-secondary:hover {
+            background: var(--color-charcoal);
+            color: white;
+        }
+        .hero-images {
+            position: relative;
+            height: 500px;
+        }
+        .hero-img {
+            position: absolute;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-img-1 {
+            width: 280px;
+            height: 350px;
+            top: 0;
+            left: 0;
+            background: linear-gradient(135deg, #d4a574 0%, #c4a484 100%);
+            font-size: 5rem;
+        }
+        .hero-img-2 {
+            width: 200px;
+            height: 250px;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #f5e6d3 0%, #e8d4c4 100%);
+            font-size: 4rem;
+        }
+        .hero-img-3 {
+            width: 130px;
+            height: 130px;
+            top: 40%;
+            right: 35%;
+            background: linear-gradient(135deg, #7c9a6f 0%, #5a7a4a 100%);
+            font-size: 3rem;
+        }
+
+        /* Marquee */
+        .marquee {
+            background: var(--color-espresso);
+            padding: 1rem 0;
+            overflow: hidden;
+        }
+        .marquee-content {
+            display: flex;
+            animation: marquee 25s linear infinite;
+        }
+        .marquee-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            font-weight: 500;
+            white-space: nowrap;
+            padding: 0 2rem;
+        }
+        .marquee-item span { color: var(--color-accent); }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Section Styles */
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 4rem;
+        }
+        .section-label {
+            display: inline-block;
+            background: var(--color-latte);
+            color: var(--color-espresso);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .section-subtitle {
+            color: var(--color-warm-gray);
+            font-size: 1.1rem;
+        }
+
+        /* About Section */
+        .about {
+            padding: 6rem 2rem;
+            background: white;
+        }
+        .about-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+        .about-card {
+            background: var(--color-cream);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .about-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+        .about-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--color-latte);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+        }
+        .about-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        .about-card p {
+            color: var(--color-warm-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Menu Section */
+        .menu {
+            padding: 6rem 2rem;
+            background: var(--color-cream);
+        }
+        .menu-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        .menu-category {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .menu-category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+        .menu-header {
+            padding: 2rem;
+            text-align: center;
+            background: var(--color-coffee);
+            color: white;
+        }
+        .menu-header.hot { background: linear-gradient(135deg, var(--color-coffee) 0%, var(--color-espresso) 100%); }
+        .menu-header.cold { background: linear-gradient(135deg, #5DADE2 0%, #2E86AB 100%); }
+        .menu-header.food { background: linear-gradient(135deg, var(--color-green) 0%, #5a7a4a 100%); }
+        .menu-header h3 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+        .menu-header span {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .menu-items { padding: 1.5rem; }
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .menu-item:last-child { border-bottom: none; }
+        .menu-item-name {
+            font-weight: 600;
+            color: var(--color-charcoal);
+        }
+        .menu-item-desc {
+            font-size: 0.85rem;
+            color: var(--color-warm-gray);
+            margin-top: 0.25rem;
+        }
+        .menu-item-price {
+            font-weight: 700;
+            color: var(--color-coffee);
+            font-size: 1.1rem;
+            white-space: nowrap;
+        }
+
+        /* Reservation Section */
+        .reservation {
+            padding: 6rem 2rem;
+            background: var(--color-espresso);
+            color: white;
+            text-align: center;
+        }
+        .reservation .section-label {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        .reservation .section-title { color: white; }
+        .reservation .section-subtitle { color: rgba(255, 255, 255, 0.7); }
+        .reservation-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+        .reservation-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        .reservation-btn.messenger {
+            background: #0084FF;
+            color: white;
+        }
+        .reservation-btn.messenger:hover {
+            background: #0066CC;
+            transform: translateY(-3px);
+        }
+        .reservation-btn.phone {
+            background: var(--color-green);
+            color: white;
+        }
+        .reservation-btn.phone:hover {
+            background: #5a7a4a;
+            transform: translateY(-3px);
+        }
+
+        /* Locations Section */
+        .locations {
+            padding: 6rem 2rem;
+            background: white;
+        }
+        .locations-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+        .location-card {
+            background: var(--color-cream);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .location-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
+        }
+        .location-image {
+            height: 200px;
+            background: linear-gradient(135deg, var(--color-latte) 0%, var(--color-coffee) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+        .location-image.park {
+            background: linear-gradient(135deg, var(--color-green) 0%, #5a7a4a 100%);
+        }
+        .location-content {
+            padding: 2rem;
+        }
+        .location-content h3 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .location-content p {
+            color: var(--color-warm-gray);
+            margin-bottom: 0.5rem;
+        }
+        .location-badge {
+            display: inline-block;
+            background: var(--color-coffee);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        .location-badge.seasonal {
+            background: var(--color-green);
+        }
+
+        /* Hours Section */
+        .hours {
+            padding: 6rem 2rem;
+            background: var(--color-cream);
+        }
+        .hours-grid {
+            max-width: 800px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1rem;
+        }
+        .hour-item {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        .hour-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        .hour-item.closed { opacity: 0.5; }
+        .hour-day {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--color-charcoal);
+        }
+        .hour-time {
+            color: var(--color-coffee);
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        /* Instagram Section */
+        .instagram {
+            padding: 6rem 2rem;
+            background: white;
+        }
+        .instagram-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0.5rem;
+        }
+        .instagram-item {
+            aspect-ratio: 1;
+            border-radius: 12px;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--color-latte) 0%, var(--color-coffee) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .instagram-item:hover {
+            transform: scale(1.05);
+            z-index: 1;
+        }
+        .instagram-item:nth-child(2) { background: linear-gradient(135deg, #f5e6d3 0%, #e8d4c4 100%); }
+        .instagram-item:nth-child(3) { background: linear-gradient(135deg, var(--color-green) 0%, #5a7a4a 100%); }
+        .instagram-item:nth-child(4) { background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%); }
+        .instagram-item:nth-child(5) { background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); }
+        .instagram-item:nth-child(6) { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); }
+        .instagram-follow {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .instagram-follow a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--color-coffee);
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+        .instagram-follow a:hover { color: var(--color-espresso); }
+
+        /* Contact Section */
+        .contact {
+            padding: 6rem 2rem;
+            background: var(--color-cream);
+        }
+        .contact-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        .contact-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--color-coffee);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+        }
+        .contact-card h4 {
+            font-family: var(--font-display);
+            margin-bottom: 0.5rem;
+        }
+        .contact-card a {
+            color: var(--color-warm-gray);
+            text-decoration: none;
+        }
+        .contact-card a:hover { color: var(--color-coffee); }
+
+        /* Footer */
+        footer {
+            background: var(--color-espresso);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        footer .logo {
+            color: white;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+        footer p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-content { grid-template-columns: 1fr; text-align: center; }
+            .hero-text { padding-right: 0; }
+            .hero-subtitle { margin: 0 auto 2rem; }
+            .hero-buttons { justify-content: center; }
+            .hero-images { display: none; }
+            .hero-bg { width: 100%; border-radius: 0; opacity: 0.3; }
+            .about-grid { grid-template-columns: repeat(2, 1fr); }
+            .menu-grid { grid-template-columns: 1fr; }
+            .locations-grid { grid-template-columns: 1fr; }
+            .hours-grid { grid-template-columns: repeat(4, 1fr); }
+            .instagram-grid { grid-template-columns: repeat(3, 1fr); }
+            .contact-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero h1 { font-size: 2.5rem; }
+            .about-grid { grid-template-columns: 1fr 1fr; }
+            .hours-grid { grid-template-columns: repeat(2, 1fr); }
+            .section-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav id="navbar">
+        <a href="na-dohled.html" class="logo">NA <span>DOHLED</span></a>
+        <div class="nav-links">
+            <a href="#menu" data-cs="Nabídka" data-en="Menu" data-ua="Меню">Nabídka</a>
+            <a href="#lokace" data-cs="Kde nás najdete" data-en="Locations" data-ua="Де нас знайти">Kde nás najdete</a>
+            <a href="#hodiny" data-cs="Otevírací doba" data-en="Hours" data-ua="Години роботи">Otevírací doba</a>
+            <a href="#kontakt" data-cs="Kontakt" data-en="Contact" data-ua="Контакт">Kontakt</a>
+            <a href="eshop.html">E-shop</a>
+            <a href="tel:+420770138462" class="nav-cta">📞</a>
+            <div class="lang-switcher">
+                <button class="lang-btn active" onclick="setLanguage('cs')" title="Čeština">🇨🇿</button>
+                <button class="lang-btn" onclick="setLanguage('en')" title="English">🇬🇧</button>
+                <button class="lang-btn" onclick="setLanguage('ua')" title="Українська">🇺🇦</button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="hero-badge">☕ Kavárna s přesahem</div>
+                <h1>Káva, která má <em>příběh</em></h1>
+                <p class="hero-subtitle">Výběrová káva z českých pražíren, čerstvé pečivo z řemeslných pekáren a domácí dobroty. To vše v prostředí, kde se cítíte jako doma.</p>
+                <div class="hero-buttons">
+                    <a href="#menu" class="btn btn-primary">Zobrazit nabídku</a>
+                    <a href="#rezervace" class="btn btn-secondary">Rezervovat pečivo</a>
+                </div>
+            </div>
+            <div class="hero-images">
+                <div class="hero-img hero-img-1">☕</div>
+                <div class="hero-img hero-img-2">🥐</div>
+                <div class="hero-img hero-img-3">🌿</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="marquee">
+        <div class="marquee-content">
+            <div class="marquee-item"><span>☕</span> Výběrová káva</div>
+            <div class="marquee-item"><span>🥐</span> Řemeslné pečivo</div>
+            <div class="marquee-item"><span>🌸</span> Květiny & doplňky</div>
+            <div class="marquee-item"><span>👶</span> Program pro děti</div>
+            <div class="marquee-item"><span>🍰</span> Domácí zákusky</div>
+            <div class="marquee-item"><span>🫖</span> Čaje & čokolády</div>
+            <div class="marquee-item"><span>☕</span> Výběrová káva</div>
+            <div class="marquee-item"><span>🥐</span> Řemeslné pečivo</div>
+            <div class="marquee-item"><span>🌸</span> Květiny & doplňky</div>
+            <div class="marquee-item"><span>👶</span> Program pro děti</div>
+            <div class="marquee-item"><span>🍰</span> Domácí zákusky</div>
+            <div class="marquee-item"><span>🫖</span> Čaje & čokolády</div>
+        </div>
+    </div>
+
+    <section class="about">
+        <div class="section-header">
+            <div class="section-label">O nás</div>
+            <h2 class="section-title">Proč si vybrat Na Kávu?</h2>
+            <p class="section-subtitle">Jsme víc než jen kavárna. Jsme místo, kde se setkávají příběhy.</p>
+        </div>
+        <div class="about-grid">
+            <div class="about-card">
+                <div class="about-icon">☕</div>
+                <h3>Výběrová káva</h3>
+                <p>DAK Coffee Roasters & Chroasta</p>
+            </div>
+            <div class="about-card">
+                <div class="about-icon">🥐</div>
+                <h3>Řemeslné pečivo</h3>
+                <p>Čerstvé každý den</p>
+            </div>
+            <div class="about-card">
+                <div class="about-icon">🌸</div>
+                <h3>Květiny</h3>
+                <p>Kytice & aranžmá</p>
+            </div>
+            <div class="about-card">
+                <div class="about-icon">👶</div>
+                <h3>Pro rodiny</h3>
+                <p>Programy pro děti</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="menu" id="menu">
+        <div class="section-header">
+            <div class="section-label">Nabídka</div>
+            <h2 class="section-title">Co u nás ochutnáte</h2>
+            <p class="section-subtitle">Vše připraveno s láskou a z kvalitních surovin.</p>
+        </div>
+        <div class="menu-grid">
+            <div class="menu-category">
+                <div class="menu-header hot">
+                    <span>☕</span>
+                    <h3>Horké nápoje</h3>
+                </div>
+                <div class="menu-items">
+                    <div class="menu-item">
+                        <div>
+                            <div class="menu-item-name">Espresso / Lungo</div>
+                            <div class="menu-item-desc">Výběrová zrnka z českých pražíren</div>
+                        </div>
+                        <div class="menu-item-price">55 Kč</div>
+                    </div>
+                    <div class="menu-item">
+                        <div>
+                            <div class="menu-item-name">Cappuccino</div>
+                            <div class="menu-item-desc">Espresso s napěněným mlékem</div>
+                        </div>
+                        <div class="menu-item-price">73 Kč</div>
+                    </div>
+                    <div class="menu-item">
+                        <div>
+                            <div class="menu-item-name">Caffè Latte</div>
+                            <div class="menu-item-desc">Espresso s jemným mlékem</div>
+                        </div>
+                        <div class="menu-item-price">80 Kč</div>
+                    </div>
+                    <div class="menu-item">
+                        <div>
+                            <div class="menu-item-name">Horká čokoláda</div>
+                            <div class="menu-item-desc">Belgická čokoláda se šlehačkou</div>
+                        </div>
+                        <div class="menu-item-price">65 Kč</div>
+                    </div>
+                    <div class="menu-item">
+                        <div>
+                            <div class="menu-item-name">Čaj Latté</div>
+                            <div class="menu-item-desc">Chai / Matcha / Kurkuma</div>
+                        </div>
+                        <div class="menu-item-price">75 Kč</div>
+                    </div>
+                    <div class="menu-item">
+                        <div>
+                            <div class="menu-item-name">Sezónní speciality</div>
+                            <div class="menu-item-desc">Dýňové latte, svařák...</div>
+                        </div>
+                        <div class="menu-item-price">od 85 Kč</div>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-category">
+                <div class="menu-header cold">
+                    <span>🧊</span>
+                    <h3>Studené nápoje</h3>
+                </div>
+                <div class="menu-items">
+                    <div class="menu-item">
+                        <div>
+                            <div class="menu-item-name">Ledové latté</div>
+                            <div class="menu-item-desc">Espresso s ledem a mlékem</div>
+                        </div>
+                        <div class="menu-item-price">85 Kč</div>
+                    </div>
+                    <div class="menu-item">
+                        <div>
+                            <div class="menu-item-name">Cold Brew</div>
+                            <div class="menu-item-desc">Káva louhovaná za studena</div>
+                        </div>
+                        <div class="menu-item-price">75 Kč</div>
+                    </div>
+                    <div class="menu-item">
+                        <div>
+                            <div class="menu-item-name">Domácí limonáda</div>
+                            <div class="menu-item-desc">Citron / Bezinka / Marakuja</div>
+                        </div>
+                        <div class="menu-item-price">65 Kč</div>
+                    </div>
+                    <div class="menu-item">
+                        <div>
+                            <div class="menu-item-name">Ledový čaj</div>
+                            <div class="menu-item-desc">Domácí, různé příchutě</div>
+                        </div>
+                        <div class="menu-item-price">55 Kč</div>
+                    </div>
+                    <div class="menu-item">
+                        <div>
+                            <div class="menu-item-name">Čerstvý džus</div>
+                            <div class="menu-item-desc">Pomeranč / Grep / Mix</div>
+                        </div>
+                        <div class="menu-item-price">75 Kč</div>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-category">
+                <div class="menu-header food">
+                    <span>🥐</span>
+                    <h3>Pečivo & zákusky</h3>
+                </div>
+                <div class="menu-items">
+                    <div class="menu-item">
+                        <div>
+                            <div class="menu-item-name">Máslový croissant</div>
+                            <div class="menu-item-desc">Křehký z francouzského těsta</div>
+                        </div>
+                        <div class="menu-item-price">62 Kč</div>
+                    </div>
+                    <div class="menu-item">
+                        <div>
+                            <div class="menu-item-name">Cruffin</div>
+                            <div class="menu-item-desc">Croissant × muffin s náplní</div>
+                        </div>
+                        <div class="menu-item-price">95 Kč</div>
+                    </div>
+                    <div class="menu-item">
+                        <div>
+                            <div class="menu-item-name">Croissant s bílou čokoládou</div>
+                            <div class="menu-item-desc">Plněný bílou čokoládou</div>
+                        </div>
+                        <div class="menu-item-price">88 Kč</div>
+                    </div>
+                    <div class="menu-item">
+                        <div>
+                            <div class="menu-item-name">Cookie</div>
+                            <div class="menu-item-desc">Domácí s kousky čokolády</div>
+                        </div>
+                        <div class="menu-item-price">32 Kč</div>
+                    </div>
+                    <div class="menu-item">
+                        <div>
+                            <div class="menu-item-name">Domácí dort</div>
+                            <div class="menu-item-desc">Dle denní nabídky</div>
+                        </div>
+                        <div class="menu-item-price">od 69 Kč</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="reservation" id="rezervace">
+        <div class="section-header">
+            <div class="section-label">Rezervace</div>
+            <h2 class="section-title">Chcete si rezervovat pečivo?</h2>
+            <p class="section-subtitle">Napište nám přes Messenger nebo zavolejte — rádi vám připravíme čerstvé pečivo k vyzvednutí.</p>
+        </div>
+        <div class="reservation-buttons">
+            <a href="https://m.me/nakavulysa" target="_blank" class="reservation-btn messenger">
+                💬 Napsat na Messenger
+            </a>
+            <a href="tel:+420770138462" class="reservation-btn phone">
+                📞 +420 770 138 462
+            </a>
+        </div>
+    </section>
+
+    <section class="locations" id="lokace">
+        <div class="section-header">
+            <div class="section-label">Kde nás najdete</div>
+            <h2 class="section-title">Dvě místa, jeden příběh</h2>
+            <p class="section-subtitle">Navštivte nás ve Smysláriu nebo v parku Čechovka.</p>
+        </div>
+        <div class="locations-grid">
+            <div class="location-card">
+                <div class="location-image">🏠</div>
+                <div class="location-content">
+                    <h3>Smyslárium</h3>
+                    <p>Višňová 510, Milovice</p>
+                    <p>Kavárna přímo v dětské smyslové herně</p>
+                    <span class="location-badge">Celoroční provoz</span>
+                </div>
+            </div>
+            <div class="location-card">
+                <div class="location-image park">🌳</div>
+                <div class="location-content">
+                    <h3>Park Čechovka</h3>
+                    <p>Čechova 218, Lysá nad Labem</p>
+                    <p>Komunitní gastrokontejner v parku</p>
+                    <span class="location-badge seasonal">Sezónní provoz</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hours" id="hodiny">
+        <div class="section-header">
+            <div class="section-label">Otevírací doba</div>
+            <h2 class="section-title">Kdy vás přivítáme</h2>
+            <p class="section-subtitle">Smyslárium, Milovice</p>
+        </div>
+        <div class="hours-grid">
+            <div class="hour-item closed"><div class="hour-day">Po</div><div class="hour-time">Zavřeno</div></div>
+            <div class="hour-item"><div class="hour-day">Út</div><div class="hour-time">8:00–18:00</div></div>
+            <div class="hour-item"><div class="hour-day">St</div><div class="hour-time">8:00–18:00</div></div>
+            <div class="hour-item"><div class="hour-day">Čt</div><div class="hour-time">8:00–18:00</div></div>
+            <div class="hour-item"><div class="hour-day">Pá</div><div class="hour-time">8:00–18:00</div></div>
+            <div class="hour-item"><div class="hour-day">So</div><div class="hour-time">10:00–18:00</div></div>
+            <div class="hour-item"><div class="hour-day">Ne</div><div class="hour-time">10:00–17:00</div></div>
+        </div>
+    </section>
+
+    <section class="instagram">
+        <div class="section-header">
+            <div class="section-label">Instagram</div>
+            <h2 class="section-title">Sledujte nás</h2>
+            <p class="section-subtitle">Nahlédněte k nám na sociálních sítích.</p>
+        </div>
+        <div class="instagram-grid">
+            <div class="instagram-item">☕</div>
+            <div class="instagram-item">🥐</div>
+            <div class="instagram-item">🌿</div>
+            <div class="instagram-item">🍰</div>
+            <div class="instagram-item">👶</div>
+            <div class="instagram-item">🌸</div>
+        </div>
+        <div class="instagram-follow">
+            <a href="https://www.instagram.com/nakavulysa" target="_blank">@nakavulysa →</a>
+        </div>
+    </section>
+
+    <section class="contact" id="kontakt">
+        <div class="section-header">
+            <div class="section-label">Kontakt</div>
+            <h2 class="section-title">Ozvěte se nám</h2>
+        </div>
+        <div class="contact-grid">
+            <div class="contact-card">
+                <div class="contact-icon">📞</div>
+                <h4>Telefon</h4>
+                <a href="tel:+420770138462">+420 770 138 462</a>
+            </div>
+            <div class="contact-card">
+                <div class="contact-icon">✉️</div>
+                <h4>E-mail</h4>
+                <a href="/cdn-cgi/l/email-protection#3e505f555f484b52474d5f7e59535f5752105d5153"><span class="__cf_email__" data-cfemail="6c020d070d1a1900151f0d2c0b010d0500420f0301">[email&#160;protected]</span></a>
+            </div>
+            <div class="contact-card">
+                <div class="contact-icon">📱</div>
+                <h4>Sociální sítě</h4>
+                <a href="https://www.facebook.com/nakavulysa" target="_blank">Facebook</a> · 
+                <a href="https://www.instagram.com/nakavulysa" target="_blank">Instagram</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <a href="na-dohled.html" class="logo">NA <span>DOHLED</span> | Na Kávu</a>
+        <p>© 2026 Na Kávu. <span data-cs="Kavárna s přesahem. Všechna práva vyhrazena." data-en="Café with a purpose. All rights reserved." data-ua="Кав'ярня з місією. Всі права захищено.">Kavárna s přesahem. Všechna práva vyhrazena.</span></p>
+    </footer>
+
+    <script>
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // Language switcher
+        let currentLang = localStorage.getItem('nadohled_lang') || 'cs';
+        
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('nadohled_lang', lang);
+            
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('[data-' + lang + ']').forEach(el => {
+                const text = el.getAttribute('data-' + lang);
+                if (text) el.textContent = text;
+            });
+            
+            document.documentElement.lang = lang === 'ua' ? 'uk' : lang;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            const langMap = { cs: 0, en: 1, ua: 2 };
+            const buttons = document.querySelectorAll('.lang-btn');
+            if (buttons[langMap[currentLang]]) buttons[langMap[currentLang]].classList.add('active');
+            
+            if (currentLang !== 'cs') {
+                document.querySelectorAll('[data-' + currentLang + ']').forEach(el => {
+                    const text = el.getAttribute('data-' + currentLang);
+                    if (text) el.textContent = text;
+                });
+            }
+        });
+    </script>
+</body>
+</html></

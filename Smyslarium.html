@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smyslárium | Dětská smyslová herna & Kavárna | NA DOHLED</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-cream: #FDF8F3;
+            --color-peach: #FFECD2;
+            --color-coral: #FFB4A2;
+            --color-sage: #A8C5A8;
+            --color-mint: #D4E9D7;
+            --color-charcoal: #2D2D2D;
+            --color-warm-gray: #6B6B6B;
+            --color-accent: #E07A5F;
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Quicksand', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-cream);
+            color: var(--color-charcoal);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(253, 248, 243, 0.95);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        nav.scrolled {
+            padding: 0.75rem 2rem;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-charcoal);
+            text-decoration: none;
+        }
+        .logo span { color: var(--color-accent); }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        .nav-links a {
+            color: var(--color-charcoal);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--color-accent);
+            transition: width 0.3s;
+        }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-cta {
+            background: var(--color-accent);
+            color: white !important;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+        .nav-cta::after { display: none !important; }
+        .nav-cta:hover { background: #c9694f; }
+
+        /* Language Switcher */
+        .lang-switcher {
+            display: flex;
+            gap: 0.25rem;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 0.25rem;
+            border-radius: 50px;
+            margin-left: 0.5rem;
+        }
+        .lang-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            background: transparent;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: scale(1.1);
+        }
+        .lang-btn.active {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 55%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--color-peach) 0%, var(--color-coral) 100%);
+            border-radius: 0 0 0 100px;
+            z-index: 0;
+        }
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-text { padding-right: 2rem; }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--color-mint);
+            color: var(--color-charcoal);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+        .hero h1 em {
+            color: var(--color-accent);
+            font-style: italic;
+        }
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--color-warm-gray);
+            margin-bottom: 2rem;
+            max-width: 500px;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-primary {
+            background: var(--color-accent);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #c9694f;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(224, 122, 95, 0.3);
+        }
+        .btn-secondary {
+            background: white;
+            color: var(--color-charcoal);
+            border: 2px solid var(--color-charcoal);
+        }
+        .btn-secondary:hover {
+            background: var(--color-charcoal);
+            color: white;
+        }
+        .hero-images {
+            position: relative;
+            height: 500px;
+        }
+        .hero-img {
+            position: absolute;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-img-1 {
+            width: 280px;
+            height: 350px;
+            top: 0;
+            left: 0;
+            background: linear-gradient(135deg, #f5d6c6 0%, #e8c4b8 100%);
+            font-size: 5rem;
+        }
+        .hero-img-2 {
+            width: 220px;
+            height: 280px;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(135deg, #d4e9d7 0%, #a8c5a8 100%);
+            font-size: 4rem;
+        }
+        .hero-img-3 {
+            width: 150px;
+            height: 150px;
+            top: 50%;
+            right: 30%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            font-size: 3rem;
+        }
+
+        /* Marquee */
+        .marquee {
+            background: var(--color-charcoal);
+            padding: 1rem 0;
+            overflow: hidden;
+        }
+        .marquee-content {
+            display: flex;
+            animation: marquee 30s linear infinite;
+        }
+        .marquee-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            font-weight: 500;
+            white-space: nowrap;
+            padding: 0 2rem;
+        }
+        .marquee-item span { color: var(--color-coral); }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 4rem 2rem;
+            background: white;
+        }
+        .stats-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 2rem;
+        }
+        .stat-number {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            margin-bottom: 0.5rem;
+        }
+        .stat-label {
+            color: var(--color-warm-gray);
+            font-weight: 500;
+        }
+
+        /* Section Styles */
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 4rem;
+        }
+        .section-label {
+            display: inline-block;
+            background: var(--color-mint);
+            color: var(--color-charcoal);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .section-subtitle {
+            color: var(--color-warm-gray);
+            font-size: 1.1rem;
+        }
+
+        /* About Section */
+        .about {
+            padding: 6rem 2rem;
+            background: var(--color-cream);
+        }
+        .about-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        .about-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .about-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+        .about-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--color-peach);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1.5rem;
+        }
+        .about-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+        .about-card p {
+            color: var(--color-warm-gray);
+            font-size: 0.95rem;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 6rem 2rem;
+            background: white;
+        }
+        .services-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+        .service-card {
+            background: var(--color-cream);
+            border-radius: 24px;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 300px;
+        }
+        .service-card.reverse { direction: rtl; }
+        .service-card.reverse > * { direction: ltr; }
+        .service-image {
+            background: linear-gradient(135deg, var(--color-peach) 0%, var(--color-coral) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            min-height: 300px;
+        }
+        .service-image.green { background: linear-gradient(135deg, var(--color-mint) 0%, var(--color-sage) 100%); }
+        .service-image.yellow { background: linear-gradient(135deg, #fff3e0 0%, #ffcc80 100%); }
+        .service-image.blue { background: linear-gradient(135deg, #e3f2fd 0%, #90caf9 100%); }
+        .service-content {
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .service-content h3 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .service-content p {
+            color: var(--color-warm-gray);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+        .service-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .service-tag {
+            background: white;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--color-charcoal);
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 6rem 2rem;
+            background: var(--color-cream);
+        }
+        .pricing-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        .pricing-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
+        }
+        .pricing-card.featured { border: 3px solid var(--color-accent); }
+        .pricing-header {
+            padding: 2rem;
+            text-align: center;
+            background: var(--color-peach);
+        }
+        .pricing-card.featured .pricing-header {
+            background: var(--color-accent);
+            color: white;
+        }
+        .pricing-header h3 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .pricing-header p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        .pricing-price {
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        .price-amount {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-accent);
+        }
+        .price-period {
+            color: var(--color-warm-gray);
+            font-size: 0.9rem;
+        }
+        .pricing-features { padding: 2rem; }
+        .pricing-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        .pricing-feature:last-child { border-bottom: none; }
+        .pricing-feature .icon {
+            color: var(--color-sage);
+            font-weight: bold;
+        }
+        .pricing-feature.highlight {
+            background: var(--color-mint);
+            margin: 0 -0.5rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+        }
+        .pricing-feature.important {
+            background: var(--color-peach);
+            margin: 0 -0.5rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .pricing-note {
+            max-width: 800px;
+            margin: 3rem auto 0;
+            text-align: center;
+            padding: 1.5rem 2rem;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            color: var(--color-warm-gray);
+        }
+
+        /* Hours Section */
+        .hours {
+            padding: 6rem 2rem;
+            background: var(--color-charcoal);
+            color: white;
+        }
+        .hours .section-label {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        .hours .section-title { color: white; }
+        .hours .section-subtitle { color: rgba(255, 255, 255, 0.7); }
+        .hours-grid {
+            max-width: 800px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1rem;
+        }
+        .hour-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .hour-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+        }
+        .hour-item.closed { opacity: 0.5; }
+        .hour-day {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+        .hour-time {
+            color: var(--color-coral);
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .hours-note {
+            max-width: 600px;
+            margin: 3rem auto 0;
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+        }
+        .hours-note h4 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+        }
+        .hours-note p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1rem;
+        }
+        .hours-phone {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--color-coral);
+            font-weight: 600;
+            font-size: 1.2rem;
+            text-decoration: none;
+        }
+        .hours-phone:hover { color: white; }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 6rem 2rem;
+            background: var(--color-mint);
+        }
+        .testimonials-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        .testimonial-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            position: relative;
+        }
+        .testimonial-quote {
+            font-size: 3rem;
+            color: var(--color-coral);
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            opacity: 0.3;
+        }
+        .testimonial-text {
+            font-style: italic;
+            color: var(--color-warm-gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--color-peach);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--color-accent);
+        }
+        .author-info h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        .author-info span {
+            font-size: 0.85rem;
+            color: var(--color-warm-gray);
+        }
+
+        /* FAQ Section */
+        .faq {
+            padding: 6rem 2rem;
+            background: white;
+        }
+        .faq-grid {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .faq-item { border-bottom: 1px solid #eee; }
+        .faq-question {
+            width: 100%;
+            padding: 1.5rem 0;
+            background: none;
+            border: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--color-charcoal);
+            text-align: left;
+        }
+        .faq-question span { transition: transform 0.3s; }
+        .faq-item.active .faq-question span { transform: rotate(45deg); }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .faq-item.active .faq-answer { max-height: 200px; }
+        .faq-answer p {
+            padding-bottom: 1.5rem;
+            color: var(--color-warm-gray);
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 6rem 2rem;
+            background: var(--color-cream);
+        }
+        .contact-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--color-accent);
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+        .contact-item h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        .contact-item a {
+            color: var(--color-warm-gray);
+            text-decoration: none;
+        }
+        .contact-item a:hover { color: var(--color-accent); }
+        .contact-map {
+            background: linear-gradient(135deg, var(--color-peach) 0%, var(--color-coral) 100%);
+            height: 400px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--color-charcoal);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        footer .logo {
+            color: white;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+        footer p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-content { grid-template-columns: 1fr; text-align: center; }
+            .hero-text { padding-right: 0; }
+            .hero-subtitle { margin: 0 auto 2rem; }
+            .hero-buttons { justify-content: center; }
+            .hero-images { display: none; }
+            .hero-bg { width: 100%; border-radius: 0; opacity: 0.3; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .about-grid, .testimonials-grid, .pricing-grid { grid-template-columns: 1fr; }
+            .services-grid { grid-template-columns: 1fr; }
+            .service-card { grid-template-columns: 1fr; }
+            .service-card.reverse { direction: ltr; }
+            .hours-grid { grid-template-columns: repeat(4, 1fr); }
+            .contact-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero h1 { font-size: 2.5rem; }
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+            .stat-number { font-size: 2rem; }
+            .hours-grid { grid-template-columns: repeat(2, 1fr); }
+            .section-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav id="navbar">
+        <a href="na-dohled.html" class="logo">NA <span>DOHLED</span></a>
+        <div class="nav-links">
+            <a href="#o-nas" data-cs="O nás" data-en="About" data-ua="Про нас">O nás</a>
+            <a href="#sluzby" data-cs="Co nabízíme" data-en="Services" data-ua="Послуги">Co nabízíme</a>
+            <a href="#cenik" data-cs="Ceník" data-en="Pricing" data-ua="Ціни">Ceník</a>
+            <a href="#hodiny" data-cs="Otevírací doba" data-en="Hours" data-ua="Години роботи">Otevírací doba</a>
+            <a href="#kontakt" data-cs="Kontakt" data-en="Contact" data-ua="Контакт">Kontakt</a>
+            <a href="tel:+420770138462" class="nav-cta">📞</a>
+            <div class="lang-switcher">
+                <button class="lang-btn active" onclick="setLanguage('cs')" title="Čeština">🇨🇿</button>
+                <button class="lang-btn" onclick="setLanguage('en')" title="English">🇬🇧</button>
+                <button class="lang-btn" onclick="setLanguage('ua')" title="Українська">🇺🇦</button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="hero-badge">🧒 Pro děti 0–6 let</div>
+                <h1>Kde se smysly probouzejí <em>k životu</em></h1>
+                <p class="hero-subtitle">Kavárna a dětská smyslová herna, kde vaše děti objevují svět prostřednictvím hry a vy si vychutnáte chvilku klidu.</p>
+                <div class="hero-buttons">
+                    <a href="#kontakt" class="btn btn-primary">Navštivte nás</a>
+                    <a href="#sluzby" class="btn btn-secondary">Prozkoumat nabídku</a>
+                </div>
+            </div>
+            <div class="hero-images">
+                <div class="hero-img hero-img-1">👶</div>
+                <div class="hero-img hero-img-2">☕</div>
+                <div class="hero-img hero-img-3">🎨</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="marquee">
+        <div class="marquee-content">
+            <div class="marquee-item"><span>☕</span> Kavárna</div>
+            <div class="marquee-item"><span>🧸</span> Smyslová herna</div>
+            <div class="marquee-item"><span>🎨</span> Tvořivé dílny</div>
+            <div class="marquee-item"><span>🎂</span> Dětské oslavy</div>
+            <div class="marquee-item"><span>☕</span> Výběrová káva</div>
+            <div class="marquee-item"><span>🧩</span> Montessori prvky</div>
+            <div class="marquee-item"><span>🎯</span> Senzorické hry</div>
+            <div class="marquee-item"><span>🍰</span> Domácí zákusky</div>
+            <div class="marquee-item"><span>☕</span> Kavárna</div>
+            <div class="marquee-item"><span>🧸</span> Smyslová herna</div>
+            <div class="marquee-item"><span>🎨</span> Tvořivé dílny</div>
+            <div class="marquee-item"><span>🎂</span> Dětské oslavy</div>
+            <div class="marquee-item"><span>☕</span> Výběrová káva</div>
+            <div class="marquee-item"><span>🧩</span> Montessori prvky</div>
+            <div class="marquee-item"><span>🎯</span> Senzorické hry</div>
+            <div class="marquee-item"><span>🍰</span> Domácí zákusky</div>
+        </div>
+    </div>
+
+    <section class="stats">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number" data-target="5">0</div>
+                <div class="stat-label">smyslových zón</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="100">0</div>
+                <div class="stat-label">% přírodní materiály</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="6">0</div>
+                <div class="stat-label">dní v týdnu otevřeno</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="500">0</div>
+                <div class="stat-label">šťastných rodin</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about" id="o-nas">
+        <div class="section-header">
+            <div class="section-label">O nás</div>
+            <h2 class="section-title">Prostor, kde rostou malí objevitelé</h2>
+            <p class="section-subtitle">Smyslárium je unikátní místo v Milovicích, které spojuje útulnou kavárnu s dětskou smyslovou hernou. Věříme, že nejlepší učení probíhá skrze hru a vlastní prožitek.</p>
+        </div>
+        <div class="about-grid">
+            <div class="about-card">
+                <div class="about-icon">🎯</div>
+                <h3>Smyslový rozvoj</h3>
+                <p>Aktivity zaměřené na rozvoj všech smyslů — od hmatových stolů přes hudební koutek po výtvarnou dílnu.</p>
+            </div>
+            <div class="about-card">
+                <div class="about-icon">☕</div>
+                <h3>Kvalitní kavárna</h3>
+                <p>Výběrová káva, domácí zákusky a lehké občerstvení. Odpočiňte si, zatímco si děti hrají.</p>
+            </div>
+            <div class="about-card">
+                <div class="about-icon">💛</div>
+                <h3>Bezpečné prostředí</h3>
+                <p>Vše navrženo s ohledem na bezpečnost a pohodlí těch nejmenších i jejich rodičů.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="services" id="sluzby">
+        <div class="section-header">
+            <div class="section-label">Co nabízíme</div>
+            <h2 class="section-title">Zážitky pro malé i velké</h2>
+            <p class="section-subtitle">Od ranní kávy po odpolední tvoření — u nás si každý najde to své.</p>
+        </div>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-image">☕</div>
+                <div class="service-content">
+                    <h3>Kavárna Na Kávu</h3>
+                    <p>Výběrová káva, čaje, domácí limonády a pečené dobroty. Vše připraveno s láskou a z kvalitních surovin.</p>
+                    <div class="service-tags">
+                        <span class="service-tag">Výběrová káva</span>
+                        <span class="service-tag">Domácí zákusky</span>
+                        <span class="service-tag">Čerstvé šťávy</span>
+                    </div>
+                </div>
+            </div>
+            <div class="service-card reverse">
+                <div class="service-image green">🧸</div>
+                <div class="service-content">
+                    <h3>Smyslová herna</h3>
+                    <p>Interaktivní prostor plný podnětů pro rozvoj smyslů. Senzorické stoly, hudební nástroje, stavebnice a mnohem více.</p>
+                    <div class="service-tags">
+                        <span class="service-tag">Senzorické hry</span>
+                        <span class="service-tag">Montessori prvky</span>
+                        <span class="service-tag">Volná hra</span>
+                    </div>
+                </div>
+            </div>
+            <div class="service-card">
+                <div class="service-image yellow">🎨</div>
+                <div class="service-content">
+                    <h3>Tvořivé dílny</h3>
+                    <p>Pravidelné výtvarné a tvořivé workshopy pro děti. Malování, modelování a další kreativní aktivity.</p>
+                    <div class="service-tags">
+                        <span class="service-tag">Workshopy</span>
+                        <span class="service-tag">Výtvarné dílny</span>
+                        <span class="service-tag">Pro rodiče i děti</span>
+                    </div>
+                </div>
+            </div>
+            <div class="service-card reverse">
+                <div class="service-image blue">🎂</div>
+                <div class="service-content">
+                    <h3>Oslavy & akce</h3>
+                    <p>Uspořádejte u nás dětskou oslavu narozenin nebo jinou soukromou akci v prostředí, které děti milují.</p>
+                    <div class="service-tags">
+                        <span class="service-tag">Narozeniny</span>
+                        <span class="service-tag">Soukromé akce</span>
+                        <span class="service-tag">Na míru</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="cenik">
+        <div class="section-header">
+            <div class="section-label" data-cs="Ceník" data-en="Pricing" data-ua="Ціни">Ceník</div>
+            <h2 class="section-title" data-cs="Přehledné ceny" data-en="Clear pricing" data-ua="Зрозумілі ціни">Přehledné ceny</h2>
+            <p class="section-subtitle" data-cs="Žádné skryté poplatky. Prostě přijďte a užijte si to." data-en="No hidden fees. Just come and enjoy." data-ua="Жодних прихованих платежів. Просто приходьте і насолоджуйтесь.">Žádné skryté poplatky. Prostě přijďte a užijte si to.</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <h3>☕ <span data-cs="Kavárna" data-en="Café" data-ua="Кав'ярня">Kavárna</span></h3>
+                    <p data-cs="Nápoje & občerstvení" data-en="Drinks & snacks" data-ua="Напої та закуски">Nápoje & občerstvení</p>
+                </div>
+                <div class="pricing-price">
+                    <div class="price-amount" data-cs="od 55 Kč" data-en="from 55 CZK" data-ua="від 55 Kč">od 55 Kč</div>
+                    <div class="price-period">espresso</div>
+                </div>
+                <div class="pricing-features">
+                    <div class="pricing-feature"><span class="icon">✓</span><span>Espresso / Lungo — 55 Kč</span></div>
+                    <div class="pricing-feature"><span class="icon">✓</span><span>Cappuccino — 73 Kč</span></div>
+                    <div class="pricing-feature"><span class="icon">✓</span><span>Caffè Latte — 80 Kč</span></div>
+                    <div class="pricing-feature"><span class="icon">✓</span><span data-cs="Horká čokoláda — 65 Kč" data-en="Hot chocolate — 65 CZK" data-ua="Гарячий шоколад — 65 Kč">Horká čokoláda — 65 Kč</span></div>
+                    <div class="pricing-feature"><span class="icon">☕</span><span data-cs="Výběrová káva Chroast" data-en="Specialty coffee Chroast" data-ua="Вибіркова кава Chroast">Výběrová káva Chroast</span></div>
+                    <div class="pricing-feature"><span class="icon">🥛</span><span data-cs="Alt. mléko bez příplatku!" data-en="Alt. milk free of charge!" data-ua="Альт. молоко безкоштовно!">Alt. mléko bez příplatku!</span></div>
+                    <div class="pricing-feature"><span class="icon">🍺</span><span data-cs="Řemeslný pivovar Volt" data-en="Craft brewery Volt" data-ua="Крафтова пивоварня Volt">Řemeslný pivovar Volt</span></div>
+                </div>
+            </div>
+            <div class="pricing-card featured">
+                <div class="pricing-header">
+                    <h3>🧸 <span data-cs="Smyslová herna" data-en="Sensory playroom" data-ua="Сенсорна ігрова">Smyslová herna</span></h3>
+                    <p data-cs="Vstupné pro děti" data-en="Entry for children" data-ua="Вхід для дітей">Vstupné pro děti</p>
+                </div>
+                <div class="pricing-price">
+                    <div class="price-amount">120 Kč</div>
+                    <div class="price-period" data-cs="1. dítě / 1 hodina" data-en="1st child / 1 hour" data-ua="1. дитина / 1 година">1. dítě / 1 hodina</div>
+                </div>
+                <div class="pricing-features">
+                    <div class="pricing-feature"><span class="icon">✓</span><span data-cs="První dítě — 120 Kč/hod" data-en="First child — 120 CZK/hour" data-ua="Перша дитина — 120 Kč/год">První dítě — 120 Kč/hod</span></div>
+                    <div class="pricing-feature"><span class="icon">💚</span><span data-cs="Další děti z rodiny — dobrovolné" data-en="Other children — voluntary" data-ua="Інші діти — добровільно">Další děti z rodiny — dobrovolné</span></div>
+                    <div class="pricing-feature"><span class="icon">✓</span><span data-cs="Dospělý doprovod — zdarma" data-en="Adult companion — free" data-ua="Дорослий супровід — безкоштовно">Dospělý doprovod — zdarma</span></div>
+                    <div class="pricing-feature highlight"><span class="icon">🎫</span><span data-cs="Permanentka 10× — 1 100 Kč" data-en="10-entry pass — 1,100 CZK" data-ua="Абонемент 10× — 1 100 Kč">Permanentka 10× — 1 100 Kč</span></div>
+                    <div class="pricing-feature highlight"><span class="icon">🎫</span><span data-cs="Permanentka 20× — 2 000 Kč" data-en="20-entry pass — 2,000 CZK" data-ua="Абонемент 20× — 2 000 Kč">Permanentka 20× — 2 000 Kč</span></div>
+                    <div class="pricing-feature"><span class="icon">📧</span><span data-cs="Koupit online: nadohledzs@gmail.com" data-en="Buy online: nadohledzs@gmail.com" data-ua="Купити онлайн: nadohledzs@gmail.com">Koupit online: nadohledzs@gmail.com</span></div>
+                </div>
+            </div>
+            <div class="pricing-card">
+                <div class="pricing-header">
+                    <h3>🎂 <span data-cs="Oslavy" data-en="Parties" data-ua="Свята">Oslavy</span></h3>
+                    <p data-cs="Soukromé akce" data-en="Private events" data-ua="Приватні заходи">Soukromé akce</p>
+                </div>
+                <div class="pricing-price">
+                    <div class="price-amount">2 000 Kč</div>
+                    <div class="price-period" data-cs="max. 20 dětí" data-en="max. 20 children" data-ua="макс. 20 дітей">max. 20 dětí</div>
+                </div>
+                <div class="pricing-features">
+                    <div class="pricing-feature"><span class="icon">✓</span><span data-cs="Soukromý prostor herny" data-en="Private playroom space" data-ua="Приватний простір ігрової">Soukromý prostor herny</span></div>
+                    <div class="pricing-feature"><span class="icon">✓</span><span data-cs="Max. 20 dětí" data-en="Max. 20 children" data-ua="Макс. 20 дітей">Max. 20 dětí</span></div>
+                    <div class="pricing-feature important"><span class="icon">🍰</span><span data-cs="Povinný catering Na Kávu" data-en="Na Kávu catering required" data-ua="Обов'язковий кейтеринг Na Kávu">Povinný catering Na Kávu</span></div>
+                    <div class="pricing-feature"><span class="icon">📞</span><span data-cs="Nutná rezervace předem!" data-en="Reservation required!" data-ua="Необхідне бронювання!">Nutná rezervace předem!</span></div>
+                    <div class="pricing-feature"><span class="icon">🎈</span><span data-cs="Výzdoba dle přání" data-en="Decoration as desired" data-ua="Декор за бажанням">Výzdoba dle přání</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="pricing-note">
+            <p data-cs="💡 Permanentky lze zakoupit online přes e-mail nadohledzs@gmail.com nebo osobně na místě." data-en="💡 Passes can be purchased online via nadohledzs@gmail.com or in person." data-ua="💡 Абонементи можна придбати онлайн через nadohledzs@gmail.com або особисто.">💡 Permanentky lze zakoupit online přes e-mail nadohledzs@gmail.com nebo osobně na místě.</p>
+        </div>
+    </section>
+
+    <section class="hours" id="hodiny">
+        <div class="section-header">
+            <div class="section-label">Otevírací doba</div>
+            <h2 class="section-title">Kdy nás navštívit</h2>
+        </div>
+        <div class="hours-grid">
+            <div class="hour-item closed"><div class="hour-day">Po</div><div class="hour-time">Zavřeno</div></div>
+            <div class="hour-item"><div class="hour-day">Út</div><div class="hour-time">8:00–18:00</div></div>
+            <div class="hour-item"><div class="hour-day">St</div><div class="hour-time">8:00–18:00</div></div>
+            <div class="hour-item"><div class="hour-day">Čt</div><div class="hour-time">8:00–18:00</div></div>
+            <div class="hour-item"><div class="hour-day">Pá</div><div class="hour-time">8:00–18:00</div></div>
+            <div class="hour-item"><div class="hour-day">So</div><div class="hour-time">10:00–18:00</div></div>
+            <div class="hour-item"><div class="hour-day">Ne</div><div class="hour-time">10:00–17:00</div></div>
+        </div>
+        <div class="hours-note">
+            <h4>🎉 Těšíme se na vás!</h4>
+            <p>Rezervace není nutná — stačí přijít. Pro soukromé akce a oslavy nás kontaktujte předem.</p>
+            <a href="tel:+420770138462" class="hours-phone">📞 +420 770 138 462</a>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="section-header">
+            <div class="section-label">Recenze</div>
+            <h2 class="section-title">Co říkají naši návštěvníci</h2>
+            <p class="section-subtitle">Přečtěte si, proč se k nám rodiny rády vrací.</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-quote">"</div>
+                <p class="testimonial-text">Úžasné místo! Dcerka (2 roky) si zamilovala senzorické stoly a já si konečně v klidu dala kávu. Personál moc milý.</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">LK</div>
+                    <div class="author-info"><h4>Lucie K.</h4><span>Google recenze</span></div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-quote">"</div>
+                <p class="testimonial-text">Slavili jsme tu narozeniny a bylo to perfektní. Děti si hrály, rodiče si povídali u kávy. Výzdoba krásná, cena férová.</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">MN</div>
+                    <div class="author-info"><h4>Martin N.</h4><span>Facebook</span></div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-quote">"</div>
+                <p class="testimonial-text">Chodíme sem pravidelně. Skvělá káva, čistý prostor a hlavně — děti se tu nikdy nenudí. V Milovicích nic lepšího nenajdete.</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">PH</div>
+                    <div class="author-info"><h4>Petra H.</h4><span>Google recenze</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq">
+        <div class="section-header">
+            <div class="section-label">FAQ</div>
+            <h2 class="section-title">Máte otázky?</h2>
+            <p class="section-subtitle">Zde najdete odpovědi na to, co nás rodiče nejčastěji ptají.</p>
+        </div>
+        <div class="faq-grid">
+            <div class="faq-item">
+                <button class="faq-question">Pro jaký věk je herna určena?<span>+</span></button>
+                <div class="faq-answer"><p>Herna je navržena pro děti od 0 do 6 let. Aktivity jsou přizpůsobeny různým věkovým skupinám, takže si zde hrají i ti nejmenší batolata.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">Je nutné rezervovat vstup předem?<span>+</span></button>
+                <div class="faq-answer"><p>Ne, rezervace není nutná — stačí přijít. Kapacita herny je omezená, ale většinou místo najdete. Pro oslavy a soukromé akce doporučujeme rezervovat předem.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">Je u vás parkování?<span>+</span></button>
+                <div class="faq-answer"><p>Ano, přímo u budovy je k dispozici několik parkovacích míst. V okolí je také dostatek veřejného parkování.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">Mohu přijít i bez dítěte — jen na kávu?<span>+</span></button>
+                <div class="faq-answer"><p>Samozřejmě! Naše kavárna je otevřená pro všechny. Rádi vás přivítáme i bez dětského doprovodu.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">Nabízíte bezlepkové nebo veganské možnosti?<span>+</span></button>
+                <div class="faq-answer"><p>Ano, v nabídce máme rostlinná mléka ke kávě a pravidelně zařazujeme bezlepkové i veganské zákusky. Aktuální nabídku najdete na místě.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="kontakt">
+        <div class="section-header">
+            <div class="section-label">Kontakt</div>
+            <h2 class="section-title">Najdete nás snadno</h2>
+            <p class="section-subtitle">Jsme v srdci Milovic — přijďte se podívat osobně.</p>
+        </div>
+        <div class="contact-grid">
+            <div class="contact-info">
+                <div class="contact-item">
+                    <div class="contact-icon">📍</div>
+                    <div><h4>Adresa</h4><a href="https://maps.google.com/?q=Višňová+510,+Milovice" target="_blank">Višňová 510, 289 24 Milovice</a></div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">📞</div>
+                    <div><h4>Telefon</h4><a href="tel:+420770138462">+420 770 138 462</a></div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">✉️</div>
+                    <div><h4>E-mail</h4><a href="/cdn-cgi/l/email-protection#452b24212a2d2920213f36052228242c296b262a28"><span class="__cf_email__" data-cfemail="d5bbb4b1babdb9b0b1afa695b2b8b4bcb9fbb6bab8">[email&#160;protected]</span></a></div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">📱</div>
+                    <div><h4>Sledujte nás</h4><a href="https://www.facebook.com/smyslariummilovice" target="_blank">Facebook</a> · <a href="https://www.instagram.com/smyslarium" target="_blank">Instagram</a></div>
+                </div>
+            </div>
+            <div class="contact-map">📍</div>
+        </div>
+    </section>
+
+    <footer>
+        <a href="na-dohled.html" class="logo">NA <span>DOHLED</span> | Smyslárium</a>
+        <p>© 2026 Smyslárium Milovice. Všechna práva vyhrazena.</p>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        function animateCounters() {
+            document.querySelectorAll('.stat-number').forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-target'));
+                const duration = 2000;
+                const increment = target / (duration / 16);
+                let current = 0;
+                const updateCounter = () => {
+                    current += increment;
+                    if (current < target) {
+                        counter.textContent = Math.floor(current);
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.textContent = target;
+                    }
+                };
+                updateCounter();
+            });
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        observer.observe(document.querySelector('.stats'));
+
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const item = button.parentElement;
+                const isActive = item.classList.contains('active');
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+                if (!isActive) item.classList.add('active');
+            });
+        });
+
+        // Language switcher
+        let currentLang = localStorage.getItem('nadohled_lang') || 'cs';
+        
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('nadohled_lang', lang);
+            
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('[data-' + lang + ']').forEach(el => {
+                const text = el.getAttribute('data-' + lang);
+                if (text) el.textContent = text;
+            });
+            
+            document.documentElement.lang = lang === 'ua' ? 'uk' : lang;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            const langMap = { cs: 0, en: 1, ua: 2 };
+            const buttons = document.querySelectorAll('.lang-btn');
+            if (buttons[langMap[currentLang]]) buttons[langMap[currentLang]].classList.add('active');
+            
+            if (currentLang !== 'cs') {
+                document.querySelectorAll('[data-' + currentLang + ']').forEach(el => {
+                    const text = el.getAttribute('data-' + currentLang);
+                    if (text) el.textContent = text;
+                });
+            }
+        });
+    </script>
+</body>
+</html>
