@@ -91,6 +91,37 @@
         .nav-cta::after { display: none !important; }
         .nav-cta:hover { background: #c9694f; }
 
+        /* Language Switcher */
+        .lang-switcher {
+            display: flex;
+            gap: 0.25rem;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 0.25rem;
+            border-radius: 50px;
+            margin-left: 0.5rem;
+        }
+        .lang-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            background: transparent;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: scale(1.1);
+        }
+        .lang-btn.active {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
         /* Hero Section */
         .hero {
             min-height: 100vh;
@@ -482,6 +513,43 @@
             color: var(--color-sage);
             font-weight: bold;
         }
+        .pricing-feature.highlight {
+            background: var(--color-mint);
+            margin: 0 -0.5rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+        }
+        .pricing-feature.important {
+            background: var(--color-peach);
+            margin: 0 -0.5rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .pricing-note {
+            max-width: 800px;
+            margin: 3rem auto 0;
+            text-align: center;
+            padding: 1.5rem 2rem;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            color: var(--color-warm-gray);
+        }
+
+        /* Social Media Section */
+        .social-media {
+            padding: 6rem 2rem;
+            background: linear-gradient(180deg, var(--color-cream) 0%, white 100%);
+        }
+        .social-embed {
+            display: flex;
+            justify-content: center;
+            margin: 0 auto;
+        }
+        .social-cta {
+            text-align: center;
+        }
 
         /* Hours Section */
         .hours {
@@ -744,12 +812,17 @@
     <nav id="navbar">
         <a href="na-dohled.html" class="logo">NA <span>DOHLED</span></a>
         <div class="nav-links">
-            <a href="#o-nas">O nás</a>
-            <a href="#sluzby">Co nabízíme</a>
-            <a href="#cenik">Ceník</a>
-            <a href="#hodiny">Otevírací doba</a>
-            <a href="#kontakt">Kontakt</a>
-            <a href="tel:+420770138462" class="nav-cta">📞 Zavolat</a>
+            <a href="#o-nas" data-cs="O nás" data-en="About" data-ua="Про нас">O nás</a>
+            <a href="#sluzby" data-cs="Co nabízíme" data-en="Services" data-ua="Послуги">Co nabízíme</a>
+            <a href="#cenik" data-cs="Ceník" data-en="Pricing" data-ua="Ціни">Ceník</a>
+            <a href="#hodiny" data-cs="Otevírací doba" data-en="Hours" data-ua="Години роботи">Otevírací doba</a>
+            <a href="#kontakt" data-cs="Kontakt" data-en="Contact" data-ua="Контакт">Kontakt</a>
+            <a href="tel:+420770138462" class="nav-cta">📞</a>
+            <div class="lang-switcher">
+                <button class="lang-btn active" onclick="setLanguage('cs')" title="Čeština">🇨🇿</button>
+                <button class="lang-btn" onclick="setLanguage('en')" title="English">🇬🇧</button>
+                <button class="lang-btn" onclick="setLanguage('ua')" title="Українська">🇺🇦</button>
+            </div>
         </div>
     </nav>
 
@@ -900,60 +973,68 @@
 
     <section class="pricing" id="cenik">
         <div class="section-header">
-            <div class="section-label">Ceník</div>
-            <h2 class="section-title">Přehledné ceny</h2>
-            <p class="section-subtitle">Žádné skryté poplatky. Prostě přijďte a užijte si to.</p>
+            <div class="section-label" data-cs="Ceník" data-en="Pricing" data-ua="Ціни">Ceník</div>
+            <h2 class="section-title" data-cs="Přehledné ceny" data-en="Clear pricing" data-ua="Зрозумілі ціни">Přehledné ceny</h2>
+            <p class="section-subtitle" data-cs="Žádné skryté poplatky. Prostě přijďte a užijte si to." data-en="No hidden fees. Just come and enjoy." data-ua="Жодних прихованих платежів. Просто приходьте і насолоджуйтесь.">Žádné skryté poplatky. Prostě přijďte a užijte si to.</p>
         </div>
         <div class="pricing-grid">
             <div class="pricing-card">
                 <div class="pricing-header">
-                    <h3>☕ Kavárna</h3>
-                    <p>Nápoje & občerstvení</p>
+                    <h3>☕ <span data-cs="Kavárna" data-en="Café" data-ua="Кав'ярня">Kavárna</span></h3>
+                    <p data-cs="Nápoje & občerstvení" data-en="Drinks & snacks" data-ua="Напої та закуски">Nápoje & občerstvení</p>
                 </div>
                 <div class="pricing-price">
-                    <div class="price-amount">od 55 Kč</div>
+                    <div class="price-amount" data-cs="od 55 Kč" data-en="from 55 CZK" data-ua="від 55 Kč">od 55 Kč</div>
                     <div class="price-period">espresso</div>
                 </div>
                 <div class="pricing-features">
                     <div class="pricing-feature"><span class="icon">✓</span><span>Espresso / Lungo — 55 Kč</span></div>
                     <div class="pricing-feature"><span class="icon">✓</span><span>Cappuccino — 73 Kč</span></div>
                     <div class="pricing-feature"><span class="icon">✓</span><span>Caffè Latte — 80 Kč</span></div>
-                    <div class="pricing-feature"><span class="icon">✓</span><span>Horká čokoláda — 65 Kč</span></div>
-                    <div class="pricing-feature"><span class="icon">✓</span><span>Domácí zákusek — od 69 Kč</span></div>
+                    <div class="pricing-feature"><span class="icon">✓</span><span data-cs="Horká čokoláda — 65 Kč" data-en="Hot chocolate — 65 CZK" data-ua="Гарячий шоколад — 65 Kč">Horká čokoláda — 65 Kč</span></div>
+                    <div class="pricing-feature"><span class="icon">☕</span><span data-cs="Výběrová káva Chroast" data-en="Specialty coffee Chroast" data-ua="Вибіркова кава Chroast">Výběrová káva Chroast</span></div>
+                    <div class="pricing-feature"><span class="icon">🥛</span><span data-cs="Alt. mléko bez příplatku!" data-en="Alt. milk free of charge!" data-ua="Альт. молоко безкоштовно!">Alt. mléko bez příplatku!</span></div>
+                    <div class="pricing-feature"><span class="icon">🍺</span><span data-cs="Řemeslný pivovar Volt" data-en="Craft brewery Volt" data-ua="Крафтова пивоварня Volt">Řemeslný pivovar Volt</span></div>
                 </div>
             </div>
             <div class="pricing-card featured">
                 <div class="pricing-header">
-                    <h3>🧸 Smyslová herna</h3>
-                    <p>Vstupné pro děti</p>
+                    <h3>🧸 <span data-cs="Smyslová herna" data-en="Sensory playroom" data-ua="Сенсорна ігрова">Smyslová herna</span></h3>
+                    <p data-cs="Vstupné pro děti" data-en="Entry for children" data-ua="Вхід для дітей">Vstupné pro děti</p>
                 </div>
                 <div class="pricing-price">
-                    <div class="price-amount">150 Kč</div>
-                    <div class="price-period">dítě / 2 hodiny</div>
+                    <div class="price-amount">120 Kč</div>
+                    <div class="price-period" data-cs="1. dítě / 1 hodina" data-en="1st child / 1 hour" data-ua="1. дитина / 1 година">1. dítě / 1 hodina</div>
                 </div>
                 <div class="pricing-features">
-                    <div class="pricing-feature"><span class="icon">✓</span><span>Děti 0–3 roky — 150 Kč</span></div>
-                    <div class="pricing-feature"><span class="icon">✓</span><span>Děti 3–6 let — 180 Kč</span></div>
-                    <div class="pricing-feature"><span class="icon">✓</span><span>Dospělý doprovod — zdarma</span></div>
-                    <div class="pricing-feature"><span class="icon">✓</span><span>Druhé dítě — sleva 20 %</span></div>
+                    <div class="pricing-feature"><span class="icon">✓</span><span data-cs="První dítě — 120 Kč/hod" data-en="First child — 120 CZK/hour" data-ua="Перша дитина — 120 Kč/год">První dítě — 120 Kč/hod</span></div>
+                    <div class="pricing-feature"><span class="icon">💚</span><span data-cs="Další děti z rodiny — dobrovolné" data-en="Other children — voluntary" data-ua="Інші діти — добровільно">Další děti z rodiny — dobrovolné</span></div>
+                    <div class="pricing-feature"><span class="icon">✓</span><span data-cs="Dospělý doprovod — zdarma" data-en="Adult companion — free" data-ua="Дорослий супровід — безкоштовно">Dospělý doprovod — zdarma</span></div>
+                    <div class="pricing-feature highlight"><span class="icon">🎫</span><span data-cs="Permanentka 10× — 1 100 Kč" data-en="10-entry pass — 1,100 CZK" data-ua="Абонемент 10× — 1 100 Kč">Permanentka 10× — 1 100 Kč</span></div>
+                    <div class="pricing-feature highlight"><span class="icon">🎫</span><span data-cs="Permanentka 20× — 2 000 Kč" data-en="20-entry pass — 2,000 CZK" data-ua="Абонемент 20× — 2 000 Kč">Permanentka 20× — 2 000 Kč</span></div>
+                    <div class="pricing-feature"><span class="icon">📧</span><span data-cs="Koupit online: nadohledzs@gmail.com" data-en="Buy online: nadohledzs@gmail.com" data-ua="Купити онлайн: nadohledzs@gmail.com">Koupit online: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="81efe0e5eee9ede4e5fbf2c1e6ece0e8edafe2eeec">[email&#160;protected]</a></span></div>
                 </div>
             </div>
             <div class="pricing-card">
                 <div class="pricing-header">
-                    <h3>🎂 Oslavy & akce</h3>
-                    <p>Soukromé pronájmy</p>
+                    <h3>🎂 <span data-cs="Oslavy" data-en="Parties" data-ua="Свята">Oslavy</span></h3>
+                    <p data-cs="Soukromé akce" data-en="Private events" data-ua="Приватні заходи">Soukromé akce</p>
                 </div>
                 <div class="pricing-price">
-                    <div class="price-amount">od 2 500 Kč</div>
-                    <div class="price-period">2 hodiny / do 10 dětí</div>
+                    <div class="price-amount">2 000 Kč</div>
+                    <div class="price-period" data-cs="max. 20 dětí" data-en="max. 20 children" data-ua="макс. 20 дітей">max. 20 dětí</div>
                 </div>
                 <div class="pricing-features">
-                    <div class="pricing-feature"><span class="icon">✓</span><span>Soukromý prostor herny</span></div>
-                    <div class="pricing-feature"><span class="icon">✓</span><span>Výzdoba dle přání</span></div>
-                    <div class="pricing-feature"><span class="icon">✓</span><span>Občerstvení na objednávku</span></div>
-                    <div class="pricing-feature"><span class="icon">✓</span><span>Individuální domluva</span></div>
+                    <div class="pricing-feature"><span class="icon">✓</span><span data-cs="Soukromý prostor herny" data-en="Private playroom space" data-ua="Приватний простір ігрової">Soukromý prostor herny</span></div>
+                    <div class="pricing-feature"><span class="icon">✓</span><span data-cs="Max. 20 dětí" data-en="Max. 20 children" data-ua="Макс. 20 дітей">Max. 20 dětí</span></div>
+                    <div class="pricing-feature important"><span class="icon">🍰</span><span data-cs="Povinný catering Na Kávu" data-en="Na Kávu catering required" data-ua="Обов'язковий кейтеринг Na Kávu">Povinný catering Na Kávu</span></div>
+                    <div class="pricing-feature"><span class="icon">📞</span><span data-cs="Nutná rezervace předem!" data-en="Reservation required!" data-ua="Необхідне бронювання!">Nutná rezervace předem!</span></div>
+                    <div class="pricing-feature"><span class="icon">🎈</span><span data-cs="Výzdoba dle přání" data-en="Decoration as desired" data-ua="Декор за бажанням">Výzdoba dle přání</span></div>
                 </div>
             </div>
+        </div>
+        <div class="pricing-note">
+            <p data-cs="💡 Permanentky lze zakoupit online přes e-mail nadohledzs@gmail.com nebo osobně na místě." data-en="💡 Passes can be purchased online via nadohledzs@gmail.com or in person." data-ua="💡 Абонементи можна придбати онлайн через nadohledzs@gmail.com або особисто.">💡 Permanentky lze zakoupit online přes e-mail <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4d232c292225212829373e0d2a202c2421632e2220">[email&#160;protected]</a> nebo osobně na místě.</p>
         </div>
     </section>
 
@@ -1012,6 +1093,23 @@
         </div>
     </section>
 
+    <!-- Social Media Section -->
+    <section class="social-media" id="socialni-site">
+        <div class="section-header">
+            <div class="section-label">📱 <span data-cs="Sledujte nás" data-en="Follow us" data-ua="Слідкуйте за нами">Sledujte nás</span></div>
+            <h2 class="section-title" data-cs="Novinky z Facebooku" data-en="Facebook news" data-ua="Новини з Facebook">Novinky z Facebooku</h2>
+            <p class="section-subtitle" data-cs="Sledujte naše příspěvky a buďte v obraze o akcích a novinkách." data-en="Follow our posts and stay updated about events and news." data-ua="Слідкуйте за нашими публікаціями та будьте в курсі подій та новин.">Sledujte naše příspěvky a buďte v obraze o akcích a novinkách.</p>
+        </div>
+        <div class="social-embed">
+            <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fprofile.php%3Fid%3D61578928778606&tabs=timeline&width=500&height=600&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true" width="500" height="600" style="border:none;overflow:hidden;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.1);max-width:100%;" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+        </div>
+        <div class="social-cta">
+            <a href="https://www.facebook.com/profile.php?id=61578928778606" target="_blank" class="btn btn-primary" style="margin-top:2rem;">
+                📘 <span data-cs="Sledovat na Facebooku" data-en="Follow on Facebook" data-ua="Слідкувати на Facebook">Sledovat na Facebooku</span>
+            </a>
+        </div>
+    </section>
+
     <section class="faq">
         <div class="section-header">
             <div class="section-label">FAQ</div>
@@ -1060,7 +1158,7 @@
                 </div>
                 <div class="contact-item">
                     <div class="contact-icon">✉️</div>
-                    <div><h4>E-mail</h4><a href="mailto:nadohledzs@gmail.com">nadohledzs@gmail.com</a></div>
+                    <div><h4>E-mail</h4><a href="/cdn-cgi/l/email-protection#452b24212a2d2920213f36052228242c296b262a28"><span class="__cf_email__" data-cfemail="d5bbb4b1babdb9b0b1afa695b2b8b4bcb9fbb6bab8">[email&#160;protected]</span></a></div>
                 </div>
                 <div class="contact-item">
                     <div class="contact-icon">📱</div>
@@ -1076,7 +1174,7 @@
         <p>© 2026 Smyslárium Milovice. Všechna práva vyhrazena.</p>
     </footer>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         window.addEventListener('scroll', function() {
             const navbar = document.getElementById('navbar');
             navbar.classList.toggle('scrolled', window.scrollY > 50);
@@ -1119,6 +1217,27 @@
                 if (!isActive) item.classList.add('active');
             });
         });
-    </script>
-</body>
-</html>
+
+        // Language switcher
+        let currentLang = localStorage.getItem('nadohled_lang') || 'cs';
+        
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('nadohled_lang', lang);
+            
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('[data-' + lang + ']').forEach(el => {
+                const text = el.getAttribute('data-' + lang);
+                if (text) el.textContent = text;
+            });
+            
+            document.documentElement.lang = lang === 'ua' ? 'uk' : lang;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            const langMap = { cs: 0, en: 1, ua: 2 };
+            const buttons = document.querySelectorAll('.lang-btn');
+            if (buttons[langMap[currentLang]]) buttons[langMap[currentLang]].classList.add

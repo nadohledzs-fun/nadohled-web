@@ -557,12 +557,15 @@
             padding: 6rem 2rem;
             background: white;
         }
-        .instagram-grid {
-            max-width: 1200px;
+        .instagram-embed {
+            max-width: 1000px;
             margin: 0 auto;
+        }
+        .instagram-placeholder-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
             gap: 0.5rem;
+            margin-bottom: 1.5rem;
         }
         .instagram-item {
             aspect-ratio: 1;
@@ -572,7 +575,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
+            font-size: 2rem;
             transition: all 0.3s;
             cursor: pointer;
         }
@@ -585,20 +588,9 @@
         .instagram-item:nth-child(4) { background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%); }
         .instagram-item:nth-child(5) { background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); }
         .instagram-item:nth-child(6) { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); }
-        .instagram-follow {
-            text-align: center;
-            margin-top: 2rem;
+        @media (max-width: 768px) {
+            .instagram-placeholder-grid { grid-template-columns: repeat(3, 1fr); }
         }
-        .instagram-follow a {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--color-coffee);
-            font-weight: 600;
-            text-decoration: none;
-            font-size: 1.1rem;
-        }
-        .instagram-follow a:hover { color: var(--color-espresso); }
 
         /* Contact Section */
         .contact {
@@ -978,22 +970,28 @@
         </div>
     </section>
 
-    <section class="instagram">
+    <section class="instagram" id="instagram">
         <div class="section-header">
-            <div class="section-label">Instagram</div>
-            <h2 class="section-title">Sledujte nás</h2>
-            <p class="section-subtitle">Nahlédněte k nám na sociálních sítích.</p>
+            <div class="section-label">📸 Instagram</div>
+            <h2 class="section-title" data-cs="Sledujte @nakavu_kavarna" data-en="Follow @nakavu_kavarna" data-ua="Слідкуйте @nakavu_kavarna">Sledujte @nakavu_kavarna</h2>
+            <p class="section-subtitle" data-cs="Novinky, akce a zákulisí z naší kavárny." data-en="News, events and behind the scenes from our café." data-ua="Новини, події та закулісся нашої кав'ярні.">Novinky, akce a zákulisí z naší kavárny.</p>
         </div>
-        <div class="instagram-grid">
-            <div class="instagram-item">☕</div>
-            <div class="instagram-item">🥐</div>
-            <div class="instagram-item">🌿</div>
-            <div class="instagram-item">🍰</div>
-            <div class="instagram-item">👶</div>
-            <div class="instagram-item">🌸</div>
-        </div>
-        <div class="instagram-follow">
-            <a href="https://www.instagram.com/nakavulysa" target="_blank">@nakavulysa →</a>
+        <div class="instagram-embed">
+            <!-- Instagram Feed Widget -->
+            <script src="https://static.elfsight.com/platform/platform.js" async></script>
+            <div class="elfsight-app-placeholder" style="background:var(--color-cream);border-radius:20px;padding:2rem;text-align:center;max-width:800px;margin:0 auto;">
+                <div class="instagram-placeholder-grid">
+                    <div class="instagram-item">☕</div>
+                    <div class="instagram-item">🥐</div>
+                    <div class="instagram-item">🌿</div>
+                    <div class="instagram-item">🍰</div>
+                    <div class="instagram-item">👶</div>
+                    <div class="instagram-item">🌸</div>
+                </div>
+                <a href="https://www.instagram.com/nakavu_kavarna" target="_blank" class="btn btn-primary" style="margin-top:2rem;">
+                    📷 <span data-cs="Sledovat na Instagramu" data-en="Follow on Instagram" data-ua="Слідкувати в Instagram">Sledovat na Instagramu</span>
+                </a>
+            </div>
         </div>
     </section>
 
@@ -1015,9 +1013,9 @@
             </div>
             <div class="contact-card">
                 <div class="contact-icon">📱</div>
-                <h4>Sociální sítě</h4>
+                <h4 data-cs="Sociální sítě" data-en="Social media" data-ua="Соціальні мережі">Sociální sítě</h4>
                 <a href="https://www.facebook.com/nakavulysa" target="_blank">Facebook</a> · 
-                <a href="https://www.instagram.com/nakavulysa" target="_blank">Instagram</a>
+                <a href="https://www.instagram.com/nakavu_kavarna" target="_blank">Instagram</a>
             </div>
         </div>
     </section>
