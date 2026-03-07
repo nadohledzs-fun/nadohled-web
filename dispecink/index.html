@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Divine Dispatch v20.3</title>
+<title>Divine Dispatch v21.0</title>
 <style>
 :root{--ff:'Avenir','Avenir Next','Nunito Sans','Segoe UI',system-ui,sans-serif;--red:#C41E1E;--red-d:#7F1D1D;--red-b:#EF4444;--red-g:rgba(196,30,30,.3);--rose:#FCA5A5;--bg:#0A0A0C;--bg2:#131316;--bg3:rgba(19,19,22,.88);--bgE:rgba(35,30,40,.55);--tx:#F4F4F5;--tx2:rgba(244,244,245,.6);--tx3:rgba(244,244,245,.35);--bdr:rgba(196,30,30,.18);--bdr2:rgba(255,255,255,.06);--ok:#34D399;--warn:#FBBF24;--info:#60A5FA;--cash:#4ADE80;--gold:#D97706;--mw:640px;--r:10px;--r2:14px;--rr:9999px;
 /* Courier colors */
@@ -154,11 +154,13 @@ input,select{font-family:var(--ff)}
 .rest-bar-name:hover{color:var(--red-b)}
 .rest-bar-name svg{width:14px;height:14px;opacity:.6;stroke:currentColor;fill:none;stroke-width:2}
 .rest-bar-btns{display:flex;gap:4px}
-.rest-bar-pdf,.rest-bar-sms{padding:5px 10px;border-radius:6px;color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;gap:4px;cursor:pointer;transition:transform .15s}
+.rest-bar-pdf,.rest-bar-sms,.rest-bar-sms2,.rest-bar-sms3{padding:5px 10px;border-radius:6px;color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;gap:4px;cursor:pointer;transition:transform .15s}
 .rest-bar-pdf{background:linear-gradient(135deg,var(--red-d),var(--red))}
 .rest-bar-sms{background:linear-gradient(135deg,#059669,var(--ok))}
-.rest-bar-pdf:active,.rest-bar-sms:active{transform:scale(.95)}
-.rest-bar-pdf svg,.rest-bar-sms svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2}
+.rest-bar-sms2{background:linear-gradient(135deg,#0891B2,#06B6D4);padding:5px 8px}
+.rest-bar-sms3{background:linear-gradient(135deg,#D97706,#F59E0B);padding:5px 8px}
+.rest-bar-pdf:active,.rest-bar-sms:active,.rest-bar-sms2:active,.rest-bar-sms3:active{transform:scale(.95)}
+.rest-bar-pdf svg,.rest-bar-sms svg,.rest-bar-sms2 svg,.rest-bar-sms3 svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2}
 
 /* Card header */
 .cd-h{padding:9px 10px;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--bdr2)}
@@ -362,6 +364,31 @@ input,select{font-family:var(--ff)}
 .cr-detail{font-size:10px;color:var(--tx2)}
 .cr-amt{font-weight:700;font-size:15px;color:var(--red-b)}
 
+/* Summary */
+.sum-section{margin-bottom:16px}
+.sum-section-t{font-size:11px;font-weight:700;color:var(--tx3);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.sum-city-grid{display:flex;flex-direction:column;gap:6px}
+.sum-city{background:var(--bg3);border:1px solid var(--bdr2);border-radius:var(--r);padding:10px 12px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:all .2s}
+.sum-city:hover{border-color:var(--info);background:rgba(96,165,250,.05)}
+.sum-city.expanded{border-color:var(--info);background:rgba(96,165,250,.08)}
+.sum-city-name{font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px}
+.sum-city-count{font-weight:700;font-size:15px;color:var(--info)}
+.sum-orders{margin-top:6px;padding:8px;background:var(--bgE);border-radius:var(--r);display:none}
+.sum-city.expanded+.sum-orders{display:block}
+.sum-order{padding:8px;margin-bottom:4px;background:var(--bg3);border:1px solid var(--bdr2);border-radius:6px;font-size:11px}
+.sum-order:last-child{margin-bottom:0}
+.sum-order-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.sum-order-rest{font-weight:700}
+.sum-order-time{color:var(--tx3)}
+.sum-order-cust{color:var(--tx2)}
+.sum-total-bar{background:linear-gradient(135deg,rgba(96,165,250,.1),rgba(96,165,250,.05));border:1px solid rgba(96,165,250,.2);border-radius:var(--r);padding:14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.sum-total-label{font-size:11px;color:var(--tx3);font-weight:700}
+.sum-total-value{font-size:22px;font-weight:700;color:var(--info)}
+
+/* Delete button (admin only) */
+.ab-del{background:rgba(239,68,68,.12);color:var(--red-b)}
+.ab-del:hover{background:rgba(239,68,68,.22)}
+
 /* Rank badges */
 .rank-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:var(--rr);font-size:8px;font-weight:700}
 .rank-badge.angel{background:rgba(255,255,255,.1);color:var(--tx2)}
@@ -423,7 +450,7 @@ input,select{font-family:var(--ff)}
       <div class="brand-ico">👼</div>
       <div>
         <div class="brand-t">Divine Delivery</div>
-        <div class="brand-s">Dispečink v20.1</div>
+        <div class="brand-s">Dispečink v21.0</div>
       </div>
     </div>
     <div class="hdr-r">
@@ -457,6 +484,7 @@ input,select{font-family:var(--ff)}
   <div class="bn-in">
     <button class="ni on" id="navOrders"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg><span>Objednávky</span></button>
     <button class="ni" id="navHist"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Historie</span></button>
+    <button class="ni" id="navSummary"><svg viewBox="0 0 24 24"><path d="M21 12h-8"/><path d="M21 6h-8"/><path d="M21 18h-8"/><path d="M3 12h2"/><path d="M3 6h2"/><path d="M3 18h2"/><circle cx="8" cy="12" r="1"/><circle cx="8" cy="6" r="1"/><circle cx="8" cy="18" r="1"/></svg><span>Souhrn</span></button>
     <button class="ni admin" id="navAdmin" style="display:none"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg><span>Tržby</span></button>
     <button class="ni" id="navSettings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg><span>Nastavení</span></button>
     <button class="ni" id="navMap"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg><span>Mapa</span></button>
@@ -537,7 +565,7 @@ input,select{font-family:var(--ff)}
     <div class="set-section">
       <div class="set-section-t">ℹ️ Info</div>
       <div class="set-item">
-        <div><div class="set-item-label">Verze</div><div class="set-item-desc">Divine Dispatch v20.3</div></div>
+        <div><div class="set-item-label">Verze</div><div class="set-item-desc">Divine Dispatch v21.0</div></div>
       </div>
       <div class="set-item">
         <div><div class="set-item-label">Přihlášen</div><div class="set-item-desc" id="setUser">—</div></div>
@@ -560,12 +588,31 @@ input,select{font-family:var(--ff)}
   <div class="panel-scroll" id="apContent"></div>
 </div>
 
+<!-- SUMMARY -->
+<div class="panel" id="SUM">
+  <div class="panel-hdr" style="color:var(--info)">
+    <h2>📊 Souhrn</h2>
+    <button class="panel-close" id="sumClose">✕</button>
+  </div>
+  <div class="panel-scroll" id="sumContent"></div>
+</div>
+
 <script>
 (function(){
 'use strict';
 var C={API:'https://www.divinedelivery.cz/_functions',POLL:12000,COURIERS:['Marek','Tonda','Kuba','Tomáš','Matěj','Milan'],ADMIN:'Marek',ADMIN_PW:'Marekporadnecochce.12345',DMIN:45,GLOW_TIME:90000,
-COLORS:{Marek:'c-marek',Tonda:'c-tonda',Kuba:'c-kuba','Tomáš':'c-tomas','Matěj':'c-matej',Milan:'c-milan'}};
-var S={courier:null,isAdmin:false,orders:[],ids:new Set(),glowIds:new Set(),flt:'all',view:'default',snd:true,vibrate:true,glow:true,timer:null,first:true,errs:0,history:[]};
+COLORS:{Marek:'c-marek',Tonda:'c-tonda',Kuba:'c-kuba','Tomáš':'c-tomas','Matěj':'c-matej',Milan:'c-milan'},
+// Restaurant phone numbers
+REST_PHONES:{
+  'kebab samuel':'+420777123456',
+  'kebab house mix apetit':'+420777234567',
+  'mix apetit':'+420777234567',
+  'vietnamská restaurace dalas':'+420777345678',
+  'dalas':'+420777345678',
+  'bistro viet-thai':'+420777456789',
+  'viet-thai':'+420777456789'
+}};
+var S={courier:null,isAdmin:false,orders:[],ids:new Set(),glowIds:new Set(),flt:'all',view:'default',snd:true,vibrate:true,glow:true,timer:null,first:true,errs:0,history:[],todayOrders:[]};
 var modalState={type:null,id:null};
 var transferTarget=null;
 
@@ -640,6 +687,8 @@ function poll(){
     o.forEach(function(x){S.ids.add(x._id)});
     // History
     o.forEach(function(x){if(ns(x.status)==='DELIVERED'&&x.courier===S.courier){if(!S.history.some(function(h){return h._id===x._id}))S.history.push(x)}});
+    // Save to localStorage
+    saveTodayOrders();
     if(fresh.length&&!S.first){
       if(S.snd)playSound();
       toast('🆕 '+fresh.length+' nová!',4000);
@@ -649,7 +698,7 @@ function poll(){
     render();
   });
 }
-function startPoll(){poll();S.timer=setInterval(poll,C.POLL)}
+function startPoll(){loadTodayOrders();poll();S.timer=setInterval(poll,C.POLL)}
 function playSound(){try{var ctx=new(window.AudioContext||window.webkitAudioContext)();for(var i=0;i<3;i++){var s=ctx.currentTime+i*.25;var o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(880+i*220,s);g.gain.setValueAtTime(.2,s);g.gain.exponentialRampToValueAtTime(.01,s+.2);o.connect(g);g.connect(ctx.destination);o.start(s);o.stop(s+.2)}}catch(e){}}
 
 // === RENDER ===
@@ -845,11 +894,12 @@ function card(o,i){
   // Actions
   var act='';
   var trIcon='<svg viewBox="0 0 24 24"><path d="M16 3h5v5"/><path d="M4 20L21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg>';
+  var delIcon='<svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/><path d="M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>';
   
   if(S.isAdmin){
     // Admin can always act
     if(st==='PENDING'&&!o.courier){
-      act='<div class="cd-a"><button class="ab ab-beru" data-action="beru" data-id="'+id+'"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>BERU</button></div>';
+      act='<div class="cd-a"><button class="ab ab-beru" data-action="beru" data-id="'+id+'"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>BERU</button><button class="ab ab-del" data-action="delete" data-id="'+id+'">'+delIcon+'</button></div>';
     }else if(st!=='DELIVERED'){
       act='<div class="cd-a">';
       if(!mine)act+='<button class="ab ab-admin" data-action="takeover" data-id="'+id+'"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg>Převzít</button>';
@@ -857,6 +907,7 @@ function card(o,i){
       if(st==='PICKED')act+='<button class="ab ab-pick ok" disabled><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Vyzved. ✓</button>';
       if(st==='ASSIGNED'||st==='PICKED')act+='<button class="ab ab-dlv" data-action="dlv" data-id="'+id+'" data-tot="'+price+'"><svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>Doruč.</button>';
       act+='<button class="ab ab-tr" data-action="transfer" data-id="'+id+'">'+trIcon+'</button>';
+      act+='<button class="ab ab-del" data-action="delete" data-id="'+id+'">'+delIcon+'</button>';
       act+='</div>';
     }
   }else{
@@ -876,7 +927,7 @@ function card(o,i){
   var courierInfo=o.courier?'<div class="courier-info '+courierCls+'">👼 '+eh(o.courier)+'</div>':'';
   var rName=eh(o.restaurantName||'Restaurace');
   
-  return'<div class="'+cls+'" id="c-'+id+'" data-glow="'+(isGlow?'1':'0')+'" data-courier="'+(o.courier||'')+'" style="animation-delay:'+i*.03+'s">'+'<div class="rest-bar"><div class="rest-bar-name" data-search="'+ea(o.restaurantName||'')+'"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>'+rName+'</div><div class="rest-bar-btns"><div class="rest-bar-pdf" data-pdf="'+id+'"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PDF</div><div class="rest-bar-sms" data-sms="'+id+'" data-phone="'+ea(o.customerPhone||'')+'"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>SMS</div></div></div><div class="cd-h"><div class="ri"><div class="r-btns">'+(o.restaurant_address?'<button class="r-btn r-nav" data-nav="'+ea(o.restaurant_address)+'"><svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></button>':'')+(o.restaurant_phone?'<button class="r-btn r-tel" data-tel="'+ea(o.restaurant_phone)+'"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></button>':'')+'</div><div><div class="ot"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>'+ft(o.createdAt)+'</div>'+courierInfo+'</div></div><span class="bs '+SC[st]+'">'+SL[st]+'</span></div><div class="prog"><div class="prog-row"><div class="prog-t"><span class="lb">Objednáno</span>'+ft(o.createdAt)+'</div><div class="prog-t r"><span class="lb">Doručit do</span>'+ft(db)+'</div></div><div class="prog-bar"><div class="prog-fill'+(st==='DELIVERED'?' done':'')+'" id="p-'+id+'" data-s="'+cr.getTime()+'" data-e="'+db.getTime()+'"></div><div class="prog-time" id="pt-'+id+'">'+remText+'</div></div></div><div class="cd-c"><div class="cr"><div><div class="cn">'+eh(o.customerName||'Neznámý')+'</div><div class="cp">'+eh(fp(o.customerPhone))+'</div></div><div class="qa">'+(o.customerPhone?'<button class="qb tel" data-tel="'+ea(o.customerPhone)+'"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></button>':'')+(o.deliveryAddress?'<button class="qb nav" data-nav="'+ea(o.deliveryAddress)+'"><svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></button>':'')+'</div></div>'+(o.deliveryAddress?'<div class="adr"><div class="adr-i"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div class="adr-t" data-nav="'+ea(o.deliveryAddress)+'">'+eh(o.deliveryAddress)+'</div></div>':'')+'</div>'+(items.length?'<button class="tgl"><span>Položky ('+items.length+')</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button><div class="cd-it">'+ih+'</div>':'')+'<div class="cd-f"><div class="pb '+pC+'"><svg viewBox="0 0 24 24">'+pI+'</svg>'+pL+'</div><div><div class="tl">Celkem</div><div class="tv">'+price.toLocaleString('cs')+' Kč</div></div></div>'+act+'</div>';
+  return'<div class="'+cls+'" id="c-'+id+'" data-glow="'+(isGlow?'1':'0')+'" data-courier="'+(o.courier||'')+'" style="animation-delay:'+i*.03+'s">'+'<div class="rest-bar"><div class="rest-bar-name" data-search="'+ea(o.restaurantName||'')+'"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>'+rName+'</div><div class="rest-bar-btns"><div class="rest-bar-pdf" data-pdf="'+id+'"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PDF</div><div class="rest-bar-sms" data-sms="'+id+'" data-phone="'+ea(o.customerPhone||'')+'"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>SMS</div><div class="rest-bar-sms2" data-sms-items="'+id+'" data-phone="'+ea(o.customerPhone||'')+'" title="SMS s položkami"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="13" y2="13"/></svg>📋</div><div class="rest-bar-sms3" data-sms-rest="'+id+'" title="SMS na restauraci"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>🍽️</div></div></div><div class="cd-h"><div class="ri"><div class="r-btns">'+(o.restaurant_address?'<button class="r-btn r-nav" data-nav="'+ea(o.restaurant_address)+'"><svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></button>':'')+(o.restaurant_phone?'<button class="r-btn r-tel" data-tel="'+ea(o.restaurant_phone)+'"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></button>':'')+'</div><div><div class="ot"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>'+ft(o.createdAt)+'</div>'+courierInfo+'</div></div><span class="bs '+SC[st]+'">'+SL[st]+'</span></div><div class="prog"><div class="prog-row"><div class="prog-t"><span class="lb">Objednáno</span>'+ft(o.createdAt)+'</div><div class="prog-t r"><span class="lb">Doručit do</span>'+ft(db)+'</div></div><div class="prog-bar"><div class="prog-fill'+(st==='DELIVERED'?' done':'')+'" id="p-'+id+'" data-s="'+cr.getTime()+'" data-e="'+db.getTime()+'"></div><div class="prog-time" id="pt-'+id+'">'+remText+'</div></div></div><div class="cd-c"><div class="cr"><div><div class="cn">'+eh(o.customerName||'Neznámý')+'</div><div class="cp">'+eh(fp(o.customerPhone))+'</div></div><div class="qa">'+(o.customerPhone?'<button class="qb tel" data-tel="'+ea(o.customerPhone)+'"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></button>':'')+(o.deliveryAddress?'<button class="qb nav" data-nav="'+ea(o.deliveryAddress)+'"><svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></button>':'')+'</div></div>'+(o.deliveryAddress?'<div class="adr"><div class="adr-i"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div class="adr-t" data-nav="'+ea(o.deliveryAddress)+'">'+eh(o.deliveryAddress)+'</div></div>':'')+'</div>'+(items.length?'<button class="tgl"><span>Položky ('+items.length+')</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button><div class="cd-it">'+ih+'</div>':'')+'<div class="cd-f"><div class="pb '+pC+'"><svg viewBox="0 0 24 24">'+pI+'</svg>'+pL+'</div><div><div class="tl">Celkem</div><div class="tv">'+price.toLocaleString('cs')+' Kč</div></div></div>'+act+'</div>';
 }
 
 // === PROGRESS UPDATE ===
@@ -893,8 +944,15 @@ function bindCA(){
     if(search){e.preventDefault();window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(search.dataset.search),'_blank');return}
     var pdf=e.target.closest('[data-pdf]');
     if(pdf){e.preventDefault();generatePDF(pdf.closest('.cd'));return}
-    var sms=e.target.closest('[data-sms]');
+    // SMS to customer
+    var sms=e.target.closest('[data-sms]:not([data-sms-items]):not([data-sms-rest])');
     if(sms){e.preventDefault();sendSMS(sms.dataset.sms,sms.dataset.phone);return}
+    // SMS with items summary (no prices)
+    var smsItems=e.target.closest('[data-sms-items]');
+    if(smsItems){e.preventDefault();sendSMSItems(smsItems.dataset.smsItems,smsItems.dataset.phone);return}
+    // SMS to restaurant
+    var smsRest=e.target.closest('[data-sms-rest]');
+    if(smsRest){e.preventDefault();sendSMSRestaurant(smsRest.dataset.smsRest);return}
     var tel=e.target.closest('[data-tel]');
     if(tel){e.preventDefault();location.href='tel:'+tel.dataset.tel;return}
     // FIXED: Address - only text is clickable
@@ -913,10 +971,11 @@ function bindCA(){
     else if(action==='pick')openModal('pick',id,tot);
     else if(action==='dlv')openModal('dlv',id,tot);
     else if(action==='transfer')openTransfer(id);
+    else if(action==='delete')doDelete(id);
   };
 }
 
-// === SMS FUNCTION ===
+// === SMS FUNCTION (enhanced with items summary) ===
 function sendSMS(orderId,phone){
   if(!phone){toast('⚠️ Chybí telefon');return}
   var o=S.orders.find(function(x){return x._id===orderId});
@@ -934,8 +993,73 @@ function sendSMS(orderId,phone){
     msg='Dobrý den, děkujeme za Vaši objednávku z '+rName+'! Kurýr: '+S.courier+'. Divine Delivery 🚗';
   }
   
-  // Open SMS app with pre-filled message
   var smsUrl='sms:'+phone+'?body='+encodeURIComponent(msg);
+  location.href=smsUrl;
+}
+
+// === SMS with ITEMS SUMMARY (without prices) ===
+function sendSMSItems(orderId,phone){
+  if(!phone){toast('⚠️ Chybí telefon');return}
+  var o=S.orders.find(function(x){return x._id===orderId});
+  if(!o){toast('⚠️ Objednávka nenalezena');return}
+  
+  var items=[];
+  try{items=typeof o.itemsRaw==='string'?JSON.parse(o.itemsRaw):(o.itemsRaw||[])}catch(e){}
+  
+  var itemList=items.filter(function(it){
+    var t=(it.type||'').toLowerCase();
+    return t!=='delivery_fee'&&t!=='tip'&&!t.includes('promo');
+  }).map(function(it){
+    var q=parseInt(it.quantity||it.qty)||1;
+    var nm=it.name||it.item_name||'Položka';
+    return q+'× '+nm;
+  }).join(', ');
+  
+  var cName=o.customerName||'Zákazník';
+  var addr=o.deliveryAddress||'Adresa neznámá';
+  
+  var msg='Objednávka pro '+cName+':\n'+itemList+'\n\nAdresa: '+addr+'\nKurýr: '+S.courier;
+  
+  var smsUrl='sms:'+phone+'?body='+encodeURIComponent(msg);
+  location.href=smsUrl;
+}
+
+// === SMS to RESTAURANT ===
+function sendSMSRestaurant(orderId){
+  var o=S.orders.find(function(x){return x._id===orderId});
+  if(!o){toast('⚠️ Objednávka nenalezena');return}
+  
+  // Find restaurant phone
+  var rName=(o.restaurantName||'').toLowerCase();
+  var rPhone=o.restaurant_phone||'';
+  
+  // Try to find in known phones
+  if(!rPhone){
+    for(var key in C.REST_PHONES){
+      if(rName.includes(key)){
+        rPhone=C.REST_PHONES[key];
+        break;
+      }
+    }
+  }
+  
+  if(!rPhone){toast('⚠️ Nemám telefon na '+o.restaurantName);return}
+  
+  var items=[];
+  try{items=typeof o.itemsRaw==='string'?JSON.parse(o.itemsRaw):(o.itemsRaw||[])}catch(e){}
+  
+  var itemList=items.filter(function(it){
+    var t=(it.type||'').toLowerCase();
+    return t!=='delivery_fee'&&t!=='tip'&&!t.includes('promo');
+  }).map(function(it){
+    var q=parseInt(it.quantity||it.qty)||1;
+    var nm=it.name||it.item_name||'Položka';
+    return q+'× '+nm;
+  }).join(', ');
+  
+  var msg='Divine Delivery - objednávka:\n'+itemList+'\n\nZákazník: '+(o.customerName||'?')+'\nDoru.adresa: '+(o.deliveryAddress||'?');
+  
+  var smsUrl='sms:'+rPhone+'?body='+encodeURIComponent(msg);
   location.href=smsUrl;
 }
 
@@ -981,6 +1105,55 @@ function generatePDF(cardEl){
 function doBeru(id){apic('/assignCourier',{method:'POST',body:{orderId:id,courier:S.courier}}).then(function(){toast('✅ Je to tvoje!');poll()}).catch(function(){toast('❌ Chyba')})}
 function doTakeover(id){apic('/assignCourier',{method:'POST',body:{orderId:id,courier:S.courier}}).then(function(){toast('👑 Převzato!');poll()}).catch(function(){toast('❌ Chyba')})}
 
+// === DELETE ORDER (Admin only) ===
+function doDelete(id){
+  if(!S.isAdmin){toast('⚠️ Pouze admin');return}
+  if(!confirm('Opravdu smazat tuto objednávku?'))return;
+  // Try to delete via API, but also remove locally
+  apic('/deleteOrder',{method:'POST',body:{orderId:id}}).then(function(){
+    toast('🗑️ Smazáno!');
+    // Remove from local state
+    S.orders=S.orders.filter(function(o){return o._id!==id});
+    S.ids.delete(id);
+    render();
+  }).catch(function(){
+    // If API fails, still remove locally for this session
+    toast('⚠️ API chyba, smazáno lokálně');
+    S.orders=S.orders.filter(function(o){return o._id!==id});
+    S.ids.delete(id);
+    render();
+  });
+}
+
+// === LOCAL STORAGE BACKUP ===
+function saveTodayOrders(){
+  var today=new Date().toISOString().split('T')[0];
+  var key='dd_orders_'+today;
+  var saved=JSON.parse(localStorage.getItem(key)||'[]');
+  S.orders.forEach(function(o){
+    if(!saved.some(function(s){return s._id===o._id})){
+      saved.push({
+        _id:o._id,
+        restaurantName:o.restaurantName,
+        customerName:o.customerName,
+        deliveryAddress:o.deliveryAddress,
+        totalPrice:o.totalPrice,
+        createdAt:o.createdAt,
+        courier:o.courier,
+        status:o.status
+      });
+    }
+  });
+  localStorage.setItem(key,JSON.stringify(saved));
+  S.todayOrders=saved;
+}
+
+function loadTodayOrders(){
+  var today=new Date().toISOString().split('T')[0];
+  var key='dd_orders_'+today;
+  S.todayOrders=JSON.parse(localStorage.getItem(key)||'[]');
+}
+
 function openModal(type,id,sug){modalState={type:type,id:id};document.getElementById('MT').textContent=type==='pick'?'📦 Vyzvednutí':'✅ Doručení';var o=S.orders.find(function(x){return x._id===id});document.getElementById('MS').textContent=o?(o.restaurantName||''):'';document.getElementById('MI').value=sug||'';document.getElementById('M').classList.add('sh');setTimeout(function(){document.getElementById('MI').focus();document.getElementById('MI').select()},100)}
 function closeModal(){document.getElementById('M').classList.remove('sh');modalState={type:null,id:null}}
 function submitModal(){var amt=parseInt(document.getElementById('MI').value)||0,id=modalState.id,type=modalState.type;closeModal();if(type==='pick'){apic('/markPicked',{method:'POST',body:{orderId:id,pickedUpAmount:amt}}).then(function(){toast('📦 Vyzvednuto!');poll()}).catch(function(){toast('❌ Chyba')})}else{apic('/markDelivered',{method:'POST',body:{orderId:id,deliveredAmount:amt}}).then(function(){toast('✅ Doručeno!');poll()}).catch(function(){toast('❌ Chyba')})}}
@@ -1022,6 +1195,99 @@ function renderAdmin(){
   c.innerHTML=h;
 }
 
+// === SUMMARY ===
+function showSummary(){document.getElementById('SUM').classList.add('show');renderSummary()}
+function getCityFromAddress(addr){
+  if(!addr)return'Neznámé';
+  var lower=addr.toLowerCase();
+  var cities=['milovice','lysá nad labem','lysá','benátky nad jizerou','benátky','luštěnice','čelákovice','brandýs','nymburk','poděbrady','lipník','horky nad jizerou','sadská','jiřice','kostomlaty','stará lysá'];
+  for(var i=0;i<cities.length;i++){
+    if(lower.includes(cities[i])){
+      // Normalize names
+      if(cities[i]==='lysá')return'Lysá nad Labem';
+      if(cities[i]==='benátky')return'Benátky nad Jizerou';
+      return cities[i].charAt(0).toUpperCase()+cities[i].slice(1);
+    }
+  }
+  return'Jiné';
+}
+function renderSummary(){
+  var c=document.getElementById('sumContent');
+  
+  // Group active orders by city
+  var activeByCity={};
+  var activeOrders=S.orders.filter(function(o){return ns(o.status)!=='DELIVERED'});
+  activeOrders.forEach(function(o){
+    var city=getCityFromAddress(o.deliveryAddress);
+    if(!activeByCity[city])activeByCity[city]=[];
+    activeByCity[city].push(o);
+  });
+  
+  // Group today's orders by city
+  var todayByCity={};
+  S.todayOrders.forEach(function(o){
+    var city=getCityFromAddress(o.deliveryAddress);
+    if(!todayByCity[city])todayByCity[city]=[];
+    todayByCity[city].push(o);
+  });
+  
+  var h='';
+  
+  // Total stats
+  var activeTotal=activeOrders.length;
+  var todayTotal=S.todayOrders.length;
+  h+='<div class="sum-total-bar"><div><div class="sum-total-label">📦 AKTIVNÍ</div><div class="sum-total-value">'+activeTotal+'</div></div><div style="text-align:right"><div class="sum-total-label">📊 DNES CELKEM</div><div class="sum-total-value">'+todayTotal+'</div></div></div>';
+  
+  // Active orders by city
+  h+='<div class="sum-section"><div class="sum-section-t">🚗 Aktivní objednávky</div><div class="sum-city-grid" id="sumActive">';
+  var activeCities=Object.keys(activeByCity).sort(function(a,b){return activeByCity[b].length-activeByCity[a].length});
+  if(activeCities.length===0){
+    h+='<div style="text-align:center;padding:20px;color:var(--tx3)">Žádné aktivní objednávky</div>';
+  }else{
+    activeCities.forEach(function(city){
+      var orders=activeByCity[city];
+      h+='<div class="sum-city" data-city="active-'+city+'"><div class="sum-city-name">📍 '+city+'</div><div class="sum-city-count">'+orders.length+'×</div></div>';
+      h+='<div class="sum-orders" id="active-'+city.replace(/\s/g,'-')+'">';
+      orders.forEach(function(o){
+        h+='<div class="sum-order"><div class="sum-order-h"><span class="sum-order-rest">'+eh(o.restaurantName||'')+'</span><span class="sum-order-time">'+ft(o.createdAt)+'</span></div><div class="sum-order-cust">'+eh(o.customerName||'')+'</div></div>';
+      });
+      h+='</div>';
+    });
+  }
+  h+='</div></div>';
+  
+  // Today's orders by city
+  h+='<div class="sum-section"><div class="sum-section-t">📊 Dnešní objednávky podle měst</div><div class="sum-city-grid" id="sumToday">';
+  var todayCities=Object.keys(todayByCity).sort(function(a,b){return todayByCity[b].length-todayByCity[a].length});
+  if(todayCities.length===0){
+    h+='<div style="text-align:center;padding:20px;color:var(--tx3)">Zatím žádné objednávky</div>';
+  }else{
+    todayCities.forEach(function(city){
+      var orders=todayByCity[city];
+      h+='<div class="sum-city" data-city="today-'+city+'"><div class="sum-city-name">📍 '+city+'</div><div class="sum-city-count">'+orders.length+'×</div></div>';
+      h+='<div class="sum-orders" id="today-'+city.replace(/\s/g,'-')+'">';
+      orders.forEach(function(o){
+        h+='<div class="sum-order"><div class="sum-order-h"><span class="sum-order-rest">'+eh(o.restaurantName||'')+'</span><span class="sum-order-time">'+ft(o.createdAt)+'</span></div><div class="sum-order-cust">'+eh(o.customerName||'')+'</div></div>';
+      });
+      h+='</div>';
+    });
+  }
+  h+='</div></div>';
+  
+  c.innerHTML=h;
+  
+  // Bind city toggles
+  c.querySelectorAll('.sum-city').forEach(function(el){
+    el.onclick=function(){
+      this.classList.toggle('expanded');
+      var next=this.nextElementSibling;
+      if(next&&next.classList.contains('sum-orders')){
+        next.style.display=this.classList.contains('expanded')?'block':'none';
+      }
+    };
+  });
+}
+
 // === SETTINGS ===
 function loadSettings(){
   var dpi=localStorage.getItem('dd_dpi')||'85';
@@ -1047,8 +1313,9 @@ document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('bS').onclick=function(){S.snd=!S.snd;this.classList.toggle('on',S.snd);saveSettings();toast(S.snd?'🔔 Zvuk zapnut':'🔕 Vypnut')};
   document.getElementById('bR').onclick=function(){poll();toast('🔄 Obnoveno')};
   // Nav
-  document.getElementById('navOrders').onclick=function(){document.querySelectorAll('.ni').forEach(function(x){x.classList.remove('on')});this.classList.add('on');document.getElementById('HP').classList.remove('show');document.getElementById('AP').classList.remove('show');document.getElementById('SP').classList.remove('show')};
+  document.getElementById('navOrders').onclick=function(){document.querySelectorAll('.ni').forEach(function(x){x.classList.remove('on')});this.classList.add('on');document.getElementById('HP').classList.remove('show');document.getElementById('AP').classList.remove('show');document.getElementById('SP').classList.remove('show');document.getElementById('SUM').classList.remove('show')};
   document.getElementById('navHist').onclick=function(){document.querySelectorAll('.ni').forEach(function(x){x.classList.remove('on')});this.classList.add('on');showHist()};
+  document.getElementById('navSummary').onclick=function(){document.querySelectorAll('.ni').forEach(function(x){x.classList.remove('on')});this.classList.add('on');showSummary()};
   document.getElementById('navAdmin').onclick=function(){if(S.isAdmin){document.querySelectorAll('.ni').forEach(function(x){x.classList.remove('on')});this.classList.add('on');showAdmin()}};
   document.getElementById('navSettings').onclick=function(){document.querySelectorAll('.ni').forEach(function(x){x.classList.remove('on')});this.classList.add('on');document.getElementById('SP').classList.add('show')};
   document.getElementById('navMap').onclick=function(){window.open('https://www.google.com/maps','_blank')};
@@ -1056,6 +1323,7 @@ document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('hpClose').onclick=function(){document.getElementById('HP').classList.remove('show')};
   document.getElementById('apClose').onclick=function(){document.getElementById('AP').classList.remove('show')};
   document.getElementById('spClose').onclick=function(){document.getElementById('SP').classList.remove('show')};
+  document.getElementById('sumClose').onclick=function(){document.getElementById('SUM').classList.remove('show')};
   // Modal
   document.getElementById('MX').onclick=closeModal;
   document.getElementById('MG').onclick=submitModal;
