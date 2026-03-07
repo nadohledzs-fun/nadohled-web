@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Divine Dispatch v20.3</title>
+<style>
+:root{--ff:'Avenir','Avenir Next','Nunito Sans','Segoe UI',system-ui,sans-serif;--red:#C41E1E;--red-d:#7F1D1D;--red-b:#EF4444;--red-g:rgba(196,30,30,.3);--rose:#FCA5A5;--bg:#0A0A0C;--bg2:#131316;--bg3:rgba(19,19,22,.88);--bgE:rgba(35,30,40,.55);--tx:#F4F4F5;--tx2:rgba(244,244,245,.6);--tx3:rgba(244,244,245,.35);--bdr:rgba(196,30,30,.18);--bdr2:rgba(255,255,255,.06);--ok:#34D399;--warn:#FBBF24;--info:#60A5FA;--cash:#4ADE80;--gold:#D97706;--mw:640px;--r:10px;--r2:14px;--rr:9999px;
+/* Courier colors */
+--c-marek:#D97706;--c-tonda:#2563EB;--c-kuba:#059669;--c-tomas:#8B5CF6;--c-matej:#EC4899;--c-milan:#06B6D4}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--ff);background:var(--bg);color:var(--tx);-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+button{font:inherit;border:none;cursor:pointer;background:none;color:inherit}
+input,select{font-family:var(--ff)}
+.bg{position:fixed;inset:0;z-index:-1;background:radial-gradient(ellipse 55% 45% at 12% 18%,rgba(196,30,30,.08) 0%,transparent 70%),radial-gradient(ellipse 45% 55% at 88% 80%,rgba(127,29,29,.06) 0%,transparent 70%),var(--bg)}
+
+/* === LOGIN === */
+.login{position:fixed;inset:0;z-index:500;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;transition:opacity .4s,transform .4s}
+.login.gone{opacity:0;transform:scale(1.05);pointer-events:none}
+.login-logo{font-size:48px;margin-bottom:12px}
+.login-t{font-weight:700;font-size:24px;background:linear-gradient(135deg,var(--red-b),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
+.login-s{color:var(--tx3);font-size:13px;margin-bottom:28px}
+.login-grid{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:400px}
+.login-btn{width:95px;padding:14px 8px;border-radius:var(--r2);background:var(--bg3);border:1px solid var(--bdr2);display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:700;font-size:13px;transition:all .2s}
+.login-btn:active{transform:scale(.95)}
+.login-av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--red-d),var(--red));display:grid;place-items:center;font-size:18px;font-weight:700;color:#fff;border:2px solid var(--bdr)}
+.login-btn.admin .login-av{background:linear-gradient(135deg,#92400E,var(--gold));border-color:rgba(251,191,36,.4)}
+.login-rank{font-size:9px;color:var(--tx3);margin-top:2px}
+
+/* === HEADER === */
+.hdr{flex-shrink:0;z-index:100;background:linear-gradient(180deg,var(--bg) 55%,rgba(10,10,12,.95));backdrop-filter:blur(20px);border-bottom:1px solid var(--bdr);padding:7px 10px}
+.hdr-in{max-width:var(--mw);margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:8px}
+.brand-ico{width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,var(--red),var(--red-b));display:grid;place-items:center;font-size:15px;box-shadow:0 2px 10px var(--red-g)}
+.brand-t{font-weight:700;font-size:14px;background:linear-gradient(135deg,var(--red-b),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.brand-s{font-size:7.5px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:1.5px}
+.hdr-r{display:flex;align-items:center;gap:5px}
+.me{display:flex;align-items:center;gap:5px;padding:3px 8px 3px 3px;border-radius:var(--rr);background:var(--bgE);border:1px solid var(--bdr2);cursor:pointer}
+.me-av{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--red-d),var(--red));display:grid;place-items:center;font-size:9px;font-weight:700;color:#fff}
+.me-av.admin{background:linear-gradient(135deg,#92400E,var(--gold))}
+.me-name{font-size:11px;font-weight:700}
+.me-rank{font-size:8px;color:var(--gold);margin-left:2px}
+.conn{display:flex;align-items:center;gap:3px;padding:3px 7px;border-radius:var(--rr);background:var(--bgE);border:1px solid var(--bdr2);font-size:8.5px;font-weight:700;color:var(--tx2)}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--ok);animation:bk 2s infinite}
+.dot.off{background:#EF4444;animation:none}
+@keyframes bk{0%,100%{opacity:1}50%{opacity:.35}}
+.hb{width:30px;height:30px;border-radius:7px;border:1px solid var(--bdr2);background:var(--bgE);display:grid;place-items:center}
+.hb:active{transform:scale(.9)}
+.hb.on{background:var(--red);border-color:var(--red)}
+.hb svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* === STATS + FILTERS === */
+.top-bar{flex-shrink:0;background:var(--bg);padding-bottom:6px;border-bottom:1px solid var(--bdr2)}
+.stats{max-width:var(--mw);margin:7px auto 0;padding:0 10px;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.st{background:var(--bg3);border:1px solid var(--bdr2);border-radius:var(--r);padding:6px 3px;text-align:center}
+.st-v{font-size:15px;font-weight:700;background:linear-gradient(135deg,var(--red-b),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.st-l{font-size:7px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.4px;margin-top:1px}
+.flt-row{max-width:var(--mw);margin:6px auto 0;padding:0 10px;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;align-items:center}
+.flt-row::-webkit-scrollbar{display:none}
+.ft{flex-shrink:0;padding:5px 9px;border-radius:var(--rr);border:1px solid var(--bdr2);background:var(--bg3);color:var(--tx2);font-size:10.5px;font-weight:700;display:flex;align-items:center;gap:3px}
+.ft.on{background:var(--red);color:#fff;border-color:var(--red)}
+.ft .n{padding:1px 4px;border-radius:var(--rr);font-size:8.5px;background:rgba(255,255,255,.1)}
+.ft.on .n{background:rgba(0,0,0,.22)}
+.vt{margin-left:auto;display:flex;gap:2px;padding:2px;border-radius:7px;background:var(--bgE);border:1px solid var(--bdr2)}
+.vt button{width:24px;height:24px;border-radius:5px;display:grid;place-items:center;color:var(--tx3)}
+.vt button.on{background:var(--red);color:#fff}
+.vt svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* === VIEW MODES === */
+.ords{max-width:var(--mw);margin:0 auto;padding:8px 10px 20px;display:flex;flex-direction:column;gap:7px}
+.ords.v-tiles{flex-direction:row;flex-wrap:wrap;gap:6px}
+.ords.v-tiles .cd{flex:1 1 calc(50% - 3px);min-width:160px}
+.ords.v-row .cd,.ords.v-mini .cd{border-radius:var(--r)}
+/* Row view */
+.ords.v-row .cd-h,.ords.v-row .prog,.ords.v-row .cd-it,.ords.v-row .tgl,.ords.v-mini .cd-h,.ords.v-mini .prog,.ords.v-mini .cd-it,.ords.v-mini .tgl{display:none}
+.ords.v-row .rest-bar{padding:6px 8px}
+.ords.v-row .rest-bar-name{font-size:11px}
+.ords.v-row .cd-c{padding:6px 8px}
+.ords.v-row .cn{font-size:11px}
+.ords.v-row .cp{font-size:9px}
+.ords.v-row .adr{padding:4px}
+.ords.v-row .adr-t{font-size:10px}
+.ords.v-row .cd-f{padding:6px 8px}
+.ords.v-row .tv{font-size:14px}
+.ords.v-row .cd-a{padding:0 8px 6px}
+.ords.v-row .ab{padding:7px;font-size:10px}
+/* Mini row */
+.ords.v-mini .rest-bar{padding:4px 6px}
+.ords.v-mini .rest-bar-name{font-size:10px;gap:4px}
+.ords.v-mini .rest-bar-name svg{width:10px;height:10px}
+.ords.v-mini .rest-bar-btns{display:none}
+.ords.v-mini .cd-c{display:none}
+.ords.v-mini .cd-f{padding:4px 6px}
+.ords.v-mini .pb{font-size:9px;padding:2px 5px}
+.ords.v-mini .pb svg{width:10px;height:10px}
+.ords.v-mini .tv{font-size:12px}
+.ords.v-mini .tl{font-size:6px}
+.ords.v-mini .cd-a{padding:0 6px 4px;gap:3px}
+.ords.v-mini .ab{padding:5px;font-size:9px;gap:3px}
+.ords.v-mini .ab svg{width:11px;height:11px}
+/* Tiles view tweaks */
+.ords.v-tiles .rest-bar{padding:6px 8px}
+.ords.v-tiles .rest-bar-name{font-size:11px}
+.ords.v-tiles .rest-bar-btns{display:none}
+.ords.v-tiles .cd-h{padding:6px 8px}
+.ords.v-tiles .prog{padding:0 8px 6px}
+.ords.v-tiles .cd-c{padding:6px 8px}
+.ords.v-tiles .cn{font-size:11px}
+.ords.v-tiles .adr{display:none}
+.ords.v-tiles .cd-f{padding:6px 8px}
+.ords.v-tiles .tv{font-size:14px}
+.ords.v-tiles .tgl,.ords.v-tiles .cd-it{display:none}
+
+/* === SCROLL === */
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain}
+
+/* === CARD === */
+.cd{background:var(--bg3);border:1px solid var(--bdr2);border-radius:var(--r2);overflow:hidden;transition:all .35s;animation:ci .35s ease both;position:relative}
+@keyframes ci{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* NEW ORDER GLOW - only when data-glow="1", color based on courier */
+.cd[data-glow="1"]{border-color:var(--red-b);animation:ci .35s ease both,gp 2s ease-in-out infinite}
+.cd[data-glow="1"][data-courier="Marek"]{border-color:var(--c-marek);animation:ci .35s ease both,gp-marek 2s ease-in-out infinite}
+.cd[data-glow="1"][data-courier="Tonda"]{border-color:var(--c-tonda);animation:ci .35s ease both,gp-tonda 2s ease-in-out infinite}
+.cd[data-glow="1"][data-courier="Kuba"]{border-color:var(--c-kuba);animation:ci .35s ease both,gp-kuba 2s ease-in-out infinite}
+.cd[data-glow="1"][data-courier="Tomáš"]{border-color:var(--c-tomas);animation:ci .35s ease both,gp-tomas 2s ease-in-out infinite}
+.cd[data-glow="1"][data-courier="Matěj"]{border-color:var(--c-matej);animation:ci .35s ease both,gp-matej 2s ease-in-out infinite}
+.cd[data-glow="1"][data-courier="Milan"]{border-color:var(--c-milan);animation:ci .35s ease both,gp-milan 2s ease-in-out infinite}
+
+@keyframes gp{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4),0 0 20px 0 rgba(239,68,68,.3)}50%{box-shadow:0 0 0 10px rgba(239,68,68,0),0 0 30px 5px rgba(239,68,68,.4)}}
+@keyframes gp-marek{0%,100%{box-shadow:0 0 0 0 rgba(217,119,6,.4),0 0 20px 0 rgba(217,119,6,.3)}50%{box-shadow:0 0 0 10px rgba(217,119,6,0),0 0 30px 5px rgba(217,119,6,.4)}}
+@keyframes gp-tonda{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.4),0 0 20px 0 rgba(37,99,235,.3)}50%{box-shadow:0 0 0 10px rgba(37,99,235,0),0 0 30px 5px rgba(37,99,235,.4)}}
+@keyframes gp-kuba{0%,100%{box-shadow:0 0 0 0 rgba(5,150,105,.4),0 0 20px 0 rgba(5,150,105,.3)}50%{box-shadow:0 0 0 10px rgba(5,150,105,0),0 0 30px 5px rgba(5,150,105,.4)}}
+@keyframes gp-tomas{0%,100%{box-shadow:0 0 0 0 rgba(139,92,246,.4),0 0 20px 0 rgba(139,92,246,.3)}50%{box-shadow:0 0 0 10px rgba(139,92,246,0),0 0 30px 5px rgba(139,92,246,.4)}}
+@keyframes gp-matej{0%,100%{box-shadow:0 0 0 0 rgba(236,72,153,.4),0 0 20px 0 rgba(236,72,153,.3)}50%{box-shadow:0 0 0 10px rgba(236,72,153,0),0 0 30px 5px rgba(236,72,153,.4)}}
+@keyframes gp-milan{0%,100%{box-shadow:0 0 0 0 rgba(6,182,212,.4),0 0 20px 0 rgba(6,182,212,.3)}50%{box-shadow:0 0 0 10px rgba(6,182,212,0),0 0 30px 5px rgba(6,182,212,.4)}}
+
+.cd.taken{border-color:rgba(239,68,68,.25)}
+.cd.taken::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),var(--red-b));opacity:.5;z-index:2}
+
+/* Courier info moved to header only */
+.courier-info{font-size:10px;font-weight:600;margin-top:2px;display:flex;align-items:center;gap:4px;padding:2px 6px;border-radius:var(--rr);background:var(--bgE)}
+.courier-info.c-marek{color:var(--c-marek);background:rgba(217,119,6,.12)}
+.courier-info.c-tonda{color:var(--c-tonda);background:rgba(37,99,235,.12)}
+.courier-info.c-kuba{color:var(--c-kuba);background:rgba(5,150,105,.12)}
+.courier-info.c-tomas{color:var(--c-tomas);background:rgba(139,92,246,.12)}
+.courier-info.c-matej{color:var(--c-matej);background:rgba(236,72,153,.12)}
+.courier-info.c-milan{color:var(--c-milan);background:rgba(6,182,212,.12)}
+
+/* Restaurant bar */
+.rest-bar{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg3);border-bottom:1px solid var(--bdr2)}
+.rest-bar-name{flex:1;font-weight:700;font-size:13px;color:var(--tx);cursor:pointer;display:flex;align-items:center;gap:6px;transition:color .2s}
+.rest-bar-name:hover{color:var(--red-b)}
+.rest-bar-name svg{width:14px;height:14px;opacity:.6;stroke:currentColor;fill:none;stroke-width:2}
+.rest-bar-btns{display:flex;gap:4px}
+.rest-bar-pdf,.rest-bar-sms{padding:5px 10px;border-radius:6px;color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;gap:4px;cursor:pointer;transition:transform .15s}
+.rest-bar-pdf{background:linear-gradient(135deg,var(--red-d),var(--red))}
+.rest-bar-sms{background:linear-gradient(135deg,#059669,var(--ok))}
+.rest-bar-pdf:active,.rest-bar-sms:active{transform:scale(.95)}
+.rest-bar-pdf svg,.rest-bar-sms svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* Card header */
+.cd-h{padding:9px 10px;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--bdr2)}
+.ri{display:flex;align-items:center;gap:8px}
+.r-btns{display:flex;gap:4px}
+.r-btn{width:26px;height:26px;border-radius:6px;display:grid;place-items:center;border:1px solid var(--bdr2);background:var(--bgE)}
+.r-btn:active{transform:scale(.9)}
+.r-btn svg{width:12px;height:12px;fill:none;stroke-width:2}
+.r-btn.r-nav svg{stroke:var(--info)}
+.r-btn.r-tel svg{stroke:var(--ok)}
+.ot{font-size:10px;color:var(--tx3);display:flex;align-items:center;gap:3px;margin-top:1px}
+.ot svg{width:10px;height:10px;stroke:currentColor;fill:none;stroke-width:2}
+.courier-info{font-size:10px;color:var(--rose);font-weight:600;margin-top:2px;display:flex;align-items:center;gap:4px}
+.bs{padding:2px 7px;border-radius:var(--rr);font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.bs.s-p{background:rgba(239,68,68,.18);color:var(--red-b)}
+.bs.s-as{background:rgba(196,30,30,.18);color:var(--rose)}
+.bs.s-pk{background:rgba(96,165,250,.15);color:var(--info)}
+.bs.s-dl{background:rgba(52,211,153,.15);color:var(--ok)}
+
+/* Progress bar - ANIMATED with time inside */
+.prog{padding:0 10px 10px}
+.prog-row{display:flex;justify-content:space-between;margin-bottom:5px}
+.prog-t{font-size:9px;font-weight:700;color:var(--tx3)}
+.prog-t.r{color:var(--red-b)}
+.prog-t .lb{font-size:7px;font-weight:400;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:1px}
+.prog-bar{width:100%;height:22px;border-radius:11px;background:rgba(255,255,255,.08);overflow:hidden;position:relative;border:1px solid var(--bdr2)}
+.prog-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--red-d),var(--red),var(--red-b));transition:width 1s linear;position:relative;min-width:40px}
+.prog-fill::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);animation:progShine 2s ease-in-out infinite}
+@keyframes progShine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.prog-fill.done{background:linear-gradient(90deg,#059669,var(--ok))}
+.prog-fill.done::after{display:none}
+.prog-time{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:11px;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.5);white-space:nowrap;z-index:2}
+.prog-time.outside{color:var(--tx2);text-shadow:none}
+
+/* Customer section */
+.cd-c{padding:9px 10px;background:rgba(0,0,0,.18)}
+.cr{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.cn{font-weight:700;font-size:12px}
+.cp{font-size:10.5px;color:var(--red-b);margin-top:1px}
+.qa{display:flex;gap:5px}
+.qb{width:32px;height:32px;border-radius:8px;display:grid;place-items:center}
+.qb:active{transform:scale(.88)}
+.qb svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2}
+.qb.tel{background:linear-gradient(135deg,#059669,var(--ok))}
+.qb.nav{background:linear-gradient(135deg,#2563EB,var(--info))}
+/* Address - only text is clickable */
+.adr{display:flex;align-items:center;gap:6px;padding:6px;border-radius:7px;background:rgba(255,255,255,.035)}
+.adr-i{width:24px;height:24px;flex-shrink:0;border-radius:6px;background:rgba(196,30,30,.18);display:grid;place-items:center}
+.adr-i svg{width:11px;height:11px;stroke:var(--red-b);fill:none;stroke-width:2}
+.adr-t{flex:1;font-size:11px;color:var(--tx2);line-height:1.3;cursor:pointer}
+.adr-t:hover{color:var(--info);text-decoration:underline}
+
+/* Items toggle */
+.tgl{width:100%;padding:7px;background:rgba(255,255,255,.02);color:var(--tx3);font-size:10.5px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:4px;border-top:1px solid var(--bdr2)}
+.tgl svg{width:12px;height:12px;transition:transform .25s;stroke:currentColor;fill:none;stroke-width:2}
+.cd.op .tgl svg{transform:rotate(180deg)}
+.cd-it{max-height:0;overflow:hidden;transition:max-height .3s ease;padding:0 10px}
+.cd.op .cd-it{max-height:900px;padding:7px 10px}
+
+/* Items grid - bubble style */
+.items-grid{display:flex;flex-wrap:wrap;gap:8px;padding:8px 0}
+.item-bubble{position:relative;border-radius:12px;padding:10px 12px;min-width:100px;flex:1 1 calc(50% - 4px);max-width:100%}
+.item-bubble.food{background:linear-gradient(135deg,rgba(239,68,68,.12),rgba(239,68,68,.06));border:1px solid rgba(239,68,68,.25);box-shadow:0 0 12px rgba(239,68,68,.15)}
+.item-bubble.drink{background:linear-gradient(135deg,rgba(251,191,36,.1),rgba(251,191,36,.05));border:1px solid rgba(251,191,36,.2);box-shadow:0 0 8px rgba(251,191,36,.1)}
+.item-bubble.fee{background:linear-gradient(135deg,rgba(96,165,250,.08),rgba(96,165,250,.04));border:1px solid rgba(96,165,250,.2)}
+.item-bubble.other{background:var(--bg3);border:1px solid var(--bdr2)}
+.item-qty{position:absolute;top:-6px;right:-6px;min-width:22px;height:22px;padding:0 5px;border-radius:11px;background:linear-gradient(135deg,var(--red),var(--red-b));color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;box-shadow:0 2px 6px rgba(239,68,68,.4)}
+.item-bubble.drink .item-qty{background:linear-gradient(135deg,#D97706,#FBBF24);box-shadow:0 2px 6px rgba(251,191,36,.4)}
+.item-bubble.fee .item-qty,.item-bubble.other .item-qty{background:var(--bgE);color:var(--tx2);box-shadow:none}
+.item-name{font-weight:700;font-size:12px;color:var(--tx);margin-bottom:2px;padding-right:20px;line-height:1.3}
+.item-price{font-size:11px;color:var(--red-b);font-weight:600}
+.item-bubble.drink .item-price{color:#D97706}
+.item-bubble.fee .item-price{color:var(--info)}
+.item-extras{margin-top:6px;padding-top:6px;border-top:1px dashed rgba(255,255,255,.1)}
+.item-extra{font-size:9px;color:var(--tx2);padding:2px 0;display:flex;align-items:baseline;gap:4px}
+.item-extra::before{content:'›';color:var(--red-b);font-weight:700}
+.item-extra-price{margin-left:auto;color:var(--warn);font-weight:700;font-size:9px}
+.item-note{margin-top:4px;font-size:9px;color:var(--tx3);font-style:italic;background:rgba(255,255,255,.03);padding:4px 6px;border-radius:4px}
+.item-discount{margin-top:3px;font-size:9px;color:var(--ok);font-weight:600}
+
+/* Footer */
+.cd-f{padding:8px 10px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--bdr2)}
+.pb{display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;font-size:10.5px;font-weight:700}
+.pb svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
+.pb.ca{background:rgba(74,222,128,.1);color:var(--cash)}
+.pb.cc{background:rgba(96,165,250,.1);color:var(--info)}
+.pb.cb{background:rgba(196,30,30,.12);color:var(--red-b)}
+.tl{font-size:7.5px;color:var(--tx3);text-transform:uppercase;letter-spacing:.4px;text-align:right;font-weight:700}
+.tv{font-size:17px;font-weight:700;background:linear-gradient(135deg,var(--red-b),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+/* Actions */
+.cd-a{padding:0 10px 10px;display:flex;gap:5px}
+.ab{flex:1;padding:10px;border-radius:var(--r);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:5px}
+.ab:active{transform:scale(.97)}
+.ab svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
+.ab-beru{background:linear-gradient(135deg,var(--red),var(--red-b));color:#fff;box-shadow:0 4px 14px var(--red-g)}
+.ab-pick{background:var(--bgE);border:1px solid var(--bdr);color:var(--tx)}
+.ab-pick.ok{background:rgba(251,191,36,.15);border-color:var(--warn);color:var(--warn)}
+.ab-dlv{background:var(--bgE);border:1px solid var(--bdr);color:var(--tx)}
+.ab-tr{background:linear-gradient(135deg,#1D4ED8,#3B82F6);color:#fff;flex:0 0 auto;padding-left:10px;padding-right:10px}
+.ab-admin{background:linear-gradient(135deg,#7C3AED,#A855F7);color:#fff}
+
+/* === BOTTOM NAV === */
+.bn{flex-shrink:0;z-index:100;background:linear-gradient(0deg,var(--bg) 65%,rgba(10,10,12,.95));backdrop-filter:blur(20px);border-top:1px solid var(--bdr);padding:6px 10px;padding-bottom:max(6px,env(safe-area-inset-bottom))}
+.bn-in{max-width:var(--mw);margin:0 auto;display:flex;justify-content:space-around}
+.ni{display:flex;flex-direction:column;align-items:center;gap:1px;padding:5px 10px;border-radius:var(--r);color:var(--tx3);font-weight:700}
+.ni.on{color:var(--red-b);background:rgba(196,30,30,.08)}
+.ni svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2}
+.ni span{font-size:7.5px;font-weight:700}
+.ni.admin{color:var(--gold)}
+.ni.admin.on{background:rgba(251,191,36,.1)}
+
+/* === MODALS === */
+.mo{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.78);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:16px}
+.mo.sh{display:flex!important}
+.mo-in{width:100%;max-width:340px;background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--r2);padding:20px 16px;animation:mu .25s ease}
+@keyframes mu{from{opacity:0;transform:scale(.92) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.mo-t{font-weight:700;font-size:18px;color:var(--red-b);margin-bottom:3px}
+.mo-sub{font-size:12px;color:var(--tx3);margin-bottom:14px}
+.mo-inp{width:100%;padding:16px;border-radius:var(--r);border:2px solid var(--bdr);background:var(--bgE);color:var(--tx);font-size:28px;font-weight:700;text-align:center;-webkit-appearance:none}
+.mo-inp:focus{outline:none;border-color:var(--red)}
+.mo-btns{display:flex;gap:7px;margin-top:14px}
+.mo-x,.mo-ok{flex:1;padding:12px;border-radius:var(--r);font-weight:700;font-size:14px}
+.mo-x{background:var(--bgE);color:var(--tx2)}
+.mo-ok{background:linear-gradient(135deg,var(--red),var(--red-b));color:#fff}
+
+/* Transfer modal */
+.tr-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
+.tr-c{padding:14px 10px;border-radius:var(--r);border:2px solid var(--bdr2);background:var(--bg3);display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .2s}
+.tr-c:hover{border-color:var(--info)}
+.tr-c.dis{opacity:.4;pointer-events:none}
+.tr-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--red-d),var(--red));display:grid;place-items:center;font-size:14px;font-weight:700;color:#fff}
+.tr-cn{font-weight:700;font-size:13px}
+.tr-cs{font-size:9px;color:var(--tx3);margin-top:1px}
+.tr-rank{font-size:8px;color:var(--gold);margin-top:2px}
+
+/* Password modal */
+.pw-modal{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;padding:20px}
+.pw-modal.sh{display:flex}
+.pw-in{width:100%;max-width:320px;background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--r2);padding:24px 20px;animation:mu .25s ease}
+.pw-t{font-weight:700;font-size:18px;color:var(--gold);margin-bottom:4px}
+.pw-s{font-size:12px;color:var(--tx3);margin-bottom:16px}
+.pw-inp{width:100%;padding:14px;border-radius:var(--r);border:2px solid var(--bdr);background:var(--bgE);color:var(--tx);font-size:16px;text-align:center;-webkit-appearance:none}
+.pw-inp:focus{outline:none;border-color:var(--gold)}
+.pw-err{font-size:11px;color:var(--red-b);text-align:center;margin-top:6px;min-height:16px}
+.pw-btns{display:flex;gap:8px;margin-top:14px}
+.pw-x,.pw-ok{flex:1;padding:12px;border-radius:var(--r);font-weight:700;font-size:14px}
+.pw-x{background:var(--bgE);color:var(--tx2)}
+.pw-ok{background:linear-gradient(135deg,#92400E,var(--gold));color:#fff}
+
+/* === PANELS === */
+.panel{position:fixed;inset:0;z-index:400;background:var(--bg);display:none;flex-direction:column}
+.panel.show{display:flex}
+.panel-hdr{flex-shrink:0;padding:10px 14px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between}
+.panel-hdr h2{font-size:16px;font-weight:700}
+.panel-close{width:32px;height:32px;border-radius:8px;background:var(--bgE);border:1px solid var(--bdr2);display:grid;place-items:center;font-size:16px;color:var(--tx2)}
+.panel-scroll{flex:1;overflow-y:auto;padding:14px}
+
+/* History */
+.hist-filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.hist-input{padding:10px;border-radius:var(--r);background:var(--bgE);border:1px solid var(--bdr2);color:var(--tx);font-size:12px;min-width:130px}
+.hist-btn{padding:10px 14px;border-radius:var(--r);background:var(--red);color:#fff;font-size:11px;font-weight:700}
+.hist-btn.sec{background:var(--bgE);color:var(--tx)}
+.hist-item{display:flex;justify-content:space-between;align-items:center;padding:10px;margin-bottom:6px;background:var(--bg3);border:1px solid var(--bdr2);border-radius:var(--r);gap:8px}
+.hi-l{flex:1;min-width:0}
+.hi-rest{font-weight:700;font-size:12px}
+.hi-cust{font-size:10px;color:var(--tx2);margin-top:1px}
+.hi-time{font-size:9px;color:var(--tx3);margin-top:2px}
+.hi-r{font-weight:700;font-size:14px;color:var(--red-b)}
+.hist-empty{text-align:center;padding:40px;color:var(--tx3)}
+
+/* Settings */
+.set-section{background:var(--bg3);border:1px solid var(--bdr2);border-radius:var(--r2);margin-bottom:14px;overflow:hidden}
+.set-section-t{padding:12px 14px;font-size:12px;font-weight:700;color:var(--tx3);text-transform:uppercase;border-bottom:1px solid var(--bdr2)}
+.set-item{padding:14px;border-bottom:1px solid var(--bdr2);display:flex;justify-content:space-between;align-items:center;gap:12px}
+.set-item:last-child{border-bottom:none}
+.set-item-label{font-size:14px;font-weight:600}
+.set-item-desc{font-size:11px;color:var(--tx3);margin-top:2px}
+.set-toggle{width:50px;height:28px;border-radius:14px;background:var(--bgE);border:1px solid var(--bdr2);position:relative;cursor:pointer;transition:all .2s}
+.set-toggle.on{background:var(--red);border-color:var(--red)}
+.set-toggle::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:all .2s}
+.set-toggle.on::after{left:25px}
+.set-select{padding:10px;border-radius:var(--r);background:var(--bgE);border:1px solid var(--bdr2);color:var(--tx);font-size:13px;min-width:120px}
+.set-btn{padding:10px 16px;border-radius:var(--r);font-size:13px;font-weight:600}
+.set-btn.danger{background:rgba(239,68,68,.15);color:var(--red-b)}
+
+/* Admin */
+.adm-tabs{display:flex;gap:4px;padding:10px 14px;border-bottom:1px solid var(--bdr2)}
+.adm-tab{flex:1;padding:10px;border-radius:var(--r);background:var(--bg3);color:var(--tx2);font-weight:700;font-size:12px;text-align:center}
+.adm-tab.on{background:rgba(251,191,36,.12);color:var(--gold)}
+.rev-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px}
+.rev-card{background:var(--bg3);border:1px solid var(--bdr2);border-radius:var(--r2);padding:14px 12px;text-align:center}
+.rev-card.gold{background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.2)}
+.rv-v{font-size:22px;font-weight:700;background:linear-gradient(135deg,var(--gold),#FDE68A);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.rv-l{font-size:8px;color:var(--tx3);text-transform:uppercase;margin-top:2px}
+.courier-row{display:flex;align-items:center;gap:10px;padding:10px;margin-bottom:4px;background:var(--bg3);border:1px solid var(--bdr2);border-radius:var(--r)}
+.cr-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--red-d),var(--red));display:grid;place-items:center;font-size:13px;font-weight:700;color:#fff}
+.cr-info{flex:1}
+.cr-name{font-weight:700;font-size:13px}
+.cr-rank{font-size:9px;color:var(--gold)}
+.cr-detail{font-size:10px;color:var(--tx2)}
+.cr-amt{font-weight:700;font-size:15px;color:var(--red-b)}
+
+/* Rank badges */
+.rank-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:var(--rr);font-size:8px;font-weight:700}
+.rank-badge.angel{background:rgba(255,255,255,.1);color:var(--tx2)}
+.rank-badge.archangel{background:rgba(96,165,250,.15);color:var(--info)}
+.rank-badge.seraph{background:rgba(168,85,247,.15);color:#A855F7}
+.rank-badge.beast{background:linear-gradient(135deg,rgba(239,68,68,.2),rgba(251,191,36,.2));color:var(--gold)}
+
+/* Toast */
+.toasts{position:fixed;top:50px;right:10px;z-index:10001;display:flex;flex-direction:column;gap:5px;max-width:280px}
+.toast{padding:8px 12px;border-radius:var(--r);background:var(--bg2);border:1px solid var(--red);box-shadow:0 6px 25px rgba(0,0,0,.5);font-size:11.5px;font-weight:700;animation:ti .3s ease}
+@keyframes ti{from{opacity:0;transform:translateX(25px)}to{opacity:1;transform:translateX(0)}}
+
+/* Empty state */
+.empty{text-align:center;padding:50px 16px}
+.empty-i{font-size:48px;margin-bottom:12px}
+.empty-t{font-weight:700;font-size:18px;color:var(--red-b);margin-bottom:3px}
+.empty-s{color:var(--tx3);font-size:11.5px}
+
+/* Skeleton */
+.sk{background:var(--bg3);border:1px solid var(--bdr2);border-radius:var(--r2);height:120px;overflow:hidden;position:relative}
+.sk::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.03),transparent);animation:sh 1.4s infinite}
+@keyframes sh{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+
+/* Foodis features */
+.foodis-section{background:linear-gradient(135deg,rgba(34,211,238,.06),rgba(168,85,247,.06));border-color:rgba(34,211,238,.15)}
+.foodis-section .set-section-t{color:#22D3EE}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="toasts" id="T"></div>
+
+<!-- LOGIN -->
+<div class="login" id="LS">
+  <div class="login-logo">👼</div>
+  <div class="login-t">Divine Delivery</div>
+  <div class="login-s">Vyber svůj profil kurýra</div>
+  <div class="login-grid" id="LG"></div>
+</div>
+
+<!-- PASSWORD -->
+<div class="pw-modal" id="PW">
+  <div class="pw-in">
+    <div class="pw-t">👑 Administrátor</div>
+    <div class="pw-s">Zadej heslo pro přístup</div>
+    <input type="password" class="pw-inp" id="PWI" placeholder="Heslo" autocomplete="off">
+    <div class="pw-err" id="PWE"></div>
+    <div class="pw-btns">
+      <button class="pw-x" id="PWX">Zrušit</button>
+      <button class="pw-ok" id="PWG">Přihlásit</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<header class="hdr" id="HDR" style="display:none">
+  <div class="hdr-in">
+    <div class="brand">
+      <div class="brand-ico">👼</div>
+      <div>
+        <div class="brand-t">Divine Delivery</div>
+        <div class="brand-s">Dispečink v20.1</div>
+      </div>
+    </div>
+    <div class="hdr-r">
+      <div class="me" id="meB">
+        <div class="me-av" id="meA"></div>
+        <span class="me-name" id="meN"></span>
+        <span class="me-rank" id="meR"></span>
+      </div>
+      <div class="conn"><div class="dot" id="cD"></div><span id="cT">Online</span></div>
+      <button class="hb on" id="bS"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg></button>
+      <button class="hb" id="bR"><svg viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<div class="top-bar" id="TB" style="display:none">
+  <div class="stats">
+    <div class="st"><div class="st-v" id="sA">—</div><div class="st-l">Moje</div></div>
+    <div class="st"><div class="st-v" id="sN">—</div><div class="st-l">Vyzved.</div></div>
+    <div class="st"><div class="st-v" id="sP">—</div><div class="st-l">Celkem</div></div>
+    <div class="st"><div class="st-v" id="sR">—</div><div class="st-l">Aktivní</div></div>
+  </div>
+  <div class="flt-row" id="F"></div>
+</div>
+
+<div class="scroll" id="SC" style="display:none">
+  <div class="ords" id="O"><div class="sk"></div><div class="sk"></div></div>
+</div>
+
+<nav class="bn" id="BN" style="display:none">
+  <div class="bn-in">
+    <button class="ni on" id="navOrders"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg><span>Objednávky</span></button>
+    <button class="ni" id="navHist"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Historie</span></button>
+    <button class="ni admin" id="navAdmin" style="display:none"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg><span>Tržby</span></button>
+    <button class="ni" id="navSettings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg><span>Nastavení</span></button>
+    <button class="ni" id="navMap"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg><span>Mapa</span></button>
+  </div>
+</nav>
+
+<!-- MODALS -->
+<div class="mo" id="M">
+  <div class="mo-in">
+    <div class="mo-t" id="MT"></div>
+    <div class="mo-sub" id="MS"></div>
+    <input type="number" class="mo-inp" id="MI" inputmode="numeric">
+    <div class="mo-btns">
+      <button class="mo-x" id="MX">Zrušit</button>
+      <button class="mo-ok" id="MG">Potvrdit</button>
+    </div>
+  </div>
+</div>
+
+<div class="mo" id="TM">
+  <div class="mo-in">
+    <div class="mo-t" style="color:var(--info)">🔄 Předat objednávku</div>
+    <div class="mo-sub" id="trSub">Vyber kurýra</div>
+    <div class="tr-grid" id="trGrid"></div>
+    <div class="mo-btns">
+      <button class="mo-x" id="trX">Zrušit</button>
+      <button class="mo-ok" id="trOK" style="opacity:.5">Předat</button>
+    </div>
+  </div>
+</div>
+
+<!-- HISTORY -->
+<div class="panel" id="HP">
+  <div class="panel-hdr" style="color:var(--red-b)">
+    <h2>📋 Historie</h2>
+    <button class="panel-close" id="hpClose">✕</button>
+  </div>
+  <div class="panel-scroll">
+    <div class="hist-filters">
+      <input type="date" class="hist-input" id="histFrom">
+      <input type="date" class="hist-input" id="histTo">
+      <button class="hist-btn" id="histLoad">Načíst</button>
+      <button class="hist-btn sec" id="histToday">Dnes</button>
+    </div>
+    <div id="hpList"></div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="panel" id="SP">
+  <div class="panel-hdr">
+    <h2>⚙️ Nastavení</h2>
+    <button class="panel-close" id="spClose">✕</button>
+  </div>
+  <div class="panel-scroll">
+    <div class="set-section">
+      <div class="set-section-t">🎨 Zobrazení</div>
+      <div class="set-item">
+        <div><div class="set-item-label">Velikost (DPI)</div><div class="set-item-desc">Přizpůsobte velikost</div></div>
+        <select class="set-select" id="dpiSelect"><option value="70">70%</option><option value="80">80%</option><option value="85" selected>85%</option><option value="90">90%</option><option value="100">100%</option><option value="110">110%</option></select>
+      </div>
+    </div>
+    <div class="set-section foodis-section">
+      <div class="set-section-t">✨ Foodis funkce</div>
+      <div class="set-item">
+        <div><div class="set-item-label">Zvuk nové obj.</div><div class="set-item-desc">Trojizvuk upozornění</div></div>
+        <div class="set-toggle on" id="togSound"></div>
+      </div>
+      <div class="set-item">
+        <div><div class="set-item-label">Vibrace</div><div class="set-item-desc">Haptická odezva</div></div>
+        <div class="set-toggle on" id="togVibrate"></div>
+      </div>
+      <div class="set-item">
+        <div><div class="set-item-label">Glow efekt</div><div class="set-item-desc">Záře nových objednávek</div></div>
+        <div class="set-toggle on" id="togGlow"></div>
+      </div>
+    </div>
+    <div class="set-section">
+      <div class="set-section-t">ℹ️ Info</div>
+      <div class="set-item">
+        <div><div class="set-item-label">Verze</div><div class="set-item-desc">Divine Dispatch v20.3</div></div>
+      </div>
+      <div class="set-item">
+        <div><div class="set-item-label">Přihlášen</div><div class="set-item-desc" id="setUser">—</div></div>
+        <button class="set-btn danger" id="logoutBtn">🚪 Odhlásit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="panel" id="AP">
+  <div class="panel-hdr" style="color:var(--gold)">
+    <h2>👑 Tržby</h2>
+    <button class="panel-close" id="apClose">✕</button>
+  </div>
+  <div class="adm-tabs">
+    <button class="adm-tab on" id="atDay">📊 Dnes</button>
+    <button class="adm-tab" id="atMonth">📅 Měsíc</button>
+  </div>
+  <div class="panel-scroll" id="apContent"></div>
+</div>
+
+<script>
+(function(){
+'use strict';
+var C={API:'https://www.divinedelivery.cz/_functions',POLL:12000,COURIERS:['Marek','Tonda','Kuba','Tomáš','Matěj','Milan'],ADMIN:'Marek',ADMIN_PW:'Marekporadnecochce.12345',DMIN:45,GLOW_TIME:90000,
+COLORS:{Marek:'c-marek',Tonda:'c-tonda',Kuba:'c-kuba','Tomáš':'c-tomas','Matěj':'c-matej',Milan:'c-milan'}};
+var S={courier:null,isAdmin:false,orders:[],ids:new Set(),glowIds:new Set(),flt:'all',view:'default',snd:true,vibrate:true,glow:true,timer:null,first:true,errs:0,history:[]};
+var modalState={type:null,id:null};
+var transferTarget=null;
+
+// === RANKING ===
+function getRank(c){
+  if(c>=21)return{n:'ŠELMA',e:'🔥',cls:'beast'};
+  if(c>=11)return{n:'Seraf',e:'💜',cls:'seraph'};
+  if(c>=6)return{n:'Archanděl',e:'💙',cls:'archangel'};
+  return{n:'Anděl',e:'👼',cls:'angel'};
+}
+function getCount(n){return S.orders.filter(function(o){return o.courier===n}).length}
+
+// === HELPERS ===
+function ns(s){if(!s)return'PENDING';var u=s.toUpperCase();return u==='ACCEPTED'||u==='NEW'?'PENDING':['PENDING','ASSIGNED','PICKED','DELIVERED'].includes(u)?u:'PENDING'}
+function ft(d){try{return new Date(d).toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'})}catch(e){return'—'}}
+function eh(s){var d=document.createElement('div');d.textContent=s||'';return d.innerHTML}
+function ea(s){return(s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;')}
+function fp(p){if(!p)return'';var c=p.replace(/\s/g,'');if(c.startsWith('+420')&&c.length===13)return'+420 '+c.slice(4,7)+' '+c.slice(7,10)+' '+c.slice(10);return p}
+function toast(m,d){var c=document.getElementById('T'),t=document.createElement('div');t.className='toast';t.innerHTML=m;c.appendChild(t);setTimeout(function(){t.remove()},d||3000)}
+
+// === LOGIN ===
+function initLogin(){var s=localStorage.getItem('dd_courier');if(s){S.courier=s;S.isAdmin=(s===C.ADMIN);showApp();return}showLogin()}
+function showLogin(){
+  document.getElementById('LS').classList.remove('gone');
+  var g=document.getElementById('LG');
+  g.innerHTML=C.COURIERS.map(function(c){
+    var isAdm=c===C.ADMIN;
+    var cnt=getCount(c);
+    var r=getRank(cnt);
+    return'<button class="login-btn'+(isAdm?' admin':'')+'" data-name="'+c+'"><div class="login-av">'+c[0]+'</div>'+c+(isAdm?' 👑':'')+'<div class="login-rank">'+r.e+' '+r.n+'</div></button>';
+  }).join('');
+  g.querySelectorAll('.login-btn').forEach(function(b){b.onclick=function(){var n=this.dataset.name;if(n===C.ADMIN)showPw(n);else pick(n)}});
+}
+function showPw(n){window._pwT=n;document.getElementById('PW').classList.add('sh');document.getElementById('PWI').value='';document.getElementById('PWE').textContent='';setTimeout(function(){document.getElementById('PWI').focus()},100)}
+function checkPw(){if(document.getElementById('PWI').value===C.ADMIN_PW){document.getElementById('PW').classList.remove('sh');pick(window._pwT)}else{document.getElementById('PWE').textContent='Nesprávné heslo';document.getElementById('PWI').value=''}}
+function pick(n){S.courier=n;S.isAdmin=(n===C.ADMIN);localStorage.setItem('dd_courier',n);showApp()}
+function showApp(){
+  document.getElementById('LS').classList.add('gone');
+  ['HDR','TB','SC','BN'].forEach(function(id){document.getElementById(id).style.display=''});
+  var r=getRank(getCount(S.courier));
+  document.getElementById('meA').textContent=S.courier[0];
+  document.getElementById('meA').className='me-av'+(S.isAdmin?' admin':'');
+  document.getElementById('meN').textContent=S.courier+(S.isAdmin?' 👑':'');
+  document.getElementById('meR').textContent=r.e;
+  document.getElementById('setUser').textContent=S.courier+' ('+r.n+')';
+  document.getElementById('navAdmin').style.display=S.isAdmin?'flex':'none';
+  loadSettings();
+  startPoll();
+}
+function logout(){S.courier=null;localStorage.removeItem('dd_courier');clearInterval(S.timer);S.orders=[];S.ids.clear();S.glowIds.clear();S.first=true;['HDR','TB','SC','BN'].forEach(function(id){document.getElementById(id).style.display='none'});document.getElementById('LS').classList.remove('gone');showLogin()}
+
+// === API ===
+function apic(ep,o){return fetch(C.API+ep,{method:(o&&o.method)||'GET',headers:{'Content-Type':'application/json'},body:o&&o.body?JSON.stringify(o.body):undefined}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()})}
+function fetchO(){return apic('/activeOrders').then(function(d){S.errs=0;cn('on');return d.items||[]}).catch(function(){S.errs++;cn(S.errs>=3?'off':'w');return null})}
+function cn(s){var d=document.getElementById('cD'),t=document.getElementById('cT');d.className='dot';if(s==='on')t.textContent='Online';else{d.classList.add('off');t.textContent=s==='w'?'Pomalé…':'Offline'}}
+
+// === POLL ===
+function poll(){
+  fetchO().then(function(o){
+    if(!o){render();return}
+    var fresh=[];
+    o.forEach(function(x){
+      if(!S.ids.has(x._id)){
+        fresh.push(x._id);
+        if(S.glow){
+          S.glowIds.add(x._id);
+          setTimeout(function(){S.glowIds.delete(x._id);render()},C.GLOW_TIME);
+        }
+      }
+    });
+    S.orders=o;
+    o.forEach(function(x){S.ids.add(x._id)});
+    // History
+    o.forEach(function(x){if(ns(x.status)==='DELIVERED'&&x.courier===S.courier){if(!S.history.some(function(h){return h._id===x._id}))S.history.push(x)}});
+    if(fresh.length&&!S.first){
+      if(S.snd)playSound();
+      toast('🆕 '+fresh.length+' nová!',4000);
+      if(S.vibrate&&'vibrate'in navigator)navigator.vibrate([200,100,200,100,200]);
+    }
+    S.first=false;
+    render();
+  });
+}
+function startPoll(){poll();S.timer=setInterval(poll,C.POLL)}
+function playSound(){try{var ctx=new(window.AudioContext||window.webkitAudioContext)();for(var i=0;i<3;i++){var s=ctx.currentTime+i*.25;var o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(880+i*220,s);g.gain.setValueAtTime(.2,s);g.gain.exponentialRampToValueAtTime(.01,s+.2);o.connect(g);g.connect(ctx.destination);o.start(s);o.stop(s+.2)}}catch(e){}}
+
+// === RENDER ===
+function render(){rStats();rFilters();rOrders();uProgAll();updateRank()}
+function updateRank(){var r=getRank(getCount(S.courier));document.getElementById('meR').textContent=r.e}
+
+function rStats(){
+  var o=S.orders;
+  var my=o.filter(function(x){return x.courier===S.courier});
+  var myPicked=my.filter(function(x){var s=ns(x.status);return s==='PICKED'||s==='DELIVERED'});
+  var active=o.filter(function(x){return ns(x.status)!=='DELIVERED'});
+  document.getElementById('sA').textContent=my.length;
+  document.getElementById('sN').textContent=myPicked.length;
+  document.getElementById('sP').textContent=o.length;
+  document.getElementById('sR').textContent=active.length;
+}
+
+function rFilters(){
+  var o=S.orders;
+  var c={all:o.length,mine:o.filter(function(x){return x.courier===S.courier}).length,PENDING:o.filter(function(x){return ns(x.status)==='PENDING'}).length,PICKED:o.filter(function(x){return ns(x.status)==='PICKED'}).length};
+  var tabs=[{k:'all',l:'Všechny'},{k:'mine',l:'🙋 Moje'},{k:'PENDING',l:'🆕 Nové'},{k:'PICKED',l:'📦 Vyzved.'}];
+  var views=[
+    {k:'default',i:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/>',t:'Výchozí'},
+    {k:'tiles',i:'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>',t:'Dlaždice'},
+    {k:'row',i:'<path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/>',t:'Řádky'},
+    {k:'mini',i:'<path d="M4 6h16"/><path d="M4 10h16"/><path d="M4 14h16"/><path d="M4 18h16"/>',t:'Mini'}
+  ];
+  document.getElementById('F').innerHTML=tabs.map(function(t){return'<button class="ft'+(S.flt===t.k?' on':'')+'" data-f="'+t.k+'">'+t.l+' <span class="n">'+(c[t.k]||0)+'</span></button>'}).join('')+'<div class="vt">'+views.map(function(v){return'<button'+(S.view===v.k?' class="on"':'')+' data-view="'+v.k+'" title="'+v.t+'"><svg viewBox="0 0 24 24">'+v.i+'</svg></button>'}).join('')+'</div>';
+  document.querySelectorAll('#F .ft').forEach(function(b){b.onclick=function(){S.flt=this.dataset.f;render()}});
+  document.querySelectorAll('#F .vt button').forEach(function(b){b.onclick=function(){S.view=this.dataset.view;document.querySelectorAll('#F .vt button').forEach(function(x){x.classList.remove('on')});this.classList.add('on');applyView()}});
+}
+
+function applyView(){
+  var o=document.getElementById('O');
+  o.className='ords'+(S.view!=='default'?' v-'+S.view:'');
+}
+
+function rOrders(){
+  var o=S.orders.filter(function(x){if(S.flt==='mine')return x.courier===S.courier;if(S.flt==='all')return true;return ns(x.status)===S.flt});
+  // Sort: glowing first, then by time
+  o.sort(function(a,b){var aG=S.glowIds.has(a._id)?1:0,bG=S.glowIds.has(b._id)?1:0;if(bG!==aG)return bG-aG;return new Date(b.createdAt)-new Date(a.createdAt)});
+  var c=document.getElementById('O');
+  c.className='ords'+(S.view!=='default'?' v-'+S.view:'');
+  if(!o.length){c.innerHTML='<div class="empty"><div class="empty-i">😇</div><div class="empty-t">Žádné objednávky</div><div class="empty-s">Čekáme na hladové duše…</div></div>';return}
+  c.innerHTML=o.map(function(x,i){return card(x,i)}).join('');
+  bindCA();
+}
+
+// === CARD ===
+var SL={PENDING:'Nová',ASSIGNED:'Přiřazeno',PICKED:'Vyzvednuto',DELIVERED:'Doručeno'};
+var SC={PENDING:'s-p',ASSIGNED:'s-as',PICKED:'s-pk',DELIVERED:'s-dl'};
+
+function card(o,i){
+  var id=o._id,st=ns(o.status),mine=o.courier===S.courier,taken=o.courier&&!mine;
+  var isGlow=S.glowIds.has(id);
+  var price=Math.round(parseFloat(o.totalPrice)||0);
+  
+  // Items parsing (from v12.1)
+  var items=[];try{items=typeof o.itemsRaw==='string'?JSON.parse(o.itemsRaw):(o.itemsRaw||[])}catch(e){}
+  
+  // Payment
+  var pm=(o.paymentMethod||'').toLowerCase();
+  var pC=pm.includes('cash')||pm.includes('hotov')?'ca':pm.includes('link')?'cb':'cc';
+  var pL=pm.includes('cash')||pm.includes('hotov')?'Hotově':pm.includes('link')?'Odkazem':'Kartou';
+  var pI=pC==='ca'?'<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/>':pC==='cb'?'<path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>':'<rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>';
+  
+  // Time
+  var cr=o.createdAt?new Date(o.createdAt):new Date();
+  var db=new Date(cr.getTime()+C.DMIN*60000);
+  var nowMs=Date.now();
+  var remMin=Math.max(0,Math.round((db.getTime()-nowMs)/60000));
+  var remText=st==='DELIVERED'?'✓ Doručeno':(remMin>0?remMin+' min':'Právě teď');
+  
+  // Items HTML - COMPLETE V12 PARSING with all options, modifiers, toppings, sizes
+  var ih='<div class="items-grid">';
+  items.forEach(function(it){
+    var itype=(it.type||'item').toLowerCase();
+    
+    // Special items: delivery fee
+    if(itype==='delivery_fee'){
+      ih+='<div class="item-bubble fee"><div class="item-qty">🚗</div><div class="item-name">Poplatek za dopravu</div><div class="item-price">'+(it.total_item_price?Math.round(parseFloat(it.total_item_price))+' Kč':'')+'</div></div>';
+      return;
+    }
+    // Tip
+    if(itype==='tip'){
+      ih+='<div class="item-bubble other"><div class="item-qty">💰</div><div class="item-name">Spropitné</div><div class="item-price">'+(it.total_item_price?Math.round(parseFloat(it.total_item_price))+' Kč':'')+'</div></div>';
+      return;
+    }
+    // Promo/discount
+    if(itype.includes('promo')){
+      ih+='<div class="item-bubble other"><div class="item-qty">🏷️</div><div class="item-name">'+(it.name||'Sleva')+'</div><div class="item-price" style="color:var(--ok)">-'+(it.cart_discount||it.total_item_price?Math.round(parseFloat(it.cart_discount||it.total_item_price||0)):0)+' Kč</div></div>';
+      return;
+    }
+
+    var itemName=it.name||it.item_name||it.product_name||'Položka';
+    var nm=itemName.toLowerCase();
+    var qt=parseInt(it.quantity||it.qty)||1;
+    var pr=it.total_item_price||it.price||it.unit_price||'';
+    var prNum=pr?parseFloat(pr):0;
+    
+    // Determine if drink, bag, or food
+    var isDrink=nm.includes('cola')||nm.includes('fanta')||nm.includes('sprite')||nm.includes('pepsi')||
+                nm.includes('nápoj')||nm.includes('drink')||nm.includes('pití')||nm.includes('voda')||
+                nm.includes('džus')||nm.includes('juice')||nm.includes('pivo')||nm.includes('beer')||
+                nm.includes('limonád')||nm.includes('ice tea')||nm.includes('kofola')||nm.includes('mattoni')||
+                nm.includes('taška')||nm.includes('bag')||nm.includes('sáček');
+    var bubbleClass=isDrink?'drink':'food';
+    
+    ih+='<div class="item-bubble '+bubbleClass+'">';
+    ih+='<div class="item-qty">'+qt+'</div>';
+    ih+='<div class="item-name">'+eh(itemName)+'</div>';
+    if(prNum)ih+='<div class="item-price">'+Math.round(prNum)+' Kč</div>';
+    
+    // === COMPLETE OPTIONS PARSING FROM V12 ===
+    var extrasH='';
+    if(it.options&&it.options.length){
+      it.options.forEach(function(grp){
+        var gName=grp.group_name||grp.option_group_name||grp.category_name||'';
+        var selections=grp.options||grp.choices||grp.selected||grp.values||[];
+        
+        // Handle flat option (legacy format)
+        if(!Array.isArray(selections)||selections.length===0){
+          if(grp.name&&typeof grp.name==='string'&&grp.name!==gName){
+            var fPrice=parseFloat(grp.price||grp.option_price||0);
+            extrasH+='<div class="item-extra">'+eh(grp.name)+(fPrice?'<span class="item-extra-price">+'+Math.round(fPrice)+'</span>':'')+'</div>';
+          }
+          return;
+        }
+        
+        // Process each selection from the group
+        selections.forEach(function(sel){
+          if(!sel)return;
+          var selName,selPrice,selQty;
+          if(typeof sel==='string'){
+            selName=sel;selPrice=0;selQty=1;
+          }else{
+            selName=sel.name||sel.option_name||sel.value||sel.label||'';
+            selPrice=parseFloat(sel.price||sel.option_price||sel.unit_price||0);
+            selQty=parseInt(sel.quantity||1);
+          }
+          if(!selName)return;
+          
+          var displayText=gName?(gName+': '+selName):selName;
+          var qtyStr=selQty>1?(selQty+'× '):'';
+          extrasH+='<div class="item-extra">'+qtyStr+eh(displayText)+(selPrice?'<span class="item-extra-price">+'+Math.round(selPrice)+'</span>':'')+'</div>';
+        });
+      });
+    }
+    
+    // Modifiers
+    if(it.modifiers&&it.modifiers.length){
+      it.modifiers.forEach(function(m){
+        if(!m)return;
+        var mName=typeof m==='string'?m:(m.name||m.modifier_name||'');
+        var mPrice=typeof m==='object'?(parseFloat(m.price||m.modifier_price||0)):0;
+        if(mName)extrasH+='<div class="item-extra">'+eh(mName)+(mPrice?'<span class="item-extra-price">+'+Math.round(mPrice)+'</span>':'')+'</div>';
+      });
+    }
+    
+    // Toppings
+    if(it.toppings&&it.toppings.length){
+      it.toppings.forEach(function(t){
+        if(!t)return;
+        var tName=typeof t==='string'?t:(t.name||'');
+        var tPrice=typeof t==='object'?(parseFloat(t.price||0)):0;
+        if(tName)extrasH+='<div class="item-extra">'+eh(tName)+(tPrice?'<span class="item-extra-price">+'+Math.round(tPrice)+'</span>':'')+'</div>';
+      });
+    }
+    
+    // Size
+    if(it.size||it.size_name){
+      var sizeName=it.size_name||it.size||'';
+      var sizePrice=parseFloat(it.size_price||0);
+      extrasH+='<div class="item-extra">Velikost: '+eh(sizeName)+(sizePrice?'<span class="item-extra-price">+'+Math.round(sizePrice)+'</span>':'')+'</div>';
+    }
+    
+    // Add extras if any
+    if(extrasH)ih+='<div class="item-extras">'+extrasH+'</div>';
+    
+    // Notes
+    var note=it.instructions||it.comment||it.special_instructions||it.customer_notes||it.notes||'';
+    if(note)ih+='<div class="item-note">💬 '+eh(note)+'</div>';
+    
+    // Discount
+    if(it.cart_discount&&parseFloat(it.cart_discount)>0){
+      ih+='<div class="item-discount">🏷️ -'+Math.round(parseFloat(it.cart_discount))+' Kč</div>';
+    }
+    
+    ih+='</div>';
+  });
+  ih+='</div>';
+  
+  // Actions
+  var act='';
+  var trIcon='<svg viewBox="0 0 24 24"><path d="M16 3h5v5"/><path d="M4 20L21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg>';
+  
+  if(S.isAdmin){
+    // Admin can always act
+    if(st==='PENDING'&&!o.courier){
+      act='<div class="cd-a"><button class="ab ab-beru" data-action="beru" data-id="'+id+'"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>BERU</button></div>';
+    }else if(st!=='DELIVERED'){
+      act='<div class="cd-a">';
+      if(!mine)act+='<button class="ab ab-admin" data-action="takeover" data-id="'+id+'"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg>Převzít</button>';
+      if(st==='ASSIGNED')act+='<button class="ab ab-pick" data-action="pick" data-id="'+id+'" data-tot="'+price+'"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>Vyzved.</button>';
+      if(st==='PICKED')act+='<button class="ab ab-pick ok" disabled><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Vyzved. ✓</button>';
+      if(st==='ASSIGNED'||st==='PICKED')act+='<button class="ab ab-dlv" data-action="dlv" data-id="'+id+'" data-tot="'+price+'"><svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>Doruč.</button>';
+      act+='<button class="ab ab-tr" data-action="transfer" data-id="'+id+'">'+trIcon+'</button>';
+      act+='</div>';
+    }
+  }else{
+    // Regular courier
+    if(st==='PENDING'&&!o.courier){
+      act='<div class="cd-a"><button class="ab ab-beru" data-action="beru" data-id="'+id+'"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>BERU</button></div>';
+    }else if(mine&&st==='ASSIGNED'){
+      act='<div class="cd-a"><button class="ab ab-pick" data-action="pick" data-id="'+id+'" data-tot="'+price+'"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>Vyzved.</button><button class="ab ab-dlv" data-action="dlv" data-id="'+id+'" data-tot="'+price+'"><svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>Doruč.</button><button class="ab ab-tr" data-action="transfer" data-id="'+id+'">'+trIcon+'</button></div>';
+    }else if(mine&&st==='PICKED'){
+      act='<div class="cd-a"><button class="ab ab-pick ok" disabled><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Vyzved. ✓</button><button class="ab ab-dlv" data-action="dlv" data-id="'+id+'" data-tot="'+price+'"><svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>Doruč.</button><button class="ab ab-tr" data-action="transfer" data-id="'+id+'">'+trIcon+'</button></div>';
+    }
+  }
+  
+  var cls='cd'+(taken?' taken':'');
+  // Courier info with color class - only in header, no duplicate badge
+  var courierCls=o.courier?C.COLORS[o.courier]||'':'';
+  var courierInfo=o.courier?'<div class="courier-info '+courierCls+'">👼 '+eh(o.courier)+'</div>':'';
+  var rName=eh(o.restaurantName||'Restaurace');
+  
+  return'<div class="'+cls+'" id="c-'+id+'" data-glow="'+(isGlow?'1':'0')+'" data-courier="'+(o.courier||'')+'" style="animation-delay:'+i*.03+'s">'+'<div class="rest-bar"><div class="rest-bar-name" data-search="'+ea(o.restaurantName||'')+'"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>'+rName+'</div><div class="rest-bar-btns"><div class="rest-bar-pdf" data-pdf="'+id+'"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PDF</div><div class="rest-bar-sms" data-sms="'+id+'" data-phone="'+ea(o.customerPhone||'')+'"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>SMS</div></div></div><div class="cd-h"><div class="ri"><div class="r-btns">'+(o.restaurant_address?'<button class="r-btn r-nav" data-nav="'+ea(o.restaurant_address)+'"><svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></button>':'')+(o.restaurant_phone?'<button class="r-btn r-tel" data-tel="'+ea(o.restaurant_phone)+'"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></button>':'')+'</div><div><div class="ot"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>'+ft(o.createdAt)+'</div>'+courierInfo+'</div></div><span class="bs '+SC[st]+'">'+SL[st]+'</span></div><div class="prog"><div class="prog-row"><div class="prog-t"><span class="lb">Objednáno</span>'+ft(o.createdAt)+'</div><div class="prog-t r"><span class="lb">Doručit do</span>'+ft(db)+'</div></div><div class="prog-bar"><div class="prog-fill'+(st==='DELIVERED'?' done':'')+'" id="p-'+id+'" data-s="'+cr.getTime()+'" data-e="'+db.getTime()+'"></div><div class="prog-time" id="pt-'+id+'">'+remText+'</div></div></div><div class="cd-c"><div class="cr"><div><div class="cn">'+eh(o.customerName||'Neznámý')+'</div><div class="cp">'+eh(fp(o.customerPhone))+'</div></div><div class="qa">'+(o.customerPhone?'<button class="qb tel" data-tel="'+ea(o.customerPhone)+'"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></button>':'')+(o.deliveryAddress?'<button class="qb nav" data-nav="'+ea(o.deliveryAddress)+'"><svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></button>':'')+'</div></div>'+(o.deliveryAddress?'<div class="adr"><div class="adr-i"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div class="adr-t" data-nav="'+ea(o.deliveryAddress)+'">'+eh(o.deliveryAddress)+'</div></div>':'')+'</div>'+(items.length?'<button class="tgl"><span>Položky ('+items.length+')</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button><div class="cd-it">'+ih+'</div>':'')+'<div class="cd-f"><div class="pb '+pC+'"><svg viewBox="0 0 24 24">'+pI+'</svg>'+pL+'</div><div><div class="tl">Celkem</div><div class="tv">'+price.toLocaleString('cs')+' Kč</div></div></div>'+act+'</div>';
+}
+
+// === PROGRESS UPDATE ===
+function uProgAll(){S.orders.forEach(function(o){var el=document.getElementById('p-'+o._id);if(!el)return;var s=+el.dataset.s,e=+el.dataset.e,n=Date.now();var pct=Math.min(100,Math.max(0,((n-s)/(e-s))*100));el.style.width=pct+'%';if(pct>=100||ns(o.status)==='DELIVERED')el.classList.add('done');var tEl=document.getElementById('pt-'+o._id);if(tEl){var rem=Math.max(0,Math.round((e-n)/60000));tEl.textContent=ns(o.status)==='DELIVERED'?'✓ Doručeno':(rem>0?rem+' min':'Právě teď');tEl.classList.toggle('outside',pct<25)}})}
+setInterval(uProgAll,5000);
+
+// === CARD ACTIONS ===
+function bindCA(){
+  var c=document.getElementById('O');
+  c.onclick=function(e){
+    var tgl=e.target.closest('.tgl');
+    if(tgl){e.preventDefault();tgl.closest('.cd').classList.toggle('op');return}
+    var search=e.target.closest('[data-search]');
+    if(search){e.preventDefault();window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(search.dataset.search),'_blank');return}
+    var pdf=e.target.closest('[data-pdf]');
+    if(pdf){e.preventDefault();generatePDF(pdf.closest('.cd'));return}
+    var sms=e.target.closest('[data-sms]');
+    if(sms){e.preventDefault();sendSMS(sms.dataset.sms,sms.dataset.phone);return}
+    var tel=e.target.closest('[data-tel]');
+    if(tel){e.preventDefault();location.href='tel:'+tel.dataset.tel;return}
+    // FIXED: Address - only text is clickable
+    var adrT=e.target.closest('.adr-t[data-nav]');
+    if(adrT){e.preventDefault();window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(adrT.dataset.nav),'_blank');return}
+    // Nav button
+    var nav=e.target.closest('.qb.nav[data-nav],.r-btn.r-nav[data-nav]');
+    if(nav){e.preventDefault();window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(nav.dataset.nav),'_blank');return}
+    var btn=e.target.closest('[data-action]');
+    if(!btn||btn.disabled)return;
+    e.preventDefault();
+    btn.disabled=true;setTimeout(function(){btn.disabled=false},1000);
+    var action=btn.dataset.action,id=btn.dataset.id,tot=parseInt(btn.dataset.tot)||0;
+    if(action==='beru')doBeru(id);
+    else if(action==='takeover')doTakeover(id);
+    else if(action==='pick')openModal('pick',id,tot);
+    else if(action==='dlv')openModal('dlv',id,tot);
+    else if(action==='transfer')openTransfer(id);
+  };
+}
+
+// === SMS FUNCTION ===
+function sendSMS(orderId,phone){
+  if(!phone){toast('⚠️ Chybí telefon');return}
+  var o=S.orders.find(function(x){return x._id===orderId});
+  if(!o){toast('⚠️ Objednávka nenalezena');return}
+  var st=ns(o.status);
+  var msg='';
+  var rName=o.restaurantName||'restaurace';
+  var eta=Math.max(5,Math.round((new Date(o.createdAt).getTime()+C.DMIN*60000-Date.now())/60000));
+  
+  if(st==='PENDING'||st==='ASSIGNED'){
+    msg='Dobrý den, Vaše objednávka z '+rName+' byla přijata. Předpokládaný čas doručení je cca '+eta+' minut. Kurýr: '+S.courier+'. Divine Delivery 🚗';
+  }else if(st==='PICKED'){
+    msg='Dobrý den, Vaše objednávka z '+rName+' byla vyzvednuta a je na cestě k Vám! Kurýr: '+S.courier+'. Divine Delivery 🚗';
+  }else{
+    msg='Dobrý den, děkujeme za Vaši objednávku z '+rName+'! Kurýr: '+S.courier+'. Divine Delivery 🚗';
+  }
+  
+  // Open SMS app with pre-filled message
+  var smsUrl='sms:'+phone+'?body='+encodeURIComponent(msg);
+  location.href=smsUrl;
+}
+
+// === PDF GENERATION ===
+function generatePDF(cardEl){
+  var rName=cardEl.querySelector('.rest-bar-name')?.textContent||'Restaurace';
+  var cName=cardEl.querySelector('.cn')?.textContent||'Zákazník';
+  var cPhone=cardEl.querySelector('.cp')?.textContent||'';
+  var addr=cardEl.querySelector('.adr-t')?.textContent||'';
+  var total=cardEl.querySelector('.tv')?.textContent||'0 Kč';
+  var payment=cardEl.querySelector('.pb')?.textContent||'';
+  var timeEl=cardEl.querySelector('.ot');
+  var time=timeEl?timeEl.textContent.trim():'';
+  var deliverBy=cardEl.querySelector('.prog-t.r')?.textContent?.replace('Doručit do','').trim()||'';
+  
+  // Get items
+  var itemsHtml='';
+  cardEl.querySelectorAll('.item-bubble').forEach(function(item){
+    var name=item.querySelector('.item-name')?.textContent||'';
+    var qty=item.querySelector('.item-qty')?.textContent||'1';
+    var price=item.querySelector('.item-price')?.textContent||'';
+    itemsHtml+='<tr><td style="width:35px;font-weight:bold">'+qty+'×</td><td>'+name+'</td><td style="text-align:right;white-space:nowrap">'+price+'</td></tr>';
+    // Extras
+    item.querySelectorAll('.item-extra').forEach(function(ex){
+      var exText=ex.textContent||'';
+      var exPrice=ex.querySelector('.item-extra-price')?.textContent||'';
+      itemsHtml+='<tr style="color:#666;font-size:12px"><td></td><td style="padding-left:10px">› '+exText.replace(exPrice,'').trim()+'</td><td style="text-align:right">'+exPrice+'</td></tr>';
+    });
+    // Notes
+    var note=item.querySelector('.item-note');
+    if(note){
+      itemsHtml+='<tr style="color:#C41E1E;font-size:11px"><td></td><td colspan="2" style="padding-left:10px">'+note.textContent+'</td></tr>';
+    }
+  });
+  
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Objednávka - '+rName+'</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;padding:16px;max-width:450px;margin:0 auto;background:#f5f5f5}.card{background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.1);overflow:hidden}.header{background:linear-gradient(135deg,#C41E1C,#EF4444);color:#fff;padding:16px;text-align:center}.header h1{font-size:20px;margin-bottom:4px}.header h2{font-size:14px;font-weight:normal;opacity:.9}.section{padding:14px 16px;border-bottom:1px solid #eee}.section:last-child{border-bottom:none}.label{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}.value{font-size:15px;font-weight:600;color:#1a1a1a}.small{font-size:13px;color:#666;margin-top:2px}.address{background:#f8f8f8;padding:10px 12px;border-radius:8px;margin-top:8px;font-size:13px;line-height:1.4}table{width:100%;border-collapse:collapse}td{padding:6px 0;vertical-align:top;font-size:14px}.total-row{background:#f8f8f8;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}.total-label{font-size:14px;color:#666}.total-value{font-size:24px;font-weight:bold;color:#C41E1C}.payment{display:inline-block;padding:6px 12px;background:#e8e8e8;border-radius:6px;font-size:13px;font-weight:600}.footer{text-align:center;padding:16px;font-size:11px;color:#888}.print-btn{display:block;width:100%;padding:14px;margin-top:16px;background:#C41E1C;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer}@media print{.print-btn{display:none}body{background:#fff;padding:0}.card{box-shadow:none}}</style></head><body><div class="card"><div class="header"><h1>🚗 Divine Delivery</h1><h2>'+rName+'</h2></div><div class="section"><div class="label">Zákazník</div><div class="value">'+cName+'</div><div class="small">'+cPhone+'</div><div class="address">📍 '+addr+'</div></div><div class="section" style="display:flex;gap:20px"><div style="flex:1"><div class="label">Objednáno</div><div class="value">'+time+'</div></div><div style="flex:1"><div class="label">Doručit do</div><div class="value" style="color:#C41E1C">'+deliverBy+'</div></div></div><div class="section"><div class="label">Položky</div><table style="margin-top:8px">'+itemsHtml+'</table></div><div class="total-row"><div><div class="label">Platba</div><div class="payment">'+payment+'</div></div><div style="text-align:right"><div class="total-label">Celkem</div><div class="total-value">'+total+'</div></div></div><div class="footer">Děkujeme za objednávku!<br>www.divinedelivery.cz</div></div><button class="print-btn" onclick="window.print()">🖨️ Vytisknout</button></body></html>';
+  
+  var newTab=window.open('about:blank','_blank');
+  if(newTab){newTab.document.write(html);newTab.document.close()}
+  else{var blob=new Blob([html],{type:'text/html'});window.open(URL.createObjectURL(blob),'_blank')}
+}
+
+function doBeru(id){apic('/assignCourier',{method:'POST',body:{orderId:id,courier:S.courier}}).then(function(){toast('✅ Je to tvoje!');poll()}).catch(function(){toast('❌ Chyba')})}
+function doTakeover(id){apic('/assignCourier',{method:'POST',body:{orderId:id,courier:S.courier}}).then(function(){toast('👑 Převzato!');poll()}).catch(function(){toast('❌ Chyba')})}
+
+function openModal(type,id,sug){modalState={type:type,id:id};document.getElementById('MT').textContent=type==='pick'?'📦 Vyzvednutí':'✅ Doručení';var o=S.orders.find(function(x){return x._id===id});document.getElementById('MS').textContent=o?(o.restaurantName||''):'';document.getElementById('MI').value=sug||'';document.getElementById('M').classList.add('sh');setTimeout(function(){document.getElementById('MI').focus();document.getElementById('MI').select()},100)}
+function closeModal(){document.getElementById('M').classList.remove('sh');modalState={type:null,id:null}}
+function submitModal(){var amt=parseInt(document.getElementById('MI').value)||0,id=modalState.id,type=modalState.type;closeModal();if(type==='pick'){apic('/markPicked',{method:'POST',body:{orderId:id,pickedUpAmount:amt}}).then(function(){toast('📦 Vyzvednuto!');poll()}).catch(function(){toast('❌ Chyba')})}else{apic('/markDelivered',{method:'POST',body:{orderId:id,deliveredAmount:amt}}).then(function(){toast('✅ Doručeno!');poll()}).catch(function(){toast('❌ Chyba')})}}
+
+function openTransfer(id){
+  var o=S.orders.find(function(x){return x._id===id});
+  if(!o)return;
+  modalState.id=id;
+  transferTarget=null;
+  document.getElementById('trSub').textContent=o.restaurantName||'Vyber kurýra';
+  var g=document.getElementById('trGrid');
+  g.innerHTML=C.COURIERS.filter(function(c){return c!==o.courier}).map(function(c){
+    var cnt=getCount(c);
+    var r=getRank(cnt);
+    return'<div class="tr-c" data-c="'+c+'"><div class="tr-av">'+c[0]+'</div><div><div class="tr-cn">'+c+'</div><div class="tr-rank">'+r.e+' '+r.n+' ('+cnt+')</div></div></div>';
+  }).join('');
+  g.querySelectorAll('.tr-c').forEach(function(el){el.onclick=function(){g.querySelectorAll('.tr-c').forEach(function(x){x.style.borderColor='';x.style.background=''});this.style.borderColor='var(--info)';this.style.background='rgba(96,165,250,.15)';transferTarget=this.dataset.c;document.getElementById('trOK').style.opacity='1'}});
+  document.getElementById('trOK').style.opacity='.5';
+  document.getElementById('TM').classList.add('sh');
+}
+function closeTransfer(){document.getElementById('TM').classList.remove('sh');transferTarget=null}
+function submitTransfer(){if(!transferTarget||!modalState.id)return;apic('/assignCourier',{method:'POST',body:{orderId:modalState.id,courier:transferTarget}}).then(function(){toast('🔄 Předáno: '+transferTarget);closeTransfer();poll()}).catch(function(){toast('❌ Chyba')})}
+
+// === HISTORY ===
+function showHist(){document.getElementById('HP').classList.add('show');var t=new Date().toISOString().split('T')[0];document.getElementById('histFrom').value=t;document.getElementById('histTo').value=t;renderHist()}
+function renderHist(){var l=document.getElementById('hpList');if(!S.history.length){l.innerHTML='<div class="hist-empty">Žádná historie</div>';return}l.innerHTML=S.history.map(function(o){var p=Math.round(parseFloat(o.totalPrice)||0);return'<div class="hist-item"><div class="hi-l"><div class="hi-rest">'+eh(o.restaurantName||'')+'</div><div class="hi-cust">'+eh(o.customerName||'')+'</div><div class="hi-time">'+ft(o.createdAt)+'</div></div><div class="hi-r">'+p+' Kč</div></div>'}).join('')}
+
+// === ADMIN ===
+function showAdmin(){document.getElementById('AP').classList.add('show');renderAdmin()}
+function renderAdmin(){
+  var c=document.getElementById('apContent'),o=S.orders;
+  var tot=o.reduce(function(s,x){return s+(parseFloat(x.totalPrice)||0)},0);
+  var byCourier={};C.COURIERS.forEach(function(cr){byCourier[cr]={c:0,r:0}});
+  o.forEach(function(x){if(x.courier&&byCourier[x.courier]){byCourier[x.courier].c++;byCourier[x.courier].r+=(parseFloat(x.totalPrice)||0)}});
+  var h='<div class="rev-cards"><div class="rev-card gold"><div class="rv-v">'+Math.round(tot).toLocaleString('cs')+' Kč</div><div class="rv-l">Celkem dnes</div></div><div class="rev-card gold"><div class="rv-v">'+o.length+'</div><div class="rv-l">Objednávek</div></div></div>';
+  h+='<div style="font-size:11px;color:var(--tx3);margin-bottom:8px;font-weight:700">👥 RANKING</div>';
+  var sorted=C.COURIERS.slice().sort(function(a,b){return byCourier[b].c-byCourier[a].c});
+  sorted.forEach(function(cr){var d=byCourier[cr],r=getRank(d.c);h+='<div class="courier-row"><div class="cr-av">'+cr[0]+'</div><div class="cr-info"><div class="cr-name">'+cr+(cr===C.ADMIN?' 👑':'')+'</div><div class="cr-rank">'+r.e+' '+r.n+'</div><div class="cr-detail">'+d.c+' objednávek</div></div><div class="cr-amt">'+Math.round(d.r).toLocaleString('cs')+' Kč</div></div>'});
+  c.innerHTML=h;
+}
+
+// === SETTINGS ===
+function loadSettings(){
+  var dpi=localStorage.getItem('dd_dpi')||'85';
+  document.getElementById('dpiSelect').value=dpi;
+  document.documentElement.style.fontSize=dpi+'%';
+  S.snd=localStorage.getItem('dd_snd')!=='0';
+  S.vibrate=localStorage.getItem('dd_vib')!=='0';
+  S.glow=localStorage.getItem('dd_glow')!=='0';
+  document.getElementById('togSound').classList.toggle('on',S.snd);
+  document.getElementById('togVibrate').classList.toggle('on',S.vibrate);
+  document.getElementById('togGlow').classList.toggle('on',S.glow);
+}
+function saveSettings(){localStorage.setItem('dd_dpi',document.getElementById('dpiSelect').value);localStorage.setItem('dd_snd',S.snd?'1':'0');localStorage.setItem('dd_vib',S.vibrate?'1':'0');localStorage.setItem('dd_glow',S.glow?'1':'0')}
+
+// === INIT ===
+document.addEventListener('DOMContentLoaded',function(){
+  // Password
+  document.getElementById('PWX').onclick=function(){document.getElementById('PW').classList.remove('sh')};
+  document.getElementById('PWG').onclick=checkPw;
+  document.getElementById('PWI').onkeydown=function(e){if(e.key==='Enter')checkPw()};
+  // Header
+  document.getElementById('meB').onclick=function(){if(confirm('Odhlásit se?'))logout()};
+  document.getElementById('bS').onclick=function(){S.snd=!S.snd;this.classList.toggle('on',S.snd);saveSettings();toast(S.snd?'🔔 Zvuk zapnut':'🔕 Vypnut')};
+  document.getElementById('bR').onclick=function(){poll();toast('🔄 Obnoveno')};
+  // Nav
+  document.getElementById('navOrders').onclick=function(){document.querySelectorAll('.ni').forEach(function(x){x.classList.remove('on')});this.classList.add('on');document.getElementById('HP').classList.remove('show');document.getElementById('AP').classList.remove('show');document.getElementById('SP').classList.remove('show')};
+  document.getElementById('navHist').onclick=function(){document.querySelectorAll('.ni').forEach(function(x){x.classList.remove('on')});this.classList.add('on');showHist()};
+  document.getElementById('navAdmin').onclick=function(){if(S.isAdmin){document.querySelectorAll('.ni').forEach(function(x){x.classList.remove('on')});this.classList.add('on');showAdmin()}};
+  document.getElementById('navSettings').onclick=function(){document.querySelectorAll('.ni').forEach(function(x){x.classList.remove('on')});this.classList.add('on');document.getElementById('SP').classList.add('show')};
+  document.getElementById('navMap').onclick=function(){window.open('https://www.google.com/maps','_blank')};
+  // Panel closes
+  document.getElementById('hpClose').onclick=function(){document.getElementById('HP').classList.remove('show')};
+  document.getElementById('apClose').onclick=function(){document.getElementById('AP').classList.remove('show')};
+  document.getElementById('spClose').onclick=function(){document.getElementById('SP').classList.remove('show')};
+  // Modal
+  document.getElementById('MX').onclick=closeModal;
+  document.getElementById('MG').onclick=submitModal;
+  document.getElementById('M').onclick=function(e){if(e.target===this)closeModal()};
+  document.getElementById('MI').onkeydown=function(e){if(e.key==='Enter')submitModal()};
+  // Transfer
+  document.getElementById('trX').onclick=closeTransfer;
+  document.getElementById('trOK').onclick=submitTransfer;
+  document.getElementById('TM').onclick=function(e){if(e.target===this)closeTransfer()};
+  // History
+  document.getElementById('histLoad').onclick=renderHist;
+  document.getElementById('histToday').onclick=function(){var t=new Date().toISOString().split('T')[0];document.getElementById('histFrom').value=t;document.getElementById('histTo').value=t;renderHist()};
+  // Admin tabs
+  document.getElementById('atDay').onclick=function(){document.getElementById('atDay').classList.add('on');document.getElementById('atMonth').classList.remove('on');renderAdmin()};
+  document.getElementById('atMonth').onclick=function(){document.getElementById('atMonth').classList.add('on');document.getElementById('atDay').classList.remove('on');renderAdmin()};
+  // Settings
+  document.getElementById('dpiSelect').onchange=function(){document.documentElement.style.fontSize=this.value+'%';saveSettings()};
+  document.getElementById('togSound').onclick=function(){this.classList.toggle('on');S.snd=this.classList.contains('on');saveSettings()};
+  document.getElementById('togVibrate').onclick=function(){this.classList.toggle('on');S.vibrate=this.classList.contains('on');saveSettings()};
+  document.getElementById('togGlow').onclick=function(){this.classList.toggle('on');S.glow=this.classList.contains('on');saveSettings()};
+  document.getElementById('logoutBtn').onclick=logout;
+  
+  initLogin();
+});
+})();
+</script>
+</body>
+</html>
