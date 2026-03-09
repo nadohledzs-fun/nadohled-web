@@ -1,19 +1,88 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="cs" data-theme="dark" data-font="avenir">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Divine Dispatch v21.0</title>
 <style>
-:root{--ff:'Avenir','Avenir Next','Nunito Sans','Segoe UI',system-ui,sans-serif;--red:#C41E1E;--red-d:#7F1D1D;--red-b:#EF4444;--red-g:rgba(196,30,30,.3);--rose:#FCA5A5;--bg:#0A0A0C;--bg2:#131316;--bg3:rgba(19,19,22,.88);--bgE:rgba(35,30,40,.55);--tx:#F4F4F5;--tx2:rgba(244,244,245,.6);--tx3:rgba(244,244,245,.35);--bdr:rgba(196,30,30,.18);--bdr2:rgba(255,255,255,.06);--ok:#34D399;--warn:#FBBF24;--info:#60A5FA;--cash:#4ADE80;--gold:#D97706;--mw:640px;--r:10px;--r2:14px;--rr:9999px;
+/* === THEME SYSTEM === */
+:root{
+/* Default fonts */
+--ff:'Avenir','Avenir Next','Nunito Sans','Segoe UI',system-ui,sans-serif;
+/* Core colors (theme-independent) */
+--red:#C41E1E;--red-d:#7F1D1D;--red-b:#EF4444;--red-g:rgba(196,30,30,.3);--rose:#FCA5A5;
+--ok:#34D399;--warn:#FBBF24;--info:#60A5FA;--cash:#4ADE80;--gold:#D97706;
+--mw:640px;--r:10px;--r2:14px;--rr:9999px;
 /* Courier colors */
---c-marek:#D97706;--c-tonda:#2563EB;--c-kuba:#059669;--c-tomas:#8B5CF6;--c-matej:#EC4899;--c-milan:#06B6D4}
+--c-marek:#D97706;--c-tonda:#2563EB;--c-kuba:#059669;--c-tomas:#8B5CF6;--c-matej:#EC4899;--c-milan:#06B6D4
+}
+
+/* DARK THEME (default) */
+[data-theme="dark"]{
+--bg:#0A0A0C;--bg2:#131316;--bg3:rgba(19,19,22,.88);--bgE:rgba(35,30,40,.55);
+--tx:#F4F4F5;--tx2:rgba(244,244,245,.6);--tx3:rgba(244,244,245,.35);
+--bdr:rgba(196,30,30,.18);--bdr2:rgba(255,255,255,.06);
+--shadow:0 4px 20px rgba(0,0,0,.5);--shadow-sm:0 2px 8px rgba(0,0,0,.3);
+--card-bg:rgba(19,19,22,.92);--modal-bg:rgba(10,10,12,.97);
+--gradient-bg:radial-gradient(ellipse 55% 45% at 12% 18%,rgba(196,30,30,.08) 0%,transparent 70%),radial-gradient(ellipse 45% 55% at 88% 80%,rgba(127,29,29,.06) 0%,transparent 70%),var(--bg)
+}
+
+/* AMOLED BLACK THEME */
+[data-theme="amoled"]{
+--bg:#000000;--bg2:#050505;--bg3:rgba(8,8,8,.95);--bgE:rgba(15,15,15,.8);
+--tx:#FFFFFF;--tx2:rgba(255,255,255,.65);--tx3:rgba(255,255,255,.4);
+--bdr:rgba(196,30,30,.25);--bdr2:rgba(255,255,255,.08);
+--shadow:0 4px 24px rgba(0,0,0,.9);--shadow-sm:0 2px 10px rgba(0,0,0,.7);
+--card-bg:rgba(5,5,5,.98);--modal-bg:rgba(0,0,0,.99);
+--gradient-bg:#000000
+}
+
+/* LIGHT THEME */
+[data-theme="light"]{
+--bg:#F8F9FA;--bg2:#FFFFFF;--bg3:rgba(255,255,255,.95);--bgE:rgba(0,0,0,.03);
+--tx:#1A1A1A;--tx2:rgba(26,26,26,.65);--tx3:rgba(26,26,26,.45);
+--bdr:rgba(196,30,30,.15);--bdr2:rgba(0,0,0,.08);
+--shadow:0 4px 20px rgba(0,0,0,.1);--shadow-sm:0 2px 8px rgba(0,0,0,.06);
+--card-bg:rgba(255,255,255,.98);--modal-bg:rgba(255,255,255,.98);
+--gradient-bg:radial-gradient(ellipse 55% 45% at 12% 18%,rgba(196,30,30,.04) 0%,transparent 70%),radial-gradient(ellipse 45% 55% at 88% 80%,rgba(127,29,29,.03) 0%,transparent 70%),var(--bg);
+/* Light theme specific overrides */
+--red-b:#DC2626;--rose:#F87171
+}
+
+/* FONT FAMILIES */
+[data-font="system"]{--ff:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+[data-font="avenir"]{--ff:'Avenir','Avenir Next','Nunito Sans','Segoe UI',sans-serif}
+[data-font="inter"]{--ff:'Inter','SF Pro Display','Segoe UI',sans-serif}
+[data-font="roboto"]{--ff:'Roboto','Helvetica Neue',Arial,sans-serif}
+[data-font="poppins"]{--ff:'Poppins','Nunito','Segoe UI',sans-serif}
+[data-font="mono"]{--ff:'SF Mono','Fira Code','JetBrains Mono',monospace}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;overflow:hidden}
 body{font-family:var(--ff);background:var(--bg);color:var(--tx);-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
 button{font:inherit;border:none;cursor:pointer;background:none;color:inherit}
-input,select{font-family:var(--ff)}
-.bg{position:fixed;inset:0;z-index:-1;background:radial-gradient(ellipse 55% 45% at 12% 18%,rgba(196,30,30,.08) 0%,transparent 70%),radial-gradient(ellipse 45% 55% at 88% 80%,rgba(127,29,29,.06) 0%,transparent 70%),var(--bg)}
+input,select{font-family:var(--ff);background:var(--bg3);color:var(--tx);border:1px solid var(--bdr2)}
+.bg{position:fixed;inset:0;z-index:-1;background:var(--gradient-bg)}
+
+/* Light theme overrides */
+[data-theme="light"] .login-av{box-shadow:0 2px 8px rgba(0,0,0,.15)}
+[data-theme="light"] .hdr{background:linear-gradient(180deg,var(--bg) 55%,rgba(248,249,250,.95))}
+[data-theme="light"] .bn{background:linear-gradient(0deg,var(--bg) 65%,rgba(248,249,250,.95))}
+[data-theme="light"] .cd{box-shadow:var(--shadow-sm)}
+[data-theme="light"] .panel{box-shadow:var(--shadow)}
+[data-theme="light"] .modal-c{box-shadow:var(--shadow)}
+[data-theme="light"] .st{box-shadow:var(--shadow-sm)}
+[data-theme="light"] .flt{box-shadow:var(--shadow-sm)}
+[data-theme="light"] .prog-bar{background:rgba(0,0,0,.06)}
+[data-theme="light"] .item-bubble.food{background:linear-gradient(135deg,rgba(239,68,68,.08),rgba(239,68,68,.03));border-color:rgba(239,68,68,.2)}
+[data-theme="light"] .item-bubble.drink{background:linear-gradient(135deg,rgba(251,191,36,.08),rgba(251,191,36,.03));border-color:rgba(251,191,36,.15)}
+[data-theme="light"] .toast{box-shadow:var(--shadow)}
+
+/* AMOLED theme overrides */
+[data-theme="amoled"] .cd{border-color:rgba(255,255,255,.1)}
+[data-theme="amoled"] .hdr{background:#000}
+[data-theme="amoled"] .bn{background:#000}
+[data-theme="amoled"] .panel{background:#000}
+[data-theme="amoled"] .login{background:#000}
 
 /* === LOGIN === */
 .login{position:fixed;inset:0;z-index:500;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;transition:opacity .4s,transform .4s}
@@ -346,6 +415,11 @@ input,select{font-family:var(--ff)}
 .set-select{padding:10px;border-radius:var(--r);background:var(--bgE);border:1px solid var(--bdr2);color:var(--tx);font-size:13px;min-width:120px}
 .set-btn{padding:10px 16px;border-radius:var(--r);font-size:13px;font-weight:600}
 .set-btn.danger{background:rgba(239,68,68,.15);color:var(--red-b)}
+/* Theme buttons */
+.theme-btns{display:flex;gap:4px}
+.theme-btn{width:40px;height:36px;border-radius:var(--r);background:var(--bgE);border:1px solid var(--bdr2);font-size:16px;display:grid;place-items:center;transition:all .2s}
+.theme-btn:active{transform:scale(.95)}
+.theme-btn.on{background:var(--red);border-color:var(--red);box-shadow:0 0 12px var(--red-g)}
 
 /* Admin */
 .adm-tabs{display:flex;gap:4px;padding:10px 14px;border-bottom:1px solid var(--bdr2)}
@@ -541,7 +615,26 @@ input,select{font-family:var(--ff)}
   </div>
   <div class="panel-scroll">
     <div class="set-section">
-      <div class="set-section-t">🎨 Zobrazení</div>
+      <div class="set-section-t">🎨 Vzhled</div>
+      <div class="set-item">
+        <div><div class="set-item-label">Téma</div><div class="set-item-desc">Světlý / Tmavý / AMOLED</div></div>
+        <div class="theme-btns" id="themeBtns">
+          <button class="theme-btn" data-theme="light" title="Světlý">☀️</button>
+          <button class="theme-btn on" data-theme="dark" title="Tmavý">🌙</button>
+          <button class="theme-btn" data-theme="amoled" title="AMOLED">⬛</button>
+        </div>
+      </div>
+      <div class="set-item">
+        <div><div class="set-item-label">Font</div><div class="set-item-desc">Styl písma</div></div>
+        <select class="set-select" id="fontSelect">
+          <option value="avenir">Avenir</option>
+          <option value="system">Systémový</option>
+          <option value="inter">Inter</option>
+          <option value="roboto">Roboto</option>
+          <option value="poppins">Poppins</option>
+          <option value="mono">Monospace</option>
+        </select>
+      </div>
       <div class="set-item">
         <div><div class="set-item-label">Velikost (DPI)</div><div class="set-item-desc">Přizpůsobte velikost</div></div>
         <select class="set-select" id="dpiSelect"><option value="70">70%</option><option value="80">80%</option><option value="85" selected>85%</option><option value="90">90%</option><option value="100">100%</option><option value="110">110%</option></select>
@@ -604,13 +697,18 @@ var C={API:'https://www.divinedelivery.cz/_functions',POLL:12000,COURIERS:['Mare
 COLORS:{Marek:'c-marek',Tonda:'c-tonda',Kuba:'c-kuba','Tomáš':'c-tomas','Matěj':'c-matej',Milan:'c-milan'},
 // Restaurant phone numbers
 REST_PHONES:{
-  'kebab samuel':'+420777123456',
-  'kebab house mix apetit':'+420777234567',
-  'mix apetit':'+420777234567',
-  'vietnamská restaurace dalas':'+420777345678',
-  'dalas':'+420777345678',
-  'bistro viet-thai':'+420777456789',
-  'viet-thai':'+420777456789'
+  'kebab samuel':'+420606843766',
+  'kebab house':'+420734316454',
+  'kebab house milovice':'+420734316454',
+  'kebab house mix apetit':'+420736602552',
+  'mix apetit':'+420736602552',
+  'vietnamská restaurace dalas':'+420792613263',
+  'dalas':'+420792613263',
+  'bistro viet-thai':'+420704366699',
+  'viet-thai':'+420704366699',
+  'základna u pata':'+420723436682',
+  'základna':'+420723436682',
+  'u pata':'+420723436682'
 }};
 var S={courier:null,isAdmin:false,orders:[],ids:new Set(),glowIds:new Set(),flt:'all',view:'default',snd:true,vibrate:true,glow:true,timer:null,first:true,errs:0,history:[],todayOrders:[]};
 var modalState={type:null,id:null};
@@ -1290,9 +1388,24 @@ function renderSummary(){
 
 // === SETTINGS ===
 function loadSettings(){
+  // DPI
   var dpi=localStorage.getItem('dd_dpi')||'85';
   document.getElementById('dpiSelect').value=dpi;
   document.documentElement.style.fontSize=dpi+'%';
+  
+  // Theme
+  var theme=localStorage.getItem('dd_theme')||'dark';
+  document.documentElement.setAttribute('data-theme',theme);
+  document.querySelectorAll('.theme-btn').forEach(function(btn){
+    btn.classList.toggle('on',btn.dataset.theme===theme);
+  });
+  
+  // Font
+  var font=localStorage.getItem('dd_font')||'avenir';
+  document.documentElement.setAttribute('data-font',font);
+  document.getElementById('fontSelect').value=font;
+  
+  // Toggles
   S.snd=localStorage.getItem('dd_snd')!=='0';
   S.vibrate=localStorage.getItem('dd_vib')!=='0';
   S.glow=localStorage.getItem('dd_glow')!=='0';
@@ -1300,7 +1413,26 @@ function loadSettings(){
   document.getElementById('togVibrate').classList.toggle('on',S.vibrate);
   document.getElementById('togGlow').classList.toggle('on',S.glow);
 }
-function saveSettings(){localStorage.setItem('dd_dpi',document.getElementById('dpiSelect').value);localStorage.setItem('dd_snd',S.snd?'1':'0');localStorage.setItem('dd_vib',S.vibrate?'1':'0');localStorage.setItem('dd_glow',S.glow?'1':'0')}
+function saveSettings(){
+  localStorage.setItem('dd_dpi',document.getElementById('dpiSelect').value);
+  localStorage.setItem('dd_theme',document.documentElement.getAttribute('data-theme')||'dark');
+  localStorage.setItem('dd_font',document.getElementById('fontSelect').value);
+  localStorage.setItem('dd_snd',S.snd?'1':'0');
+  localStorage.setItem('dd_vib',S.vibrate?'1':'0');
+  localStorage.setItem('dd_glow',S.glow?'1':'0');
+}
+function setTheme(theme){
+  document.documentElement.setAttribute('data-theme',theme);
+  document.querySelectorAll('.theme-btn').forEach(function(btn){
+    btn.classList.toggle('on',btn.dataset.theme===theme);
+  });
+  saveSettings();
+  toast(theme==='light'?'☀️ Světlý režim':theme==='amoled'?'⬛ AMOLED režim':'🌙 Tmavý režim');
+}
+function setFont(font){
+  document.documentElement.setAttribute('data-font',font);
+  saveSettings();
+}
 
 // === INIT ===
 document.addEventListener('DOMContentLoaded',function(){
@@ -1341,6 +1473,10 @@ document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('atMonth').onclick=function(){document.getElementById('atMonth').classList.add('on');document.getElementById('atDay').classList.remove('on');renderAdmin()};
   // Settings
   document.getElementById('dpiSelect').onchange=function(){document.documentElement.style.fontSize=this.value+'%';saveSettings()};
+  document.getElementById('fontSelect').onchange=function(){setFont(this.value)};
+  document.querySelectorAll('.theme-btn').forEach(function(btn){
+    btn.onclick=function(){setTheme(this.dataset.theme)};
+  });
   document.getElementById('togSound').onclick=function(){this.classList.toggle('on');S.snd=this.classList.contains('on');saveSettings()};
   document.getElementById('togVibrate').onclick=function(){this.classList.toggle('on');S.vibrate=this.classList.contains('on');saveSettings()};
   document.getElementById('togGlow').onclick=function(){this.classList.toggle('on');S.glow=this.classList.contains('on');saveSettings()};
