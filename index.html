@@ -3,39 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NA DOHLED | Nezisková organizace pro rodiny, seniory a komunitu | Milovice</title>
-    <meta name="description" content="NA DOHLED z.s. - Kavárna Na Kávu, dětská herna Smyslárium, rozvoz jídla Divine Delivery a podpora domácího hospice.">
+    <title>NA DOHLED | Nezisková organizace | Milovice</title>
+    <meta name="description" content="NA DOHLED z.s. - Kavárna Na Kávu, dětská herna Smyslárium, rozvoz Divine Delivery a E-shop.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --color-cream: #FDF8F3;
-            --color-peach: #FFECD2;
-            --color-coral: #FFB4A2;
-            --color-sage: #A8C5A8;
-            --color-mint: #D4E9D7;
-            --color-lavender: #E8E0FF;
-            --color-sky: #E0F4FF;
-            --color-charcoal: #2D2D2D;
-            --color-warm-gray: #6B6B6B;
-            --color-accent: #E07A5F;
-            --color-coffee: #6F4E37;
+            --cream: #FDF8F3;
+            --peach: #FFECD2;
+            --coral: #FFB4A2;
+            --sage: #A8C5A8;
+            --mint: #D4E9D7;
+            --lavender: #E8E0FF;
+            --charcoal: #2D2D2D;
+            --gray: #6B6B6B;
+            --accent: #E07A5F;
+            --coffee: #6F4E37;
+            --gold: #D4A574;
+            --red: #DC2626;
             --font-display: 'Playfair Display', serif;
             --font-body: 'Quicksand', sans-serif;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
             font-family: var(--font-body);
-            background-color: var(--color-cream);
-            color: var(--color-charcoal);
+            background: var(--cream);
+            color: var(--charcoal);
             line-height: 1.6;
             overflow-x: hidden;
         }
 
-        /* Floating shapes background */
-        .floating-shapes {
+        /* Floating Background */
+        .bg-shapes {
             position: fixed;
             top: 0;
             left: 0;
@@ -45,102 +45,59 @@
             z-index: 0;
             overflow: hidden;
         }
-        .shape {
+        .bg-shape {
             position: absolute;
             border-radius: 50%;
             filter: blur(80px);
             opacity: 0.4;
-            animation: float 25s infinite ease-in-out;
+            animation: floatBg 25s infinite ease-in-out;
         }
-        .shape-1 { width: 500px; height: 500px; background: var(--color-peach); top: -150px; left: -150px; }
-        .shape-2 { width: 400px; height: 400px; background: var(--color-mint); top: 20%; right: -100px; animation-delay: -5s; }
-        .shape-3 { width: 450px; height: 450px; background: var(--color-lavender); bottom: 5%; left: 5%; animation-delay: -10s; }
-        .shape-4 { width: 350px; height: 350px; background: var(--color-coral); top: 60%; left: 50%; animation-delay: -15s; }
-        .shape-5 { width: 300px; height: 300px; background: var(--color-sky); bottom: -100px; right: 10%; animation-delay: -8s; }
-        
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
-            25% { transform: translate(40px, -40px) rotate(5deg) scale(1.05); }
-            50% { transform: translate(-30px, 30px) rotate(-5deg) scale(0.95); }
-            75% { transform: translate(30px, 40px) rotate(3deg) scale(1.02); }
-        }
-
-        /* Bouncing elements */
-        .bounce { animation: bounce 2s infinite; }
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-20px); }
-            60% { transform: translateY(-10px); }
-        }
-
-        /* Wiggle animation */
-        .wiggle { animation: wiggle 3s infinite; }
-        @keyframes wiggle {
-            0%, 100% { transform: rotate(-3deg); }
-            50% { transform: rotate(3deg); }
-        }
-
-        /* Pulse animation */
-        .pulse { animation: pulse 2s infinite; }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        /* Float animation */
-        .float-anim { animation: floatSingle 3s ease-in-out infinite; }
-        @keyframes floatSingle {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+        .bg-shape:nth-child(1) { width: 500px; height: 500px; background: var(--peach); top: -150px; left: -150px; }
+        .bg-shape:nth-child(2) { width: 400px; height: 400px; background: var(--mint); top: 20%; right: -100px; animation-delay: -5s; }
+        .bg-shape:nth-child(3) { width: 450px; height: 450px; background: var(--lavender); bottom: 5%; left: 5%; animation-delay: -10s; }
+        @keyframes floatBg {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, -30px) scale(1.05); }
         }
 
         /* Navigation */
-        nav {
+        .nav-wrapper {
             position: fixed;
             top: 1rem;
             left: 50%;
             transform: translateX(-50%);
-            padding: 0.6rem 1.2rem;
+            z-index: 1000;
+            width: calc(100% - 2rem);
+            max-width: 1200px;
+        }
+        nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border-radius: 100px;
+            padding: 0.6rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            border-radius: 100px;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            max-width: 1300px;
-            width: calc(100% - 2rem);
-            transition: all 0.3s ease;
-        }
-        nav.scrolled {
-            background: rgba(255, 255, 255, 0.98);
-            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.15);
         }
         .logo {
             display: flex;
             align-items: center;
-            gap: 0.6rem;
+            gap: 0.5rem;
             text-decoration: none;
-            color: var(--color-charcoal);
-        }
-        .logo-img {
-            height: 40px;
-            width: auto;
-        }
-        .logo-text {
+            color: var(--charcoal);
             font-family: var(--font-display);
             font-size: 1.3rem;
             font-weight: 700;
         }
-        .logo-text span { color: var(--color-accent); }
+        .logo span { color: var(--accent); }
         .nav-links {
             display: flex;
             gap: 0.5rem;
             align-items: center;
         }
         .nav-links a {
-            color: var(--color-charcoal);
+            color: var(--charcoal);
             text-decoration: none;
             font-weight: 600;
             font-size: 0.9rem;
@@ -148,63 +105,48 @@
             border-radius: 50px;
             transition: all 0.3s;
         }
-        .nav-links a:hover { background: var(--color-peach); }
+        .nav-links a:hover { background: var(--peach); }
         .nav-cta {
-            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-coral) 100%) !important;
+            background: linear-gradient(135deg, var(--accent) 0%, #c9694f 100%) !important;
             color: white !important;
         }
-        .nav-cta:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(224, 122, 95, 0.4);
-        }
-
-        /* Language Switcher */
+        .nav-cta:hover { transform: scale(1.05); }
         .lang-switcher {
             display: flex;
             gap: 0.2rem;
-            background: var(--color-cream);
+            background: var(--cream);
             padding: 0.2rem;
             border-radius: 50px;
             margin-left: 0.5rem;
         }
         .lang-btn {
-            width: 34px;
-            height: 34px;
+            width: 32px;
+            height: 32px;
             border: none;
             border-radius: 50%;
             cursor: pointer;
             font-size: 1rem;
             background: transparent;
             transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
         .lang-btn:hover { transform: scale(1.15); }
-        .lang-btn.active {
-            background: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        .lang-btn.active { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+
+        /* Main Container */
+        .main-container {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            padding-top: 5rem;
         }
 
         /* Hero Section */
         .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 8rem 2rem 4rem;
-            position: relative;
-            z-index: 1;
-        }
-        .hero-content {
-            max-width: 1400px;
+            padding: 4rem 2rem;
+            text-align: center;
+            max-width: 900px;
             margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
         }
-        .hero-text { position: relative; }
         .hero-badge {
             display: inline-flex;
             align-items: center;
@@ -216,10 +158,11 @@
             font-weight: 600;
             margin-bottom: 1.5rem;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-        .hero-badge-icon {
-            font-size: 1.2rem;
             animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
         .hero h1 {
             font-family: var(--font-display);
@@ -229,7 +172,7 @@
             margin-bottom: 1.5rem;
         }
         .hero h1 em {
-            color: var(--color-accent);
+            color: var(--accent);
             font-style: italic;
             position: relative;
         }
@@ -240,544 +183,330 @@
             left: 0;
             width: 100%;
             height: 12px;
-            background: var(--color-peach);
+            background: var(--peach);
             z-index: -1;
             border-radius: 4px;
         }
-        .hero-subtitle {
+        .hero p {
             font-size: 1.2rem;
-            color: var(--color-warm-gray);
-            margin-bottom: 2rem;
-            max-width: 500px;
-            line-height: 1.7;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto 2rem;
         }
-        .hero-buttons {
+
+        /* Book Tabs */
+        .book-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+        .book-tabs {
             display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 0;
+            position: relative;
+            z-index: 10;
         }
-        .btn {
+        .book-tab {
+            padding: 1rem 2rem;
+            background: white;
+            border: none;
+            border-radius: 20px 20px 0 0;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+            transform: translateY(10px);
+            opacity: 0.7;
+        }
+        .book-tab:hover {
+            transform: translateY(5px);
+            opacity: 0.9;
+        }
+        .book-tab.active {
+            transform: translateY(0);
+            opacity: 1;
+            z-index: 5;
+        }
+        .book-tab.smyslarium { color: var(--coral); }
+        .book-tab.nakavu { color: var(--coffee); }
+        .book-tab.divine { color: var(--gold); }
+        .book-tab.eshop { color: var(--sage); }
+        .book-tab-icon {
+            font-size: 1.3rem;
+        }
+
+        /* Book Pages */
+        .book-pages {
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
+            min-height: 600px;
+            overflow: hidden;
+            position: relative;
+        }
+        .book-page {
+            display: none;
+            padding: 3rem;
+            animation: pageFlip 0.5s ease;
+        }
+        .book-page.active {
+            display: block;
+        }
+        @keyframes pageFlip {
+            0% { opacity: 0; transform: rotateY(-10deg) scale(0.95); }
+            100% { opacity: 1; transform: rotateY(0) scale(1); }
+        }
+
+        /* Back Button */
+        .back-home {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+            color: var(--charcoal);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 100;
+            transition: all 0.3s;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .back-home.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .back-home:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Page Sections */
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .page-logo {
+            height: 80px;
+            margin-bottom: 1rem;
+        }
+        .page-title {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .page-subtitle {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .content-card {
+            background: var(--cream);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+        .content-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .content-card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .content-card p {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        /* Pricing */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .pricing-card {
+            background: var(--cream);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .pricing-card.featured {
+            background: linear-gradient(135deg, var(--coral) 0%, var(--accent) 100%);
+            color: white;
+        }
+        .pricing-value {
+            font-size: 2rem;
+            font-weight: 800;
+        }
+        .pricing-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Partners */
+        .partners-row {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+        .partner-logo {
+            height: 50px;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+        .partner-logo:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        /* Menu */
+        .menu-section {
+            margin-bottom: 2rem;
+        }
+        .menu-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .menu-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--cream);
+            border-radius: 12px;
+        }
+        .menu-item-name {
+            font-weight: 600;
+        }
+        .menu-item-price {
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        /* E-shop */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+        .product-card {
+            background: var(--cream);
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+        .product-image {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1rem;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+        .product-name {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .product-price {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        .product-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--charcoal);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .product-btn:hover {
+            background: var(--accent);
+            transform: scale(1.02);
+        }
+
+        /* CTA Button */
+        .cta-btn {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--accent) 0%, #c9694f 100%);
+            color: white;
             border-radius: 50px;
-            font-family: var(--font-body);
             font-weight: 700;
-            font-size: 1rem;
             text-decoration: none;
             transition: all 0.3s;
-            cursor: pointer;
-            border: none;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, var(--color-accent) 0%, #c9694f 100%);
-            color: white;
             box-shadow: 0 10px 30px rgba(224, 122, 95, 0.3);
         }
-        .btn-primary:hover {
-            transform: translateY(-3px) scale(1.02);
+        .cta-btn:hover {
+            transform: translateY(-3px);
             box-shadow: 0 15px 40px rgba(224, 122, 95, 0.4);
         }
-        .btn-secondary {
-            background: white;
-            color: var(--color-charcoal);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-        .btn-secondary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-        }
 
-        /* Hero Visual */
-        .hero-visual {
-            position: relative;
-            height: 550px;
-        }
-        .hero-image-main {
-            position: absolute;
-            width: 350px;
-            height: 420px;
-            border-radius: 30px;
-            overflow: hidden;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
-            top: 0;
-            left: 0;
-            animation: floatSingle 4s ease-in-out infinite;
-        }
-        .hero-image-main img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .hero-image-secondary {
-            position: absolute;
-            width: 220px;
-            height: 280px;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
-            bottom: 20px;
-            right: 0;
-            animation: floatSingle 4s ease-in-out infinite;
-            animation-delay: -1s;
-        }
-        .hero-image-secondary img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .hero-image-tertiary {
-            position: absolute;
-            width: 150px;
-            height: 150px;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-            top: 50%;
-            right: 25%;
-            transform: translateY(-50%);
-            animation: floatSingle 4s ease-in-out infinite;
-            animation-delay: -2s;
-        }
-        .hero-image-tertiary img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .hero-sticker {
-            position: absolute;
-            background: white;
-            padding: 1rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            font-weight: 700;
-            font-size: 0.9rem;
+        /* Social Embed */
+        .social-embed {
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .hero-sticker-1 {
-            top: 30%;
-            right: 10%;
-            animation: bounce 3s infinite;
-        }
-        .hero-sticker-2 {
-            bottom: 40%;
-            left: 30%;
-            animation: bounce 3s infinite;
-            animation-delay: -1s;
-        }
-
-        /* Marquee */
-        .marquee {
-            background: var(--color-charcoal);
-            padding: 1rem 0;
-            overflow: hidden;
-            position: relative;
-            z-index: 1;
-        }
-        .marquee-content {
-            display: flex;
-            animation: marquee 30s linear infinite;
-        }
-        .marquee-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: white;
-            font-weight: 600;
-            white-space: nowrap;
-            padding: 0 2rem;
-        }
-        .marquee-item span { color: var(--color-coral); }
-        @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        /* Section Styles */
-        section { position: relative; z-index: 1; }
-        .section-header {
-            text-align: center;
-            max-width: 700px;
-            margin: 0 auto 4rem;
-        }
-        .section-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        }
-        .section-title {
-            font-family: var(--font-display);
-            font-size: 2.8rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-        .section-subtitle {
-            color: var(--color-warm-gray);
-            font-size: 1.1rem;
-            line-height: 1.7;
-        }
-
-        /* Projects Section */
-        .projects {
-            padding: 6rem 2rem;
-            background: linear-gradient(180deg, var(--color-cream) 0%, white 100%);
-        }
-        .projects-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-        }
-        .project-card {
-            background: white;
-            border-radius: 28px;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            text-decoration: none;
-            color: inherit;
-        }
-        .project-card:hover {
-            transform: translateY(-15px) rotate(-1deg);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
-        }
-        .project-image {
-            height: 220px;
-            overflow: hidden;
-            position: relative;
-        }
-        .project-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s;
-        }
-        .project-card:hover .project-image img { transform: scale(1.1); }
-        .project-image-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 4rem;
+            margin: 2rem 0;
         }
-        .project-image-placeholder.cafe { background: linear-gradient(135deg, var(--color-peach) 0%, #C4A484 100%); }
-        .project-image-placeholder.playroom { background: linear-gradient(135deg, #FFE5EC 0%, var(--color-coral) 100%); }
-        .project-image-placeholder.delivery { background: linear-gradient(135deg, var(--color-mint) 0%, #5EEAD4 100%); }
-        .project-badge {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
-            background: white;
-            padding: 0.4rem 1rem;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-        .project-content { padding: 1.5rem 2rem 2rem; }
-        .project-logo {
-            height: 40px;
-            margin-bottom: 1rem;
-        }
-        .project-content h3 {
-            font-family: var(--font-display);
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 0.75rem;
-        }
-        .project-content p {
-            color: var(--color-warm-gray);
-            margin-bottom: 1.5rem;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-        .project-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--color-accent);
-            font-weight: 700;
-            transition: gap 0.3s;
-        }
-        .project-card:hover .project-link { gap: 0.75rem; }
-
-        /* Feature Section */
-        .feature {
-            padding: 0;
-            position: relative;
-            z-index: 1;
-        }
-        .feature-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            min-height: 600px;
-        }
-        .feature-content {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 4rem;
-            background: linear-gradient(135deg, var(--color-coffee) 0%, #3C2415 100%);
-            color: white;
-        }
-        .feature-content h2 {
-            font-family: var(--font-display);
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-        }
-        .feature-content p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            margin-bottom: 2rem;
-            line-height: 1.7;
-        }
-        .feature-highlights {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-        .feature-highlight {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 0.6rem 1.2rem;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .feature-image {
-            position: relative;
-            overflow: hidden;
-        }
-        .feature-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Partners Section */
-        .partners {
-            padding: 6rem 2rem;
-            background: white;
-        }
-        .partners-grid {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
-        }
-        .partner-card {
-            background: var(--color-cream);
-            padding: 2rem 1.5rem;
-            border-radius: 20px;
-            text-align: center;
-            transition: all 0.3s;
-        }
-        .partner-card:hover {
-            transform: translateY(-8px) rotate(2deg);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
-        }
-        .partner-logo {
-            height: 60px;
-            width: auto;
-            max-width: 120px;
-            object-fit: contain;
-            margin: 0 auto 1rem;
-            display: block;
-        }
-        .partner-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-        .partner-card h4 {
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 0.25rem;
-        }
-        .partner-card p {
-            font-size: 0.85rem;
-            color: var(--color-warm-gray);
-        }
-
-        /* Stats Section */
-        .stats {
-            padding: 5rem 2rem;
-            background: var(--color-charcoal);
-            color: white;
-            position: relative;
-            z-index: 1;
-        }
-        .stats-grid {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-        }
-        .stat-item {
-            text-align: center;
-            padding: 1.5rem;
-        }
-        .stat-icon {
-            font-size: 2.5rem;
-            margin-bottom: 0.75rem;
-            display: block;
-        }
-        .stat-number {
-            font-family: var(--font-display);
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--color-coral);
-            margin-bottom: 0.25rem;
-        }
-        .stat-label {
-            font-size: 0.95rem;
-            opacity: 0.8;
-        }
-
-        /* Gallery Section */
-        .gallery {
-            padding: 6rem 2rem;
-            background: var(--color-cream);
-        }
-        .gallery-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(2, 220px);
-            gap: 1rem;
-        }
-        .gallery-item {
-            border-radius: 20px;
-            overflow: hidden;
-            position: relative;
-            transition: all 0.4s;
-        }
-        .gallery-item:hover {
-            transform: scale(1.03);
-            z-index: 1;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-        }
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s;
-        }
-        .gallery-item:hover img { transform: scale(1.1); }
-        .gallery-item:first-child {
-            grid-column: span 2;
-            grid-row: span 2;
-        }
-
-        /* Contact Section */
-        .contact {
-            padding: 6rem 2rem;
-            background: white;
-        }
-        .contact-grid {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-        }
-        .contact-info h2 {
-            font-family: var(--font-display);
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-        }
-        .contact-info > p {
-            color: var(--color-warm-gray);
-            margin-bottom: 2rem;
-            font-size: 1.1rem;
-            line-height: 1.7;
-        }
-        .contact-items { display: flex; flex-direction: column; gap: 1.5rem; }
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            background: var(--color-cream);
-            padding: 1.25rem 1.5rem;
-            border-radius: 16px;
-            transition: all 0.3s;
-        }
-        .contact-item:hover {
-            transform: translateX(10px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-        }
-        .contact-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-coral) 100%);
-            color: white;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            flex-shrink: 0;
-        }
-        .contact-item-text h4 { font-weight: 700; margin-bottom: 0.15rem; }
-        .contact-item-text a {
-            color: var(--color-warm-gray);
-            text-decoration: none;
-        }
-        .contact-item-text a:hover { color: var(--color-accent); }
-        .contact-visual {
-            position: relative;
-            height: 400px;
-        }
-        .contact-visual-img {
-            width: 100%;
-            height: 100%;
-            border-radius: 28px;
-            overflow: hidden;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
-        }
-        .contact-visual-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .contact-sticker {
-            position: absolute;
-            bottom: -20px;
-            right: -20px;
-            background: white;
-            padding: 1.5rem 2rem;
-            border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
-            animation: bounce 3s infinite;
-        }
-        .contact-sticker-emoji { font-size: 2rem; margin-bottom: 0.5rem; }
-        .contact-sticker-text { font-weight: 700; font-size: 1.1rem; }
 
         /* Footer */
         footer {
-            background: var(--color-charcoal);
+            background: var(--charcoal);
             color: white;
-            padding: 5rem 2rem 2rem;
+            padding: 4rem 2rem 2rem;
+            margin-top: 4rem;
             position: relative;
             z-index: 1;
         }
@@ -789,501 +518,441 @@
             gap: 3rem;
             margin-bottom: 3rem;
         }
-        .footer-brand .logo { color: white; margin-bottom: 1rem; display: inline-flex; }
+        .footer-brand .logo { color: white; }
         .footer-brand p {
             color: rgba(255, 255, 255, 0.6);
             margin-top: 1rem;
-            line-height: 1.7;
             font-size: 0.95rem;
         }
         .footer-links h5 {
             font-weight: 700;
-            margin-bottom: 1.25rem;
-            font-size: 1rem;
+            margin-bottom: 1rem;
         }
         .footer-links a {
             display: block;
             color: rgba(255, 255, 255, 0.6);
             text-decoration: none;
-            margin-bottom: 0.6rem;
-            font-size: 0.95rem;
-            transition: all 0.3s;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s;
         }
-        .footer-links a:hover {
-            color: white;
-            transform: translateX(5px);
-        }
+        .footer-links a:hover { color: white; }
         .footer-bottom {
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             padding-top: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .footer-bottom p {
+            text-align: center;
             color: rgba(255, 255, 255, 0.5);
             font-size: 0.9rem;
         }
-        .footer-social {
-            display: flex;
-            gap: 0.75rem;
-        }
-        .footer-social a {
-            width: 44px;
-            height: 44px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-decoration: none;
-            font-size: 1.2rem;
-            transition: all 0.3s;
-        }
-        .footer-social a:hover {
-            background: var(--color-accent);
-            transform: translateY(-5px) rotate(5deg);
-        }
 
         /* Responsive */
-        @media (max-width: 1024px) {
-            .hero-content { grid-template-columns: 1fr; text-align: center; }
-            .hero-subtitle { margin: 0 auto 2rem; }
-            .hero-buttons { justify-content: center; }
-            .hero-visual { display: none; }
-            .projects-grid { grid-template-columns: 1fr; max-width: 450px; }
-            .feature-grid { grid-template-columns: 1fr; }
-            .partners-grid { grid-template-columns: repeat(2, 1fr); }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: auto; }
-            .gallery-item:first-child { grid-column: span 2; height: 300px; }
-            .gallery-item { height: 200px; }
-            .contact-grid { grid-template-columns: 1fr; }
-            .contact-visual { display: none; }
-            .footer-content { grid-template-columns: 1fr 1fr; }
-        }
         @media (max-width: 768px) {
-            .nav-links a:not(.nav-cta) { display: none; }
             .hero h1 { font-size: 2.5rem; }
-            .section-title { font-size: 2rem; }
-            .stats-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
-            .stat-number { font-size: 2.5rem; }
-            .gallery-grid { grid-template-columns: 1fr; }
-            .gallery-item:first-child { grid-column: span 1; }
+            .book-tabs { flex-wrap: wrap; gap: 0.25rem; }
+            .book-tab { padding: 0.7rem 1rem; font-size: 0.85rem; }
+            .book-page { padding: 1.5rem; }
+            .nav-links a:not(.nav-cta) { display: none; }
             .footer-content { grid-template-columns: 1fr; text-align: center; }
-            .footer-bottom { flex-direction: column; gap: 1rem; }
         }
-
-        /* Fun cursor effect */
-        .fun-cursor {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--color-accent);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            transition: transform 0.1s, opacity 0.3s;
-            opacity: 0;
-        }
-        body:hover .fun-cursor { opacity: 1; }
     </style>
 </head>
 <body>
-    <!-- Fun cursor -->
-    <div class="fun-cursor" id="cursor"></div>
-
-    <!-- Floating shapes background -->
-    <div class="floating-shapes">
-        <div class="shape shape-1"></div>
-        <div class="shape shape-2"></div>
-        <div class="shape shape-3"></div>
-        <div class="shape shape-4"></div>
-        <div class="shape shape-5"></div>
+    <!-- Background -->
+    <div class="bg-shapes">
+        <div class="bg-shape"></div>
+        <div class="bg-shape"></div>
+        <div class="bg-shape"></div>
     </div>
 
     <!-- Navigation -->
-    <nav id="navbar">
-        <a href="#" class="logo">
-            <span class="logo-text">NA <span>DOHLED</span></span>
-        </a>
-        <div class="nav-links">
-            <a href="#projekty" data-cs="Projekty" data-en="Projects" data-ua="Проєкти">Projekty</a>
-            <a href="#partneri" data-cs="Partneři" data-en="Partners" data-ua="Партнери">Partneři</a>
-            <a href="#galerie" data-cs="Galerie" data-en="Gallery" data-ua="Галерея">Galerie</a>
-            <a href="#kontakt" data-cs="Kontakt" data-en="Contact" data-ua="Контакт">Kontakt</a>
-            <a href="eshop.html" class="nav-cta">🛒 E-shop</a>
-            <div class="lang-switcher">
-                <button class="lang-btn active" onclick="setLanguage('cs')" title="Čeština">🇨🇿</button>
-                <button class="lang-btn" onclick="setLanguage('en')" title="English">🇬🇧</button>
-                <button class="lang-btn" onclick="setLanguage('ua')" title="Українська">🇺🇦</button>
+    <div class="nav-wrapper">
+        <nav>
+            <a href="#" class="logo" onclick="showHome()">NA <span>DOHLED</span></a>
+            <div class="nav-links">
+                <a href="#" onclick="showPage('smyslarium')">Smyslárium</a>
+                <a href="#" onclick="showPage('nakavu')">Na Kávu</a>
+                <a href="#" onclick="showPage('divine')">Rozvoz</a>
+                <a href="#" onclick="showPage('eshop')" class="nav-cta">🛒 E-shop</a>
+                <div class="lang-switcher">
+                    <button class="lang-btn active" onclick="setLanguage('cs')">🇨🇿</button>
+                    <button class="lang-btn" onclick="setLanguage('en')">🇬🇧</button>
+                    <button class="lang-btn" onclick="setLanguage('ua')">🇺🇦</button>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
+    </div>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <div class="hero-text">
-                <div class="hero-badge">
-                    <span class="hero-badge-icon">💚</span>
-                    <span data-cs="Neziskovka s přesahem" data-en="Non-profit with purpose" data-ua="Некомерційна з місією">Neziskovka s přesahem</span>
-                </div>
-                <h1 data-cs="Společně tvoříme komunitu, která se <em>stará</em>" data-en="Together we create a community that <em>cares</em>" data-ua="Разом ми створюємо громаду, яка <em>піклується</em>">Společně tvoříme komunitu, která se <em>stará</em></h1>
-                <p class="hero-subtitle" data-cs="Kavárna, dětská herna, rozvoz jídla a podpora hospice. Jsme tu pro rodiny, seniory i celou komunitu v Milovicích." data-en="Café, children's playroom, food delivery and hospice support. We are here for families, seniors and the whole community." data-ua="Кав'ярня, дитяча ігрова, доставка їжі та підтримка хоспісу. Ми тут для родин, літніх людей та всієї громади.">Kavárna, dětská herna, rozvoz jídla a podpora hospice. Jsme tu pro rodiny, seniory i celou komunitu v Milovicích.</p>
-                <div class="hero-buttons">
-                    <a href="#projekty" class="btn btn-primary" data-cs="🚀 Naše projekty" data-en="🚀 Our projects" data-ua="🚀 Наші проєкти">🚀 Naše projekty</a>
-                    <a href="#kontakt" class="btn btn-secondary" data-cs="📍 Kde nás najdete" data-en="📍 Where to find us" data-ua="📍 Де нас знайти">📍 Kde nás najdete</a>
-                </div>
-            </div>
-            <div class="hero-visual">
-                <div class="hero-image-main">
-                    <img src="images/rodiny-park-kavarna.png" alt="Rodiny v parku" onerror="this.parentElement.innerHTML='<div style=\'width:100%;height:100%;background:linear-gradient(135deg,#FFECD2,#FFB4A2);display:flex;align-items:center;justify-content:center;font-size:5rem;\'>👨‍👩‍👧‍👦</div>'">
-                </div>
-                <div class="hero-image-secondary">
-                    <img src="images/latte-art.jpg" alt="Latte art" onerror="this.parentElement.innerHTML='<div style=\'width:100%;height:100%;background:linear-gradient(135deg,#D4A574,#6F4E37);display:flex;align-items:center;justify-content:center;font-size:4rem;\'>☕</div>'">
-                </div>
-                <div class="hero-image-tertiary">
-                    <img src="images/park-deti-kontejner.png" alt="Děti v parku" onerror="this.parentElement.innerHTML='<div style=\'width:100%;height:100%;background:linear-gradient(135deg,#D4E9D7,#A8C5A8);display:flex;align-items:center;justify-content:center;font-size:3rem;\'>🧸</div>'">
-                </div>
-                <div class="hero-sticker hero-sticker-1">
-                    <span>☕</span>
-                    <span data-cs="Alt. mléko zdarma!" data-en="Alt. milk free!" data-ua="Альт. молоко безкоштовно!">Alt. mléko zdarma!</span>
-                </div>
-                <div class="hero-sticker hero-sticker-2">
-                    <span>🧒</span>
-                    <span data-cs="Pro děti 0-6 let" data-en="For kids 0-6 years" data-ua="Для дітей 0-6 років">Pro děti 0-6 let</span>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Hero -->
+        <section class="hero" id="heroSection">
+            <div class="hero-badge">💚 Nezisková organizace z.s.</div>
+            <h1>Společně tvoříme komunitu, která se <em>stará</em></h1>
+            <p>Kavárna, dětská herna, rozvoz jídla a podpora hospice. Jsme tu pro rodiny, seniory i celou komunitu.</p>
+        </section>
 
-    <!-- Marquee -->
-    <div class="marquee">
-        <div class="marquee-content">
-            <div class="marquee-item"><span>☕</span> Kavárna Na Kávu</div>
-            <div class="marquee-item"><span>🧸</span> Smyslárium</div>
-            <div class="marquee-item"><span>🚗</span> Divine Delivery</div>
-            <div class="marquee-item"><span>💜</span> Podpora hospice</div>
-            <div class="marquee-item"><span>🥛</span> Alt. mléko zdarma</div>
-            <div class="marquee-item"><span>🍺</span> Pivovar Volt</div>
-            <div class="marquee-item"><span>🎂</span> Dětské oslavy</div>
-            <div class="marquee-item"><span>🌿</span> Přírodní materiály</div>
-            <div class="marquee-item"><span>☕</span> Kavárna Na Kávu</div>
-            <div class="marquee-item"><span>🧸</span> Smyslárium</div>
-            <div class="marquee-item"><span>🚗</span> Divine Delivery</div>
-            <div class="marquee-item"><span>💜</span> Podpora hospice</div>
-            <div class="marquee-item"><span>🥛</span> Alt. mléko zdarma</div>
-            <div class="marquee-item"><span>🍺</span> Pivovar Volt</div>
-            <div class="marquee-item"><span>🎂</span> Dětské oslavy</div>
-            <div class="marquee-item"><span>🌿</span> Přírodní materiály</div>
+        <!-- Book Container -->
+        <div class="book-container">
+            <!-- Tabs -->
+            <div class="book-tabs">
+                <button class="book-tab smyslarium active" onclick="showPage('smyslarium')">
+                    <span class="book-tab-icon">🧸</span> Smyslárium
+                </button>
+                <button class="book-tab nakavu" onclick="showPage('nakavu')">
+                    <span class="book-tab-icon">☕</span> Na Kávu
+                </button>
+                <button class="book-tab divine" onclick="showPage('divine')">
+                    <span class="book-tab-icon">🚗</span> Divine Delivery
+                </button>
+                <button class="book-tab eshop" onclick="showPage('eshop')">
+                    <span class="book-tab-icon">🛒</span> E-shop
+                </button>
+            </div>
+
+            <!-- Book Pages -->
+            <div class="book-pages">
+                <!-- SMYSLÁRIUM PAGE -->
+                <div class="book-page active" id="page-smyslarium">
+                    <div class="page-header">
+                        <img src="logo-smyslarium.png" alt="Smyslárium" class="page-logo" onerror="this.style.display='none'">
+                        <h2 class="page-title">Smyslárium</h2>
+                        <p class="page-subtitle">Dětská smyslová herna pro děti 0–6 let</p>
+                    </div>
+
+                    <div class="content-grid">
+                        <div class="content-card">
+                            <div class="content-card-icon">🎨</div>
+                            <h3>Senzorické hry</h3>
+                            <p>Rozvíjejte smysly dětí pomocí speciálních herních zón a přírodních materiálů.</p>
+                        </div>
+                        <div class="content-card">
+                            <div class="content-card-icon">🌿</div>
+                            <h3>Přírodní materiály</h3>
+                            <p>100% přírodní a bezpečné materiály pro zdravý vývoj vašeho dítěte.</p>
+                        </div>
+                        <div class="content-card">
+                            <div class="content-card-icon">👨‍👩‍👧</div>
+                            <h3>Pro celou rodinu</h3>
+                            <p>Dospělý doprovod zdarma. Káva a občerstvení přímo v herně.</p>
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 2rem 0 1rem; font-size: 1.5rem;">💰 Ceník</h3>
+                    <div class="pricing-grid">
+                        <div class="pricing-card featured">
+                            <div class="pricing-value">120 Kč</div>
+                            <div class="pricing-label">1. dítě / hodina</div>
+                        </div>
+                        <div class="pricing-card">
+                            <div class="pricing-value">Dobrovolné</div>
+                            <div class="pricing-label">Další děti</div>
+                        </div>
+                        <div class="pricing-card">
+                            <div class="pricing-value">1 100 Kč</div>
+                            <div class="pricing-label">Permanentka 10 vstupů</div>
+                        </div>
+                        <div class="pricing-card">
+                            <div class="pricing-value">2 000 Kč</div>
+                            <div class="pricing-label">Permanentka 20 vstupů</div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 2rem 0 1rem; font-size: 1.5rem;">🎂 Dětské oslavy</h3>
+                    <div class="content-card" style="text-align: center;">
+                        <p><strong>2 000 Kč</strong> za pronájem (max. 20 dětí)</p>
+                        <p style="margin-top: 0.5rem;">Povinný catering z kavárny Na Kávu • Dekorace v ceně • Nutná rezervace předem</p>
+                    </div>
+
+                    <div class="social-embed">
+                        <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fprofile.php%3Fid%3D61578928778606&tabs=timeline&width=400&height=300&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false" width="400" height="300" style="border:none;overflow:hidden;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,0.1);max-width:100%;" scrolling="no" frameborder="0" allowfullscreen="true"></iframe>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <a href="https://www.facebook.com/profile.php?id=61578928778606" target="_blank" class="cta-btn">📘 Sledovat na Facebooku</a>
+                    </div>
+                </div>
+
+                <!-- NA KÁVU PAGE -->
+                <div class="book-page" id="page-nakavu">
+                    <div class="page-header">
+                        <img src="logo-nakavu.png" alt="Na Kávu" class="page-logo" onerror="this.style.display='none'">
+                        <h2 class="page-title">Na Kávu</h2>
+                        <p class="page-subtitle">Kavárna s přesahem • Výběrová káva • Řemeslné pečivo</p>
+                    </div>
+
+                    <h3 style="margin-bottom: 1rem; font-size: 1.3rem;">🤝 Naši partneři</h3>
+                    <div class="partners-row">
+                        <img src="https://cdn.myshoptet.com/usr/www.chroast.cz/user/logos/log_narozeniny-2.png" alt="Chroast Coffee" class="partner-logo">
+                        <img src="https://pivovarvolt.cz/images/logomenu.svg" alt="Pivovar Volt" class="partner-logo">
+                    </div>
+
+                    <div class="content-grid">
+                        <div class="content-card">
+                            <div class="content-card-icon">☕</div>
+                            <h3>Výběrová káva Chroast</h3>
+                            <p>Pražená s láskou v Čechách. Espresso, filter, cold brew.</p>
+                        </div>
+                        <div class="content-card">
+                            <div class="content-card-icon">🥛</div>
+                            <h3>Alt. mléko ZDARMA</h3>
+                            <p>Ovesné, sójové, mandlové - vždy bez příplatku!</p>
+                        </div>
+                        <div class="content-card">
+                            <div class="content-card-icon">🍺</div>
+                            <h3>Pivovar Volt</h3>
+                            <p>Čepované řemeslné pivo z lokálního pivovaru.</p>
+                        </div>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3 class="menu-title">☕ Teplé nápoje</h3>
+                        <div class="menu-items">
+                            <div class="menu-item"><span class="menu-item-name">Espresso / Lungo</span><span class="menu-item-price">55 Kč</span></div>
+                            <div class="menu-item"><span class="menu-item-name">Cappuccino</span><span class="menu-item-price">73 Kč</span></div>
+                            <div class="menu-item"><span class="menu-item-name">Caffè Latte</span><span class="menu-item-price">80 Kč</span></div>
+                            <div class="menu-item"><span class="menu-item-name">Horká čokoláda</span><span class="menu-item-price">65 Kč</span></div>
+                        </div>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3 class="menu-title">🥐 Pečivo</h3>
+                        <div class="menu-items">
+                            <div class="menu-item"><span class="menu-item-name">Croissant</span><span class="menu-item-price">62 Kč</span></div>
+                            <div class="menu-item"><span class="menu-item-name">Cruffin</span><span class="menu-item-price">95 Kč</span></div>
+                            <div class="menu-item"><span class="menu-item-name">Cookie</span><span class="menu-item-price">32 Kč</span></div>
+                            <div class="menu-item"><span class="menu-item-name">Domácí dort</span><span class="menu-item-price">od 69 Kč</span></div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <a href="https://www.instagram.com/nakavu_kavarna" target="_blank" class="cta-btn">📷 Sledovat na Instagramu</a>
+                    </div>
+                </div>
+
+                <!-- DIVINE DELIVERY PAGE -->
+                <div class="book-page" id="page-divine">
+                    <div class="page-header">
+                        <img src="logo-divine.png" alt="Divine Delivery" class="page-logo" onerror="this.style.display='none'">
+                        <h2 class="page-title">Divine Delivery</h2>
+                        <p class="page-subtitle">Božský rozvoz jídla • Milovice a okolí</p>
+                    </div>
+
+                    <div class="content-grid">
+                        <div class="content-card">
+                            <div class="content-card-icon">🚗</div>
+                            <h3>Rychlý rozvoz</h3>
+                            <p>Doručení do 45 minut po celém regionu.</p>
+                        </div>
+                        <div class="content-card">
+                            <div class="content-card-icon">🍽️</div>
+                            <h3>13+ restaurací</h3>
+                            <p>Široký výběr z lokálních i řetězcových restaurací.</p>
+                        </div>
+                        <div class="content-card">
+                            <div class="content-card-icon">📱</div>
+                            <h3>Snadné objednání</h3>
+                            <p>Objednej online nebo telefonicky.</p>
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 2rem 0 1rem; font-size: 1.3rem;">🍕 Partnerské restaurace</h3>
+                    <div class="content-grid">
+                        <div class="content-card"><div class="content-card-icon">🍽️</div><h3>Bílý Páv</h3><p>Česká a mezinárodní kuchyně</p></div>
+                        <div class="content-card"><div class="content-card-icon">🍕</div><h3>Pizzeria Adelante</h3><p>Italská kuchyně</p></div>
+                        <div class="content-card"><div class="content-card-icon">🍺</div><h3>Pivovar Tahoun</h3><p>Řemeslný pivovar</p></div>
+                        <div class="content-card"><div class="content-card-icon">🥙</div><h3>Kebab Benátky</h3><p>Turecké speciality</p></div>
+                        <div class="content-card"><div class="content-card-icon">☕</div><h3>Na Kávu</h3><p>Kavárna Na Dohled</p></div>
+                        <div class="content-card"><div class="content-card-icon">🍔</div><h3>McDonald's</h3><p>Fast food</p></div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <a href="https://www.divinedelivery.cz/restaurace" target="_blank" class="cta-btn">🛒 Objednat nyní</a>
+                        <a href="dispatch.html" style="margin-left: 1rem;" class="cta-btn" style="background: var(--charcoal);">📡 Dispečink</a>
+                    </div>
+                </div>
+
+                <!-- E-SHOP PAGE -->
+                <div class="book-page" id="page-eshop">
+                    <div class="page-header">
+                        <h2 class="page-title">🛒 E-shop</h2>
+                        <p class="page-subtitle">Pečivo, káva a produkty Na Dohled</p>
+                    </div>
+
+                    <h3 style="margin-bottom: 1.5rem; font-size: 1.3rem;">🥐 Pečivo z kavárny</h3>
+                    <div class="product-grid">
+                        <div class="product-card">
+                            <div class="product-image">🥐</div>
+                            <div class="product-name">Croissant</div>
+                            <div class="product-price">62 Kč</div>
+                            <button class="product-btn" onclick="addToCart('Croissant', 62)">Přidat do košíku</button>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-image">🧁</div>
+                            <div class="product-name">Cruffin</div>
+                            <div class="product-price">95 Kč</div>
+                            <button class="product-btn" onclick="addToCart('Cruffin', 95)">Přidat do košíku</button>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-image">🍪</div>
+                            <div class="product-name">Cookie</div>
+                            <div class="product-price">32 Kč</div>
+                            <button class="product-btn" onclick="addToCart('Cookie', 32)">Přidat do košíku</button>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-image">🥖</div>
+                            <div class="product-name">Bílý croissant</div>
+                            <div class="product-price">88 Kč</div>
+                            <button class="product-btn" onclick="addToCart('Bílý croissant', 88)">Přidat do košíku</button>
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 2rem 0 1.5rem; font-size: 1.3rem;">☕ Káva Chroast</h3>
+                    <div class="product-grid">
+                        <div class="product-card">
+                            <div class="product-image">☕</div>
+                            <div class="product-name">Zrnková káva 250g</div>
+                            <div class="product-price">290 Kč</div>
+                            <button class="product-btn" onclick="addToCart('Zrnková káva 250g', 290)">Přidat do košíku</button>
+                        </div>
+                        <div class="product-card">
+                            <div class="product-image">☕</div>
+                            <div class="product-name">Zrnková káva 1kg</div>
+                            <div class="product-price">890 Kč</div>
+                            <button class="product-btn" onclick="addToCart('Zrnková káva 1kg', 890)">Přidat do košíku</button>
+                        </div>
+                    </div>
+
+                    <div id="cartSummary" style="margin-top: 2rem; padding: 1.5rem; background: var(--cream); border-radius: 20px; display: none;">
+                        <h3 style="margin-bottom: 1rem;">🛒 Váš košík</h3>
+                        <div id="cartItems"></div>
+                        <div style="margin-top: 1rem; font-size: 1.3rem; font-weight: 800;">
+                            Celkem: <span id="cartTotal">0</span> Kč
+                        </div>
+                        <button onclick="checkout()" class="cta-btn" style="margin-top: 1rem; width: 100%; justify-content: center;">📧 Odeslat objednávku</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Projects Section -->
-    <section class="projects" id="projekty">
-        <div class="section-header">
-            <div class="section-label">🚀 <span data-cs="Naše projekty" data-en="Our projects" data-ua="Наші проєкти">Naše projekty</span></div>
-            <h2 class="section-title" data-cs="Tři místa, jeden cíl" data-en="Three places, one goal" data-ua="Три місця, одна мета">Tři místa, jeden cíl</h2>
-            <p class="section-subtitle" data-cs="Každý projekt má svůj příběh. Všechny spojuje láska ke komunitě." data-en="Every project has its story. All united by love for the community." data-ua="Кожен проєкт має свою історію. Всі об'єднані любов'ю до громади.">Každý projekt má svůj příběh. Všechny spojuje láska ke komunitě.</p>
-        </div>
-        <div class="projects-grid">
-            <a href="nakavu.html" class="project-card">
-                <div class="project-image">
-                    <img src="images/zakaznice-croissant.jpg" alt="Na Kávu" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                    <div class="project-image-placeholder cafe" style="display:none">☕</div>
-                    <span class="project-badge">☕ Kavárna</span>
-                </div>
-                <div class="project-content">
-                    <img src="logo-nakavu.png" alt="Na Kávu logo" class="project-logo" onerror="this.style.display='none'">
-                    <h3>Na Kávu</h3>
-                    <p data-cs="Výběrová káva Chroast, řemeslné pečivo a pivovar Volt. Alt. mléko vždy zdarma!" data-en="Specialty coffee Chroast, craft pastries and Volt brewery. Alt. milk always free!" data-ua="Вибіркова кава Chroast, ремісниче печиво та пивоварня Volt. Альт. молоко безкоштовно!">Výběrová káva Chroast, řemeslné pečivo a pivovar Volt. Alt. mléko vždy zdarma!</p>
-                    <span class="project-link" data-cs="Zjistit více →" data-en="Learn more →" data-ua="Дізнатися більше →">Zjistit více →</span>
-                </div>
-            </a>
-            <a href="smyslarium.html" class="project-card">
-                <div class="project-image">
-                    <img src="images/maminky-v-parku.jpg" alt="Smyslárium" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                    <div class="project-image-placeholder playroom" style="display:none">🧸</div>
-                    <span class="project-badge">🧸 Herna</span>
-                </div>
-                <div class="project-content">
-                    <img src="logo-smyslarium.png" alt="Smyslárium logo" class="project-logo" onerror="this.style.display='none'">
-                    <h3>Smyslárium</h3>
-                    <p data-cs="Dětská smyslová herna pro děti 0–6 let. Montessori prvky a bezpečné prostředí. Od 120 Kč/hod." data-en="Sensory playroom for kids 0-6. Montessori elements and safe environment. From 120 CZK/hour." data-ua="Сенсорна ігрова для дітей 0-6 років. Монтессорі елементи та безпечне середовище.">Dětská smyslová herna pro děti 0–6 let. Montessori prvky a bezpečné prostředí. Od 120 Kč/hod.</p>
-                    <span class="project-link" data-cs="Zjistit více →" data-en="Learn more →" data-ua="Дізнатися більше →">Zjistit více →</span>
-                </div>
-            </a>
-            <a href="https://divinedelivery.cz" target="_blank" class="project-card">
-                <div class="project-image">
-                    <img src="images/divine-delivery-kuryr.png" alt="Divine Delivery" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                    <div class="project-image-placeholder delivery" style="display:none">🚗</div>
-                    <span class="project-badge">🚗 Rozvoz</span>
-                </div>
-                <div class="project-content">
-                    <img src="logo-divine.png" alt="Divine Delivery logo" class="project-logo" onerror="this.style.display='none'">
-                    <h3>Divine Delivery</h3>
-                    <p data-cs="Rozvoz jídla po Milovicích a okolí. Objednávky přímo k vám domů. Rychle a spolehlivě." data-en="Food delivery in Milovice and surroundings. Orders delivered to your door. Fast and reliable." data-ua="Доставка їжі в Міловіцах та околицях. Замовлення прямо до вас. Швидко та надійно.">Rozvoz jídla po Milovicích a okolí. Objednávky přímo k vám domů. Rychle a spolehlivě.</p>
-                    <span class="project-link">divinedelivery.cz →</span>
-                </div>
-            </a>
-        </div>
-    </section>
-
-    <!-- Feature Section -->
-    <section class="feature">
-        <div class="feature-grid">
-            <div class="feature-content">
-                <h2 data-cs="Víc než jen kavárna ☕" data-en="More than just a café ☕" data-ua="Більше, ніж просто кав'ярня ☕">Víc než jen kavárna ☕</h2>
-                <p data-cs="Věříme, že kvalitní káva spojuje lidi. Proto jsme vytvořili místo, kde se setkávají rodiny, senioři i podnikatelé. Část zisku podporuje domácí hospic Nablízku." data-en="We believe quality coffee brings people together. That's why we created a place where families, seniors and entrepreneurs meet. Part of our profit supports hospice Nablízku." data-ua="Ми віримо, що якісна кава об'єднує людей. Тому ми створили місце, де зустрічаються родини, літні люди та підприємці.">Věříme, že kvalitní káva spojuje lidi. Proto jsme vytvořili místo, kde se setkávají rodiny, senioři i podnikatelé. Část zisku podporuje domácí hospic Nablízku.</p>
-                <div class="feature-highlights">
-                    <span class="feature-highlight">☕ Chroast Coffee</span>
-                    <span class="feature-highlight">🍺 Pivovar Volt</span>
-                    <span class="feature-highlight">🥛 Alt. mléko zdarma</span>
-                    <span class="feature-highlight">💜 Podpora hospice</span>
-                </div>
-                <a href="nakavu.html" class="btn btn-primary" data-cs="Navštivte Na Kávu" data-en="Visit Na Kávu" data-ua="Відвідайте Na Kávu">Navštivte Na Kávu</a>
-            </div>
-            <div class="feature-image">
-                <img src="images/barista-kavovar.jpg" alt="Příprava kávy" onerror="this.src='images/latte-art.jpg'" style="width:100%;height:100%;object-fit:cover;">
-            </div>
-        </div>
-    </section>
-
-    <!-- Stats Section -->
-    <section class="stats">
-        <div class="stats-grid">
-            <div class="stat-item">
-                <span class="stat-icon bounce">👨‍👩‍👧‍👦</span>
-                <div class="stat-number" data-target="500">0</div>
-                <div class="stat-label" data-cs="spokojených rodin" data-en="happy families" data-ua="щасливих родин">spokojených rodin</div>
-            </div>
-            <div class="stat-item">
-                <span class="stat-icon bounce" style="animation-delay: -0.5s">🚀</span>
-                <div class="stat-number" data-target="3">0</div>
-                <div class="stat-label" data-cs="aktivní projekty" data-en="active projects" data-ua="активні проєкти">aktivní projekty</div>
-            </div>
-            <div class="stat-item">
-                <span class="stat-icon bounce" style="animation-delay: -1s">📅</span>
-                <div class="stat-number" data-target="6">0</div>
-                <div class="stat-label" data-cs="dní v týdnu otevřeno" data-en="days a week open" data-ua="днів на тиждень">dní v týdnu otevřeno</div>
-            </div>
-            <div class="stat-item">
-                <span class="stat-icon bounce" style="animation-delay: -1.5s">🌿</span>
-                <div class="stat-number" data-target="100">0</div>
-                <div class="stat-label" data-cs="% přírodní materiály" data-en="% natural materials" data-ua="% природні матеріали">% přírodní materiály</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Partners Section -->
-    <section class="partners" id="partneri">
-        <div class="section-header">
-            <div class="section-label">🤝 <span data-cs="Naši partneři" data-en="Our partners" data-ua="Наші партнери">Naši partneři</span></div>
-            <h2 class="section-title" data-cs="Společně to jde lépe" data-en="Together we do better" data-ua="Разом краще">Společně to jde lépe</h2>
-        </div>
-        <div class="partners-grid">
-            <div class="partner-card">
-                <img src="images/hospic-nablizku-interior.jpg" alt="Hospic Nablízku" class="partner-logo" onerror="this.outerHTML='<div class=\'partner-icon\'>💜</div>'">
-                <h4>Hospic Nablízku</h4>
-                <p data-cs="Domácí hospicová péče" data-en="Home hospice care" data-ua="Домашній хоспіс">Domácí hospicová péče</p>
-            </div>
-            <div class="partner-card">
-                <img src="images/logo-lysa-nad-labem.jpg" alt="Lysá nad Labem" class="partner-logo" onerror="this.outerHTML='<div class=\'partner-icon\'>🏛️</div>'">
-                <h4>Lysá nad Labem</h4>
-                <p data-cs="Partnerské město" data-en="Partner city" data-ua="Місто-партнер">Partnerské město</p>
-            </div>
-            <div class="partner-card">
-                <div class="partner-icon">☕</div>
-                <h4>Chroast Coffee</h4>
-                <p data-cs="Výběrová káva" data-en="Specialty coffee" data-ua="Вибіркова кава">Výběrová káva</p>
-            </div>
-            <div class="partner-card">
-                <div class="partner-icon">🍺</div>
-                <h4>Pivovar Volt</h4>
-                <p data-cs="Řemeslný pivovar" data-en="Craft brewery" data-ua="Крафтова пивоварня">Řemeslný pivovar</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Gallery Section -->
-    <section class="gallery" id="galerie">
-        <div class="section-header">
-            <div class="section-label">📸 <span data-cs="Galerie" data-en="Gallery" data-ua="Галерея">Galerie</span></div>
-            <h2 class="section-title" data-cs="Nahlédněte k nám" data-en="Take a look" data-ua="Загляньте до нас">Nahlédněte k nám</h2>
-        </div>
-        <div class="gallery-grid">
-            <div class="gallery-item">
-                <img src="images/nakavu-park-stanek.jpg" alt="Na Kávu v parku" onerror="this.parentElement.style.background='linear-gradient(135deg,#D4E9D7,#A8C5A8)';this.style.display='none'">
-            </div>
-            <div class="gallery-item">
-                <img src="images/kava-detail.jpg" alt="Detail kávy" onerror="this.parentElement.style.background='linear-gradient(135deg,#FFECD2,#D4A574)';this.style.display='none'">
-            </div>
-            <div class="gallery-item">
-                <img src="images/nakavu-cechovka-banner.jpg" alt="Na Kávu Čechovka" onerror="this.parentElement.style.background='linear-gradient(135deg,#FFE5EC,#FFB4A2)';this.style.display='none'">
-            </div>
-            <div class="gallery-item">
-                <img src="images/park-trampolina.jpg" alt="Park" onerror="this.parentElement.style.background='linear-gradient(135deg,#E8E0FF,#A78BFA)';this.style.display='none'">
-            </div>
-            <div class="gallery-item">
-                <img src="images/barista-kavovar.jpg" alt="Baristka" onerror="this.parentElement.style.background='linear-gradient(135deg,#E0F4FF,#90CAF9)';this.style.display='none'">
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section class="contact" id="kontakt">
-        <div class="contact-grid">
-            <div class="contact-info">
-                <h2 data-cs="Těšíme se na vás! 👋" data-en="Looking forward to seeing you! 👋" data-ua="Чекаємо на вас! 👋">Těšíme se na vás! 👋</h2>
-                <p data-cs="Navštivte nás osobně nebo nám napište. Rádi vám odpovíme na všechny dotazy." data-en="Visit us in person or write to us. We'll be happy to answer all your questions." data-ua="Відвідайте нас особисто або напишіть нам. Будемо раді відповісти на всі запитання.">Navštivte nás osobně nebo nám napište. Rádi vám odpovíme na všechny dotazy.</p>
-                <div class="contact-items">
-                    <div class="contact-item">
-                        <div class="contact-icon">📍</div>
-                        <div class="contact-item-text">
-                            <h4 data-cs="Adresa" data-en="Address" data-ua="Адреса">Adresa</h4>
-                            <a href="https://maps.google.com/?q=Višňová+510,+Milovice" target="_blank">Višňová 510, 289 24 Milovice</a>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">📞</div>
-                        <div class="contact-item-text">
-                            <h4 data-cs="Telefon" data-en="Phone" data-ua="Телефон">Telefon</h4>
-                            <a href="tel:+420770138462">+420 770 138 462</a>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">✉️</div>
-                        <div class="contact-item-text">
-                            <h4>E-mail</h4>
-                            <a href="mailto:nadohledzs@gmail.com">nadohledzs@gmail.com</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="contact-visual">
-                <div class="contact-visual-img">
-                    <img src="images/rodiny-park-kavarna.png" alt="Komunita" onerror="this.parentElement.style.background='linear-gradient(135deg,#FFECD2,#FFB4A2)'">
-                </div>
-                <div class="contact-sticker">
-                    <div class="contact-sticker-emoji">☕</div>
-                    <div class="contact-sticker-text" data-cs="Přijďte na kávu!" data-en="Come for coffee!" data-ua="Приходьте на каву!">Přijďte na kávu!</div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- Back Home Button -->
+    <a href="#" class="back-home" id="backHomeBtn" onclick="showHome()">
+        ← Zpět Na Dohled
+    </a>
 
     <!-- Footer -->
     <footer>
         <div class="footer-content">
             <div class="footer-brand">
-                <a href="#" class="logo">
-                    <span class="logo-text">NA <span>DOHLED</span></span>
-                </a>
-                <p data-cs="Nezisková organizace pro rodiny, seniory a celou komunitu. Kavárna, herna, rozvoz a podpora hospice." data-en="Non-profit for families, seniors and the whole community. Café, playroom, delivery and hospice support." data-ua="Некомерційна для родин, літніх людей та громади. Кав'ярня, ігрова, доставка та підтримка хоспісу.">Nezisková organizace pro rodiny, seniory a celou komunitu. Kavárna, herna, rozvoz a podpora hospice.</p>
+                <a href="#" class="logo">NA <span>DOHLED</span></a>
+                <p>Nezisková organizace pro rodiny, seniory a celou komunitu v Milovicích.</p>
             </div>
             <div class="footer-links">
-                <h5 data-cs="Projekty" data-en="Projects" data-ua="Проєкти">Projekty</h5>
-                <a href="nakavu.html">Na Kávu</a>
-                <a href="smyslarium.html">Smyslárium</a>
-                <a href="https://divinedelivery.cz">Divine Delivery</a>
-                <a href="eshop.html">E-shop</a>
+                <h5>Projekty</h5>
+                <a href="#" onclick="showPage('smyslarium')">Smyslárium</a>
+                <a href="#" onclick="showPage('nakavu')">Na Kávu</a>
+                <a href="#" onclick="showPage('divine')">Divine Delivery</a>
+                <a href="#" onclick="showPage('eshop')">E-shop</a>
             </div>
             <div class="footer-links">
-                <h5 data-cs="Informace" data-en="Info" data-ua="Інформація">Informace</h5>
-                <a href="#projekty" data-cs="O nás" data-en="About" data-ua="Про нас">O nás</a>
-                <a href="#partneri" data-cs="Partneři" data-en="Partners" data-ua="Партнери">Partneři</a>
-                <a href="smyslarium.html#cenik" data-cs="Ceník" data-en="Pricing" data-ua="Ціни">Ceník</a>
+                <h5>Kontakt</h5>
+                <a href="tel:+420770138462">+420 770 138 462</a>
+                <a href="mailto:nadohledzs@gmail.com">nadohledzs@gmail.com</a>
+                <a>Višňová 510, Milovice</a>
             </div>
             <div class="footer-links">
-                <h5 data-cs="Sledujte nás" data-en="Follow us" data-ua="Слідкуйте">Sledujte nás</h5>
-                <a href="https://www.facebook.com/profile.php?id=61578928778606" target="_blank">Facebook Smyslárium</a>
-                <a href="https://www.instagram.com/nakavu_kavarna" target="_blank">Instagram Na Kávu</a>
+                <h5>Sledujte nás</h5>
+                <a href="https://www.facebook.com/profile.php?id=61578928778606" target="_blank">Facebook</a>
+                <a href="https://www.instagram.com/nakavu_kavarna" target="_blank">Instagram</a>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2026 NA DOHLED, z.s. IČO: 19444494</p>
-            <div class="footer-social">
-                <a href="https://www.facebook.com/profile.php?id=61578928778606" target="_blank" title="Facebook">📘</a>
-                <a href="https://www.instagram.com/nakavu_kavarna" target="_blank" title="Instagram">📷</a>
-                <a href="mailto:nadohledzs@gmail.com" title="E-mail">✉️</a>
-            </div>
+            © 2026 NA DOHLED, z.s. | IČO: 19444494
         </div>
     </footer>
 
     <script>
-        // Navbar scroll effect
-        window.addEventListener('scroll', function() {
-            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
-        });
+        let cart = [];
 
-        // Fun cursor
-        const cursor = document.getElementById('cursor');
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX - 10 + 'px';
-            cursor.style.top = e.clientY - 10 + 'px';
-        });
-
-        // Counter animation
-        function animateCounters() {
-            document.querySelectorAll('.stat-number').forEach(counter => {
-                const target = parseInt(counter.getAttribute('data-target'));
-                if (!target || counter.dataset.animated) return;
-                counter.dataset.animated = 'true';
-                const duration = 2000;
-                const increment = target / (duration / 16);
-                let current = 0;
-                const update = () => {
-                    current += increment;
-                    if (current < target) {
-                        counter.textContent = Math.floor(current);
-                        requestAnimationFrame(update);
-                    } else {
-                        counter.textContent = target;
-                    }
-                };
-                update();
-            });
+        function showPage(page) {
+            // Update tabs
+            document.querySelectorAll('.book-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelector(`.book-tab.${page}`).classList.add('active');
+            
+            // Update pages
+            document.querySelectorAll('.book-page').forEach(p => p.classList.remove('active'));
+            document.getElementById(`page-${page}`).classList.add('active');
+            
+            // Show back button
+            document.getElementById('backHomeBtn').classList.add('visible');
+            
+            // Scroll to book
+            document.querySelector('.book-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        // Intersection Observer for animations
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    if (entry.target.classList.contains('stats')) animateCounters();
-                }
-            });
-        }, { threshold: 0.3 });
-        document.querySelectorAll('.stats').forEach(el => observer.observe(el));
+        function showHome() {
+            document.getElementById('backHomeBtn').classList.remove('visible');
+            document.getElementById('heroSection').scrollIntoView({ behavior: 'smooth' });
+        }
 
-        // Language switcher
-        let currentLang = localStorage.getItem('nadohled_lang') || 'cs';
-        
         function setLanguage(lang) {
-            currentLang = lang;
-            localStorage.setItem('nadohled_lang', lang);
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            document.querySelectorAll('[data-' + lang + ']').forEach(el => {
-                const text = el.getAttribute('data-' + lang);
-                if (text) el.innerHTML = text;
-            });
-            document.documentElement.lang = lang === 'ua' ? 'uk' : lang;
+            localStorage.setItem('nadohled_lang', lang);
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const langMap = { cs: 0, en: 1, ua: 2 };
-            const buttons = document.querySelectorAll('.lang-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            if (buttons[langMap[currentLang]]) buttons[langMap[currentLang]].classList.add('active');
-            if (currentLang !== 'cs') {
-                document.querySelectorAll('[data-' + currentLang + ']').forEach(el => {
-                    const text = el.getAttribute('data-' + currentLang);
-                    if (text) el.innerHTML = text;
-                });
+        function addToCart(name, price) {
+            cart.push({ name, price });
+            updateCartUI();
+            showToast(`✓ ${name} přidáno do košíku`);
+        }
+
+        function updateCartUI() {
+            const summary = document.getElementById('cartSummary');
+            const items = document.getElementById('cartItems');
+            const total = document.getElementById('cartTotal');
+            
+            if (cart.length === 0) {
+                summary.style.display = 'none';
+                return;
+            }
+            
+            summary.style.display = 'block';
+            items.innerHTML = cart.map((item, i) => 
+                `<div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(0,0,0,0.1);">
+                    <span>${item.name}</span>
+                    <span>${item.price} Kč <button onclick="removeFromCart(${i})" style="background:none;border:none;cursor:pointer;color:var(--accent);">✕</button></span>
+                </div>`
+            ).join('');
+            total.textContent = cart.reduce((sum, item) => sum + item.price, 0);
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function checkout() {
+            if (cart.length === 0) return;
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            const items = cart.map(i => i.name).join(', ');
+            const body = `Dobrý den,\n\nrád/a bych objednal/a:\n${items}\n\nCelkem: ${total} Kč\n\nDěkuji!`;
+            window.location.href = `mailto:nadohledzs@gmail.com?subject=Objednávka z e-shopu&body=${encodeURIComponent(body)}`;
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = 'position:fixed;top:100px;left:50%;transform:translateX(-50%);background:var(--charcoal);color:white;padding:1rem 2rem;border-radius:50px;font-weight:600;z-index:2000;animation:fadeIn 0.3s ease;';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check URL hash
+            const hash = window.location.hash.slice(1);
+            if (['smyslarium', 'nakavu', 'divine', 'eshop'].includes(hash)) {
+                showPage(hash);
             }
         });
     </script>
