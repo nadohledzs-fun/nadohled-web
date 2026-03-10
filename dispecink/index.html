@@ -267,8 +267,19 @@ input,select{font-family:var(--ff);background:var(--bg3);color:var(--tx);border:
 @keyframes progShine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 .prog-fill.done{background:linear-gradient(90deg,#059669,var(--ok))}
 .prog-fill.done::after{display:none}
+
+/* SINNING state - blood effect */
+.prog-fill.sinning{background:linear-gradient(90deg,#450a0a,#7f1d1d,#991b1b,#b91c1c,#dc2626);animation:bloodPulse 1s ease-in-out infinite,bloodFlow 2s linear infinite;background-size:200% 100%}
+.prog-fill.sinning::after{background:linear-gradient(90deg,transparent,rgba(220,38,38,.4),transparent);animation:bloodDrip .8s ease-in-out infinite}
+@keyframes bloodPulse{0%,100%{opacity:1;box-shadow:0 0 10px rgba(220,38,38,.5)}50%{opacity:.85;box-shadow:0 0 20px rgba(220,38,38,.8),0 0 30px rgba(153,27,27,.4)}}
+@keyframes bloodFlow{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+@keyframes bloodDrip{0%{transform:translateX(-100%) scaleY(1)}50%{transform:translateX(0%) scaleY(1.2)}100%{transform:translateX(100%) scaleY(1)}}
+.prog-bar.sinning{border-color:rgba(220,38,38,.5);box-shadow:0 0 15px rgba(220,38,38,.3)}
+
 .prog-time{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:11px;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.5);white-space:nowrap;z-index:2}
 .prog-time.outside{color:var(--tx2);text-shadow:none}
+.prog-time.sinning{font-size:9px;animation:sinText 1.5s ease-in-out infinite}
+@keyframes sinText{0%,100%{color:#fff;text-shadow:0 0 5px rgba(220,38,38,.8)}50%{color:#fca5a5;text-shadow:0 0 10px rgba(220,38,38,1),0 0 20px rgba(220,38,38,.5)}}
 
 /* Customer section */
 .cd-c{padding:9px 10px;background:rgba(0,0,0,.18)}
@@ -1020,7 +1031,20 @@ function card(o,i){
   var nowMs=Date.now();
   var remMin=Math.round((db.getTime()-nowMs)/60000);
   var isLate=remMin<0;
-  var remText=st==='DELIVERED'?'✓ Doručeno':(isLate?'⚠️ +'+Math.abs(remMin)+' min':(remMin>0?remMin+' min':'Právě teď'));
+  var isSinning=remMin<=-5; // 5+ minutes late = sinning
+  var remText,remClass='';
+  if(st==='DELIVERED'){
+    remText='✓ Doručeno';
+  }else if(isSinning){
+    remText='💀 Hřešíš! Doruč HNED!';
+    remClass=' sinning';
+  }else if(isLate){
+    remText='⚠️ +'+Math.abs(remMin)+' min';
+  }else if(remMin>0){
+    remText=remMin+' min';
+  }else{
+    remText='Právě teď';
+  }
   
   // Items HTML - COMPLETE V12 PARSING with all options, modifiers, toppings, sizes
   var ih='<div class="items-grid">';
@@ -1177,11 +1201,49 @@ function card(o,i){
   var courierInfo=o.courier?'<div class="courier-info '+courierCls+'">👼 '+eh(o.courier)+'</div>':'';
   var rName=eh(o.restaurantName||'Restaurace');
   
-  return'<div class="'+cls+'" id="c-'+id+'" data-glow="'+(isGlow?'1':'0')+'" data-courier="'+(o.courier||'')+'" style="animation-delay:'+i*.03+'s">'+'<div class="rest-bar"><div class="rest-bar-name" data-search="'+ea(o.restaurantName||'')+'"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>'+rName+'</div><div class="rest-bar-btns"><div class="rest-bar-pdf" data-pdf="'+id+'"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PDF</div><div class="rest-bar-sms" data-sms="'+id+'" data-phone="'+ea(o.customerPhone||'')+'"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>SMS</div><div class="rest-bar-sms2" data-sms-items="'+id+'" data-phone="'+ea(o.customerPhone||'')+'" title="SMS s položkami"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="13" y2="13"/></svg>📋</div><div class="rest-bar-sms3" data-sms-rest="'+id+'" title="SMS na restauraci"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>🍽️</div></div></div><div class="cd-h"><div class="ri"><div class="r-btns">'+(o.restaurant_address?'<button class="r-btn r-nav" data-nav="'+ea(o.restaurant_address)+'"><svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></button>':'')+(o.restaurant_phone?'<button class="r-btn r-tel" data-tel="'+ea(o.restaurant_phone)+'"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></button>':'')+'</div><div><div class="ot"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>'+ft(o.createdAt)+'</div>'+courierInfo+'</div></div><span class="bs '+SC[st]+'">'+SL[st]+'</span></div><div class="prog"><div class="prog-row"><div class="prog-t"><span class="lb">Objednáno</span>'+ft(o.createdAt)+'</div><div class="prog-t r"><span class="lb">Doručit do</span>'+ft(db)+'</div></div><div class="prog-bar"><div class="prog-fill'+(st==='DELIVERED'?' done':'')+'" id="p-'+id+'" data-s="'+cr.getTime()+'" data-e="'+db.getTime()+'"></div><div class="prog-time" id="pt-'+id+'">'+remText+'</div></div></div><div class="cd-c"><div class="cr"><div><div class="cn">'+eh(o.customerName||'Neznámý')+'</div><div class="cp">'+eh(fp(o.customerPhone))+'</div></div><div class="qa">'+(o.customerPhone?'<button class="qb tel" data-tel="'+ea(o.customerPhone)+'"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></button>':'')+(o.deliveryAddress?'<button class="qb nav" data-nav="'+ea(o.deliveryAddress)+'"><svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></button>':'')+'</div></div>'+(o.deliveryAddress?'<div class="adr"><div class="adr-i"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div class="adr-t" data-nav="'+ea(o.deliveryAddress)+'">'+eh(o.deliveryAddress)+'</div></div>':'')+'</div>'+(items.length?'<button class="tgl"><span>Položky ('+items.length+')</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button><div class="cd-it">'+ih+'</div>':'')+'<div class="cd-f"><div class="pb '+pC+'"><svg viewBox="0 0 24 24">'+pI+'</svg>'+pL+'</div><div><div class="tl">Celkem</div><div class="tv">'+price.toLocaleString('cs')+' Kč</div></div></div>'+act+'</div>';
+  return'<div class="'+cls+'" id="c-'+id+'" data-glow="'+(isGlow?'1':'0')+'" data-courier="'+(o.courier||'')+'" style="animation-delay:'+i*.03+'s">'+'<div class="rest-bar"><div class="rest-bar-name" data-search="'+ea(o.restaurantName||'')+'"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>'+rName+'</div><div class="rest-bar-btns"><div class="rest-bar-pdf" data-pdf="'+id+'"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PDF</div><div class="rest-bar-sms" data-sms="'+id+'" data-phone="'+ea(o.customerPhone||'')+'"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>SMS</div><div class="rest-bar-sms2" data-sms-items="'+id+'" data-phone="'+ea(o.customerPhone||'')+'" title="SMS s položkami"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="13" y2="13"/></svg>📋</div><div class="rest-bar-sms3" data-sms-rest="'+id+'" title="SMS na restauraci"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>🍽️</div></div></div><div class="cd-h"><div class="ri"><div class="r-btns">'+(o.restaurant_address?'<button class="r-btn r-nav" data-nav="'+ea(o.restaurant_address)+'"><svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></button>':'')+(o.restaurant_phone?'<button class="r-btn r-tel" data-tel="'+ea(o.restaurant_phone)+'"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></button>':'')+'</div><div><div class="ot"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>'+ft(o.createdAt)+'</div>'+courierInfo+'</div></div><span class="bs '+SC[st]+'">'+SL[st]+'</span></div><div class="prog"><div class="prog-row"><div class="prog-t"><span class="lb">Objednáno</span>'+ft(o.createdAt)+'</div><div class="prog-t r"><span class="lb">Doručit do</span>'+ft(db)+'</div></div><div class="prog-bar'+(isSinning?' sinning':'')+'"><div class="prog-fill'+(st==='DELIVERED'?' done':remClass)+'" id="p-'+id+'" data-s="'+cr.getTime()+'" data-e="'+db.getTime()+'"></div><div class="prog-time'+remClass+'" id="pt-'+id+'">'+remText+'</div></div></div><div class="cd-c"><div class="cr"><div><div class="cn">'+eh(o.customerName||'Neznámý')+'</div><div class="cp">'+eh(fp(o.customerPhone))+'</div></div><div class="qa">'+(o.customerPhone?'<button class="qb tel" data-tel="'+ea(o.customerPhone)+'"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></button>':'')+(o.deliveryAddress?'<button class="qb nav" data-nav="'+ea(o.deliveryAddress)+'"><svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></button>':'')+'</div></div>'+(o.deliveryAddress?'<div class="adr"><div class="adr-i"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div class="adr-t" data-nav="'+ea(o.deliveryAddress)+'">'+eh(o.deliveryAddress)+'</div></div>':'')+'</div>'+(items.length?'<button class="tgl"><span>Položky ('+items.length+')</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button><div class="cd-it">'+ih+'</div>':'')+'<div class="cd-f"><div class="pb '+pC+'"><svg viewBox="0 0 24 24">'+pI+'</svg>'+pL+'</div><div><div class="tl">Celkem</div><div class="tv">'+price.toLocaleString('cs')+' Kč</div></div></div>'+act+'</div>';
 }
 
 // === PROGRESS UPDATE ===
-function uProgAll(){S.orders.forEach(function(o){var el=document.getElementById('p-'+o._id);if(!el)return;var s=+el.dataset.s,e=+el.dataset.e,n=Date.now();var pct=Math.min(100,Math.max(0,((n-s)/(e-s))*100));el.style.width=pct+'%';if(pct>=100||ns(o.status)==='DELIVERED')el.classList.add('done');var tEl=document.getElementById('pt-'+o._id);if(tEl){var rem=Math.max(0,Math.round((e-n)/60000));tEl.textContent=ns(o.status)==='DELIVERED'?'✓ Doručeno':(rem>0?rem+' min':'Právě teď');tEl.classList.toggle('outside',pct<25)}})}
+function uProgAll(){S.orders.forEach(function(o){
+  var el=document.getElementById('p-'+o._id);if(!el)return;
+  var s=+el.dataset.s,e=+el.dataset.e,n=Date.now();
+  var pct=Math.min(100,Math.max(0,((n-s)/(e-s))*100));
+  el.style.width=pct+'%';
+  
+  var remMin=Math.round((e-n)/60000);
+  var isSinning=remMin<=-5;
+  var isLate=remMin<0;
+  var isDone=ns(o.status)==='DELIVERED';
+  
+  // Update fill classes
+  el.classList.remove('done','sinning');
+  if(isDone){el.classList.add('done');}
+  else if(isSinning){el.classList.add('sinning');}
+  
+  // Update bar classes
+  var barEl=el.parentElement;
+  if(barEl){barEl.classList.toggle('sinning',isSinning&&!isDone);}
+  
+  // Update time text
+  var tEl=document.getElementById('pt-'+o._id);
+  if(tEl){
+    tEl.classList.remove('sinning','outside');
+    if(isDone){
+      tEl.textContent='✓ Doručeno';
+    }else if(isSinning){
+      tEl.textContent='💀 Hřešíš! Doruč HNED!';
+      tEl.classList.add('sinning');
+    }else if(isLate){
+      tEl.textContent='⚠️ +'+Math.abs(remMin)+' min';
+    }else if(remMin>0){
+      tEl.textContent=remMin+' min';
+      tEl.classList.toggle('outside',pct<25);
+    }else{
+      tEl.textContent='Právě teď';
+    }
+  }
+})}
 setInterval(uProgAll,5000);
 
 // === CARD ACTIONS ===
