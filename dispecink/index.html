@@ -93,8 +93,12 @@ input,select{font-family:var(--ff);background:var(--bg3);color:var(--tx);border:
 .login-grid{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:400px}
 .login-btn{width:95px;padding:14px 8px;border-radius:var(--r2);background:var(--bg3);border:1px solid var(--bdr2);display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:700;font-size:13px;transition:all .2s}
 .login-btn:active{transform:scale(.95)}
+.login-btn.sinner{border-color:rgba(239,68,68,.4);background:rgba(127,29,29,.15)}
 .login-av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--red-d),var(--red));display:grid;place-items:center;font-size:18px;font-weight:700;color:#fff;border:2px solid var(--bdr)}
+.login-av.sinner{background:linear-gradient(135deg,#7F1D1D,#991B1B);border-color:rgba(239,68,68,.5)}
 .login-btn.admin .login-av{background:linear-gradient(135deg,#92400E,var(--gold));border-color:rgba(251,191,36,.4)}
+.login-name.sinner{color:#EF4444}
+.login-sin{margin-left:4px;padding:1px 5px;border-radius:8px;background:rgba(239,68,68,.2);color:#EF4444;font-size:10px}
 .login-rank{font-size:9px;color:var(--tx3);margin-top:2px}
 
 /* === HEADER === */
@@ -108,6 +112,8 @@ input,select{font-family:var(--ff);background:var(--bg3);color:var(--tx);border:
 .me{display:flex;align-items:center;gap:5px;padding:3px 8px 3px 3px;border-radius:var(--rr);background:var(--bgE);border:1px solid var(--bdr2);cursor:pointer}
 .me-av{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--red-d),var(--red));display:grid;place-items:center;font-size:9px;font-weight:700;color:#fff}
 .me-av.admin{background:linear-gradient(135deg,#92400E,var(--gold))}
+.me-av.sinner{background:linear-gradient(135deg,#7F1D1D,#991B1B)}
+.me-name.sinner{color:#EF4444}
 .me-name{font-size:11px;font-weight:700}
 .me-rank{font-size:8px;color:var(--gold);margin-left:2px}
 .conn{display:flex;align-items:center;gap:3px;padding:3px 7px;border-radius:var(--rr);background:var(--bgE);border:1px solid var(--bdr2);font-size:8.5px;font-weight:700;color:var(--tx2)}
@@ -361,8 +367,11 @@ input,select{font-family:var(--ff);background:var(--bg3);color:var(--tx);border:
 .tr-c{padding:14px 10px;border-radius:var(--r);border:2px solid var(--bdr2);background:var(--bg3);display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .2s}
 .tr-c:hover{border-color:var(--info)}
 .tr-c.dis{opacity:.4;pointer-events:none}
+.tr-c.sinner{border-color:rgba(239,68,68,.3);background:rgba(127,29,29,.1)}
 .tr-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--red-d),var(--red));display:grid;place-items:center;font-size:14px;font-weight:700;color:#fff}
+.tr-av.sinner{background:linear-gradient(135deg,#7F1D1D,#991B1B)}
 .tr-cn{font-weight:700;font-size:13px}
+.tr-cn.sinner{color:#EF4444}
 .tr-cs{font-size:9px;color:var(--tx3);margin-top:1px}
 .tr-rank{font-size:8px;color:var(--gold);margin-top:2px}
 
@@ -431,12 +440,20 @@ input,select{font-family:var(--ff);background:var(--bg3);color:var(--tx);border:
 .rv-v{font-size:22px;font-weight:700;background:linear-gradient(135deg,var(--gold),#FDE68A);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .rv-l{font-size:8px;color:var(--tx3);text-transform:uppercase;margin-top:2px}
 .courier-row{display:flex;align-items:center;gap:10px;padding:10px;margin-bottom:4px;background:var(--bg3);border:1px solid var(--bdr2);border-radius:var(--r)}
+.courier-row.sinner-row{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.3);animation:sinPulse 2s infinite}
+@keyframes sinPulse{0%,100%{box-shadow:0 0 0 rgba(239,68,68,0)}50%{box-shadow:0 0 15px rgba(239,68,68,.3)}}
 .cr-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--red-d),var(--red));display:grid;place-items:center;font-size:13px;font-weight:700;color:#fff}
+.cr-av.sinner-av{background:linear-gradient(135deg,#7F1D1D,#991B1B);font-size:18px}
 .cr-info{flex:1}
 .cr-name{font-weight:700;font-size:13px}
+.cr-name.sinner{color:#EF4444}
 .cr-rank{font-size:9px;color:var(--gold)}
 .cr-detail{font-size:10px;color:var(--tx2)}
 .cr-amt{font-weight:700;font-size:15px;color:var(--red-b)}
+.sin-badge{margin-left:6px;padding:2px 6px;border-radius:10px;background:rgba(239,68,68,.2);color:#EF4444;font-size:10px;font-weight:700}
+.sins-monitor{background:linear-gradient(135deg,rgba(127,29,29,.15),rgba(153,27,27,.1));border:1px solid rgba(239,68,68,.3);border-radius:var(--r2);padding:14px;margin-bottom:14px;text-align:center}
+.sins-header{font-size:14px;font-weight:700;color:#EF4444;margin-bottom:4px}
+.sins-total{font-size:12px;color:var(--tx2)}
 
 /* Summary */
 .sum-section{margin-bottom:16px}
@@ -710,18 +727,43 @@ REST_PHONES:{
   'základna':'+420723436682',
   'u pata':'+420723436682'
 }};
-var S={courier:null,isAdmin:false,orders:[],ids:new Set(),glowIds:new Set(),flt:'all',view:'default',snd:true,vibrate:true,glow:true,timer:null,first:true,errs:0,history:[],todayOrders:[]};
+var S={courier:null,isAdmin:false,orders:[],ids:new Set(),glowIds:new Set(),flt:'all',view:'default',snd:true,vibrate:true,glow:true,timer:null,first:true,errs:0,history:[],todayOrders:[],sins:{}};
 var modalState={type:null,id:null};
 var transferTarget=null;
 
-// === RANKING ===
-function getRank(c){
-  if(c>=21)return{n:'ŠELMA',e:'🔥',cls:'beast'};
-  if(c>=11)return{n:'Seraf',e:'💜',cls:'seraph'};
-  if(c>=6)return{n:'Archanděl',e:'💙',cls:'archangel'};
-  return{n:'Anděl',e:'👼',cls:'angel'};
+// === RANKING & SINS ===
+function getRank(c,sins){
+  sins=sins||0;
+  if(sins>=3)return{n:'Hříšník',e:'😈',cls:'sinner',isSinner:true};
+  if(c>=21)return{n:'ŠELMA',e:'🔥',cls:'beast',isSinner:false};
+  if(c>=11)return{n:'Seraf',e:'💜',cls:'seraph',isSinner:false};
+  if(c>=6)return{n:'Archanděl',e:'💙',cls:'archangel',isSinner:false};
+  return{n:'Anděl',e:'👼',cls:'angel',isSinner:false};
 }
 function getCount(n){return S.orders.filter(function(o){return o.courier===n}).length}
+function getSins(n){return S.sins[n]||0}
+
+// Load sins from localStorage
+function loadSins(){
+  var today=new Date().toISOString().split('T')[0];
+  var key='dd_sins_'+today;
+  S.sins=JSON.parse(localStorage.getItem(key)||'{}');
+}
+function saveSins(){
+  var today=new Date().toISOString().split('T')[0];
+  var key='dd_sins_'+today;
+  localStorage.setItem(key,JSON.stringify(S.sins));
+}
+function addSin(courier,orderId){
+  if(!courier)return;
+  // Only add sin once per order
+  var sinKey='sin_'+orderId;
+  if(localStorage.getItem(sinKey))return;
+  localStorage.setItem(sinKey,'1');
+  S.sins[courier]=(S.sins[courier]||0)+1;
+  saveSins();
+  toast('😈 '+courier+' získal hřích za pozdní doručení!',4000);
+}
 
 // === HELPERS ===
 function ns(s){if(!s)return'PENDING';var u=s.toUpperCase();return u==='ACCEPTED'||u==='NEW'?'PENDING':['PENDING','ASSIGNED','PICKED','DELIVERED'].includes(u)?u:'PENDING'}
@@ -734,13 +776,17 @@ function toast(m,d){var c=document.getElementById('T'),t=document.createElement(
 // === LOGIN ===
 function initLogin(){var s=localStorage.getItem('dd_courier');if(s){S.courier=s;S.isAdmin=(s===C.ADMIN);showApp();return}showLogin()}
 function showLogin(){
+  loadSins(); // Load sins for display
   document.getElementById('LS').classList.remove('gone');
   var g=document.getElementById('LG');
   g.innerHTML=C.COURIERS.map(function(c){
     var isAdm=c===C.ADMIN;
     var cnt=getCount(c);
-    var r=getRank(cnt);
-    return'<button class="login-btn'+(isAdm?' admin':'')+'" data-name="'+c+'"><div class="login-av">'+c[0]+'</div>'+c+(isAdm?' 👑':'')+'<div class="login-rank">'+r.e+' '+r.n+'</div></button>';
+    var sins=getSins(c);
+    var r=getRank(cnt,sins);
+    var sinnerClass=r.isSinner?' sinner':'';
+    var sinBadge=sins>0?'<span class="login-sin">😈'+sins+'</span>':'';
+    return'<button class="login-btn'+(isAdm?' admin':'')+sinnerClass+'" data-name="'+c+'"><div class="login-av'+(r.isSinner?' sinner':'')+'">'+r.e+'</div><span class="login-name'+(r.isSinner?' sinner':'')+'">'+c+'</span>'+(isAdm?' 👑':'')+sinBadge+'<div class="login-rank">'+r.e+' '+r.n+'</div></button>';
   }).join('');
   g.querySelectorAll('.login-btn').forEach(function(b){b.onclick=function(){var n=this.dataset.name;if(n===C.ADMIN)showPw(n);else pick(n)}});
 }
@@ -750,11 +796,13 @@ function pick(n){S.courier=n;S.isAdmin=(n===C.ADMIN);localStorage.setItem('dd_co
 function showApp(){
   document.getElementById('LS').classList.add('gone');
   ['HDR','TB','SC','BN'].forEach(function(id){document.getElementById(id).style.display=''});
-  var r=getRank(getCount(S.courier));
-  document.getElementById('meA').textContent=S.courier[0];
-  document.getElementById('meA').className='me-av'+(S.isAdmin?' admin':'');
+  var sins=getSins(S.courier);
+  var r=getRank(getCount(S.courier),sins);
+  document.getElementById('meA').textContent=r.e;
+  document.getElementById('meA').className='me-av'+(S.isAdmin?' admin':'')+(r.isSinner?' sinner':'');
   document.getElementById('meN').textContent=S.courier+(S.isAdmin?' 👑':'');
-  document.getElementById('meR').textContent=r.e;
+  document.getElementById('meN').className='me-name'+(r.isSinner?' sinner':'');
+  document.getElementById('meR').textContent=r.isSinner?'':r.e;
   document.getElementById('setUser').textContent=S.courier+' ('+r.n+')';
   document.getElementById('navAdmin').style.display=S.isAdmin?'flex':'none';
   loadSettings();
@@ -796,7 +844,7 @@ function poll(){
     render();
   });
 }
-function startPoll(){loadTodayOrders();poll();S.timer=setInterval(poll,C.POLL)}
+function startPoll(){loadTodayOrders();loadSins();poll();S.timer=setInterval(poll,C.POLL)}
 function playSound(){try{var ctx=new(window.AudioContext||window.webkitAudioContext)();for(var i=0;i<3;i++){var s=ctx.currentTime+i*.25;var o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(880+i*220,s);g.gain.setValueAtTime(.2,s);g.gain.exponentialRampToValueAtTime(.01,s+.2);o.connect(g);g.connect(ctx.destination);o.start(s);o.stop(s+.2)}}catch(e){}}
 
 // === RENDER ===
@@ -863,12 +911,25 @@ function card(o,i){
   var pL=pm.includes('cash')||pm.includes('hotov')?'Hotově':pm.includes('link')?'Odkazem':'Kartou';
   var pI=pC==='ca'?'<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/>':pC==='cb'?'<path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>':'<rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>';
   
-  // Time
+  // Time - COMPLETE v12 LOGIC for delivery time
   var cr=o.createdAt?new Date(o.createdAt):new Date();
-  var db=new Date(cr.getTime()+C.DMIN*60000);
+  // GloriaFood/Wix sends fulfill_at as ISO timestamp (e.g. "2025-05-15T18:30:00+02:00")
+  // Also check: fulfillAt, fulfillment_expected, required_at, expectedDelivery
+  var db;
+  var fat=o.fulfill_at||o.fulfillAt||o.fulfillment_expected||o.required_at||o.expectedDelivery||o.deliverBy||null;
+  if(fat){
+    var parsed=new Date(fat);
+    db=isNaN(parsed.getTime())?new Date(cr.getTime()+C.DMIN*60000):parsed;
+  }else{
+    // Fallback: fulfillment_time (minutes), deliveryTime (minutes), or default
+    var dm=parseFloat(o.fulfillment_time||o.deliveryTime||o.delivery_time)||0;
+    if(dm>0&&dm<300){db=new Date(cr.getTime()+dm*60000)}
+    else{db=new Date(cr.getTime()+C.DMIN*60000)}
+  }
   var nowMs=Date.now();
-  var remMin=Math.max(0,Math.round((db.getTime()-nowMs)/60000));
-  var remText=st==='DELIVERED'?'✓ Doručeno':(remMin>0?remMin+' min':'Právě teď');
+  var remMin=Math.round((db.getTime()-nowMs)/60000);
+  var isLate=remMin<0;
+  var remText=st==='DELIVERED'?'✓ Doručeno':(isLate?'⚠️ +'+Math.abs(remMin)+' min':(remMin>0?remMin+' min':'Právě teď'));
   
   // Items HTML - COMPLETE V12 PARSING with all options, modifiers, toppings, sizes
   var ih='<div class="items-grid">';
@@ -1228,8 +1289,17 @@ function saveTodayOrders(){
   var today=new Date().toISOString().split('T')[0];
   var key='dd_orders_'+today;
   var saved=JSON.parse(localStorage.getItem(key)||'[]');
+  
+  // Merge current orders with saved, update status if changed
   S.orders.forEach(function(o){
-    if(!saved.some(function(s){return s._id===o._id})){
+    var existing=saved.find(function(s){return s._id===o._id});
+    if(existing){
+      // Update status and courier if changed
+      existing.status=o.status;
+      existing.courier=o.courier;
+      existing.deliveredAt=o.deliveredAt||existing.deliveredAt;
+    }else{
+      // Add new order
       saved.push({
         _id:o._id,
         restaurantName:o.restaurantName,
@@ -1238,12 +1308,18 @@ function saveTodayOrders(){
         totalPrice:o.totalPrice,
         createdAt:o.createdAt,
         courier:o.courier,
-        status:o.status
+        status:o.status,
+        savedAt:Date.now(),
+        deliveredAt:o.deliveredAt||null
       });
     }
   });
+  
   localStorage.setItem(key,JSON.stringify(saved));
   S.todayOrders=saved;
+  
+  // Cleanup old days (keep last 7 days)
+  cleanupOldOrders();
 }
 
 function loadTodayOrders(){
@@ -1252,9 +1328,43 @@ function loadTodayOrders(){
   S.todayOrders=JSON.parse(localStorage.getItem(key)||'[]');
 }
 
+function cleanupOldOrders(){
+  var now=new Date();
+  var cutoff=new Date(now.getTime()-7*24*60*60*1000).toISOString().split('T')[0];
+  for(var i=0;i<localStorage.length;i++){
+    var k=localStorage.key(i);
+    if(k&&k.startsWith('dd_orders_')){
+      var dateStr=k.replace('dd_orders_','');
+      if(dateStr<cutoff){
+        localStorage.removeItem(k);
+      }
+    }
+  }
+}
+
 function openModal(type,id,sug){modalState={type:type,id:id};document.getElementById('MT').textContent=type==='pick'?'📦 Vyzvednutí':'✅ Doručení';var o=S.orders.find(function(x){return x._id===id});document.getElementById('MS').textContent=o?(o.restaurantName||''):'';document.getElementById('MI').value=sug||'';document.getElementById('M').classList.add('sh');setTimeout(function(){document.getElementById('MI').focus();document.getElementById('MI').select()},100)}
 function closeModal(){document.getElementById('M').classList.remove('sh');modalState={type:null,id:null}}
-function submitModal(){var amt=parseInt(document.getElementById('MI').value)||0,id=modalState.id,type=modalState.type;closeModal();if(type==='pick'){apic('/markPicked',{method:'POST',body:{orderId:id,pickedUpAmount:amt}}).then(function(){toast('📦 Vyzvednuto!');poll()}).catch(function(){toast('❌ Chyba')})}else{apic('/markDelivered',{method:'POST',body:{orderId:id,deliveredAmount:amt}}).then(function(){toast('✅ Doručeno!');poll()}).catch(function(){toast('❌ Chyba')})}}
+function submitModal(){
+  var amt=parseInt(document.getElementById('MI').value)||0,id=modalState.id,type=modalState.type;
+  closeModal();
+  if(type==='pick'){
+    apic('/markPicked',{method:'POST',body:{orderId:id,pickedUpAmount:amt}}).then(function(){toast('📦 Vyzvednuto!');poll()}).catch(function(){toast('❌ Chyba')});
+  }else{
+    // Check if late delivery
+    var o=S.orders.find(function(x){return x._id===id});
+    if(o&&o.courier){
+      var cr=o.createdAt?new Date(o.createdAt):new Date();
+      var fat=o.fulfill_at||o.fulfillAt||o.fulfillment_expected||o.required_at||o.expectedDelivery||o.deliverBy||null;
+      var db;
+      if(fat){var parsed=new Date(fat);db=isNaN(parsed.getTime())?new Date(cr.getTime()+C.DMIN*60000):parsed;}
+      else{var dm=parseFloat(o.fulfillment_time||o.deliveryTime||o.delivery_time)||0;db=dm>0&&dm<300?new Date(cr.getTime()+dm*60000):new Date(cr.getTime()+C.DMIN*60000);}
+      if(Date.now()>db.getTime()){
+        addSin(o.courier,id);
+      }
+    }
+    apic('/markDelivered',{method:'POST',body:{orderId:id,deliveredAmount:amt}}).then(function(){toast('✅ Doručeno!');poll()}).catch(function(){toast('❌ Chyba')});
+  }
+}
 
 function openTransfer(id){
   var o=S.orders.find(function(x){return x._id===id});
@@ -1265,8 +1375,11 @@ function openTransfer(id){
   var g=document.getElementById('trGrid');
   g.innerHTML=C.COURIERS.filter(function(c){return c!==o.courier}).map(function(c){
     var cnt=getCount(c);
-    var r=getRank(cnt);
-    return'<div class="tr-c" data-c="'+c+'"><div class="tr-av">'+c[0]+'</div><div><div class="tr-cn">'+c+'</div><div class="tr-rank">'+r.e+' '+r.n+' ('+cnt+')</div></div></div>';
+    var sins=getSins(c);
+    var r=getRank(cnt,sins);
+    var sinBadge=sins>0?' 😈'+sins:'';
+    var sinnerClass=r.isSinner?' sinner':'';
+    return'<div class="tr-c'+sinnerClass+'" data-c="'+c+'"><div class="tr-av'+sinnerClass+'">'+r.e+'</div><div><div class="tr-cn'+sinnerClass+'">'+c+sinBadge+'</div><div class="tr-rank">'+r.e+' '+r.n+' ('+cnt+')</div></div></div>';
   }).join('');
   g.querySelectorAll('.tr-c').forEach(function(el){el.onclick=function(){g.querySelectorAll('.tr-c').forEach(function(x){x.style.borderColor='';x.style.background=''});this.style.borderColor='var(--info)';this.style.background='rgba(96,165,250,.15)';transferTarget=this.dataset.c;document.getElementById('trOK').style.opacity='1'}});
   document.getElementById('trOK').style.opacity='.5';
@@ -1284,12 +1397,28 @@ function showAdmin(){document.getElementById('AP').classList.add('show');renderA
 function renderAdmin(){
   var c=document.getElementById('apContent'),o=S.orders;
   var tot=o.reduce(function(s,x){return s+(parseFloat(x.totalPrice)||0)},0);
-  var byCourier={};C.COURIERS.forEach(function(cr){byCourier[cr]={c:0,r:0}});
+  var byCourier={};C.COURIERS.forEach(function(cr){byCourier[cr]={c:0,r:0,sins:getSins(cr)}});
   o.forEach(function(x){if(x.courier&&byCourier[x.courier]){byCourier[x.courier].c++;byCourier[x.courier].r+=(parseFloat(x.totalPrice)||0)}});
+  
+  // Total sins count
+  var totalSins=Object.values(S.sins).reduce(function(a,b){return a+b},0);
+  
   var h='<div class="rev-cards"><div class="rev-card gold"><div class="rv-v">'+Math.round(tot).toLocaleString('cs')+' Kč</div><div class="rv-l">Celkem dnes</div></div><div class="rev-card gold"><div class="rv-v">'+o.length+'</div><div class="rv-l">Objednávek</div></div></div>';
+  
+  // Sins monitor
+  if(totalSins>0){
+    h+='<div class="sins-monitor"><div class="sins-header">😈 HŘÍCH MONITOR</div><div class="sins-total">'+totalSins+' hříchů dnes</div></div>';
+  }
+  
   h+='<div style="font-size:11px;color:var(--tx3);margin-bottom:8px;font-weight:700">👥 RANKING</div>';
   var sorted=C.COURIERS.slice().sort(function(a,b){return byCourier[b].c-byCourier[a].c});
-  sorted.forEach(function(cr){var d=byCourier[cr],r=getRank(d.c);h+='<div class="courier-row"><div class="cr-av">'+cr[0]+'</div><div class="cr-info"><div class="cr-name">'+cr+(cr===C.ADMIN?' 👑':'')+'</div><div class="cr-rank">'+r.e+' '+r.n+'</div><div class="cr-detail">'+d.c+' objednávek</div></div><div class="cr-amt">'+Math.round(d.r).toLocaleString('cs')+' Kč</div></div>'});
+  sorted.forEach(function(cr){
+    var d=byCourier[cr];
+    var r=getRank(d.c,d.sins);
+    var sinBadge=d.sins>0?'<span class="sin-badge">😈×'+d.sins+'</span>':'';
+    var nameClass=r.isSinner?'cr-name sinner':'cr-name';
+    h+='<div class="courier-row'+(r.isSinner?' sinner-row':'')+'"><div class="cr-av'+(r.isSinner?' sinner-av':'')+'">'+r.e+'</div><div class="cr-info"><div class="'+nameClass+'">'+cr+(cr===C.ADMIN?' 👑':'')+sinBadge+'</div><div class="cr-rank">'+r.e+' '+r.n+'</div><div class="cr-detail">'+d.c+' objednávek</div></div><div class="cr-amt">'+Math.round(d.r).toLocaleString('cs')+' Kč</div></div>';
+  });
   c.innerHTML=h;
 }
 
