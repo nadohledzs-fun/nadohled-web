@@ -255,6 +255,11 @@ input,select{font-family:var(--ff);background:var(--bg3);color:var(--tx);border:
 .bs.s-pk{background:rgba(96,165,250,.15);color:var(--info)}
 .bs.s-dl{background:rgba(52,211,153,.15);color:var(--ok)}
 
+/* Time type badges (slot vs ASAP) */
+.time-badge{padding:3px 8px;border-radius:var(--rr);font-size:9px;font-weight:700;display:inline-flex;align-items:center;gap:3px;margin-left:6px}
+.time-badge.slot{background:linear-gradient(135deg,rgba(139,92,246,.2),rgba(139,92,246,.1));color:#A78BFA;border:1px solid rgba(139,92,246,.3)}
+.time-badge.asap{background:linear-gradient(135deg,rgba(251,191,36,.2),rgba(251,191,36,.1));color:var(--gold);border:1px solid rgba(251,191,36,.3)}
+
 /* Progress bar - ANIMATED with time inside */
 .prog{padding:0 10px 10px}
 .prog-row{display:flex;justify-content:space-between;margin-bottom:5px}
@@ -784,11 +789,29 @@ REST_PHONES:{
   'mix apetit':'+420736602552',
   'vietnamská restaurace dalas':'+420792613263',
   'dalas':'+420792613263',
+  'dallas':'+420792613263',
   'bistro viet-thai':'+420704366699',
   'viet-thai':'+420704366699',
+  'viet thai':'+420704366699',
   'základna u pata':'+420723436682',
   'základna':'+420723436682',
-  'u pata':'+420723436682'
+  'u pata':'+420723436682',
+  'bílý páv':'+420737130064',
+  'bily pav':'+420737130064',
+  'šupito presto':'+420721344619',
+  'supito presto':'+420721344619',
+  'šupito':'+420721344619',
+  'bistrozza':'+420770330430',
+  'hostinec u háje':'+420602250295',
+  'u háje':'+420602250295',
+  'u haje':'+420602250295',
+  'maso na place':'+420732998818',
+  'kavárna na kávu':'+420736712956',
+  'na kávu':'+420736712956',
+  'pizzeria adelante':'+420604499050',
+  'adelante':'+420604499050',
+  'clock cafe':'+420777292618',
+  'clock':'+420777292618'
 }};
 var S={courier:null,isAdmin:false,orders:[],ids:new Set(),glowIds:new Set(),flt:'all',view:'default',snd:true,vibrate:true,glow:true,timer:null,first:true,errs:0,history:[],todayOrders:[],sins:{},karma:{}};
 var modalState={type:null,id:null};
@@ -861,6 +884,19 @@ function addSin(courier,orderId){
 // === HELPERS ===
 function ns(s){if(!s)return'PENDING';var u=s.toUpperCase();return u==='ACCEPTED'||u==='NEW'?'PENDING':['PENDING','ASSIGNED','PICKED','DELIVERED'].includes(u)?u:'PENDING'}
 function ft(d){try{return new Date(d).toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'})}catch(e){return'—'}}
+
+// Get restaurant phone from config
+function getRestPhone(name){
+  if(!name)return null;
+  var lower=name.toLowerCase().trim();
+  // Direct match
+  if(C.REST_PHONES[lower])return C.REST_PHONES[lower];
+  // Partial match
+  for(var k in C.REST_PHONES){
+    if(lower.includes(k)||k.includes(lower))return C.REST_PHONES[k];
+  }
+  return null;
+}
 function eh(s){var d=document.createElement('div');d.textContent=s||'';return d.innerHTML}
 function ea(s){return(s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;')}
 function fp(p){if(!p)return'';var c=p.replace(/\s/g,'');if(c.startsWith('+420')&&c.length===13)return'+420 '+c.slice(4,7)+' '+c.slice(7,10)+' '+c.slice(10);return p}
@@ -1019,20 +1055,32 @@ function card(o,i){
   // Also check: fulfillAt, fulfillment_expected, required_at, expectedDelivery
   var db;
   var fat=o.fulfill_at||o.fulfillAt||o.fulfillment_expected||o.required_at||o.expectedDelivery||o.deliverBy||null;
+  var isTimeSlot=!!fat; // Has specific delivery time = time slot order
+  var totalDeliveryMin=0; // For ASAP orders
+  
   if(fat){
     var parsed=new Date(fat);
     db=isNaN(parsed.getTime())?new Date(cr.getTime()+C.DMIN*60000):parsed;
   }else{
     // Fallback: fulfillment_time (minutes), deliveryTime (minutes), or default
     var dm=parseFloat(o.fulfillment_time||o.deliveryTime||o.delivery_time)||0;
-    if(dm>0&&dm<300){db=new Date(cr.getTime()+dm*60000)}
-    else{db=new Date(cr.getTime()+C.DMIN*60000)}
+    if(dm>0&&dm<300){db=new Date(cr.getTime()+dm*60000);totalDeliveryMin=dm;}
+    else{db=new Date(cr.getTime()+C.DMIN*60000);totalDeliveryMin=C.DMIN;}
   }
   var nowMs=Date.now();
   var remMin=Math.round((db.getTime()-nowMs)/60000);
   var isLate=remMin<0;
   var isSinning=remMin<=-5; // 5+ minutes late = sinning
   var remText,remClass='';
+  
+  // Time slot badge or ASAP total time
+  var timeTypeBadge='';
+  if(isTimeSlot){
+    timeTypeBadge='<span class="time-badge slot">🕐 '+ft(db)+'</span>';
+  }else if(totalDeliveryMin>0){
+    timeTypeBadge='<span class="time-badge asap">⚡ '+totalDeliveryMin+' min</span>';
+  }
+  
   if(st==='DELIVERED'){
     remText='✓ Doručeno';
   }else if(isSinning){
@@ -1200,8 +1248,9 @@ function card(o,i){
   var courierCls=o.courier?C.COLORS[o.courier]||'':'';
   var courierInfo=o.courier?'<div class="courier-info '+courierCls+'">👼 '+eh(o.courier)+'</div>':'';
   var rName=eh(o.restaurantName||'Restaurace');
+  var restPhone=getRestPhone(o.restaurantName)||o.restaurant_phone||'';
   
-  return'<div class="'+cls+'" id="c-'+id+'" data-glow="'+(isGlow?'1':'0')+'" data-courier="'+(o.courier||'')+'" style="animation-delay:'+i*.03+'s">'+'<div class="rest-bar"><div class="rest-bar-name" data-search="'+ea(o.restaurantName||'')+'"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>'+rName+'</div><div class="rest-bar-btns"><div class="rest-bar-pdf" data-pdf="'+id+'"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PDF</div><div class="rest-bar-sms" data-sms="'+id+'" data-phone="'+ea(o.customerPhone||'')+'"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>SMS</div><div class="rest-bar-sms2" data-sms-items="'+id+'" data-phone="'+ea(o.customerPhone||'')+'" title="SMS s položkami"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="13" y2="13"/></svg>📋</div><div class="rest-bar-sms3" data-sms-rest="'+id+'" title="SMS na restauraci"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>🍽️</div></div></div><div class="cd-h"><div class="ri"><div class="r-btns">'+(o.restaurant_address?'<button class="r-btn r-nav" data-nav="'+ea(o.restaurant_address)+'"><svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></button>':'')+(o.restaurant_phone?'<button class="r-btn r-tel" data-tel="'+ea(o.restaurant_phone)+'"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></button>':'')+'</div><div><div class="ot"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>'+ft(o.createdAt)+'</div>'+courierInfo+'</div></div><span class="bs '+SC[st]+'">'+SL[st]+'</span></div><div class="prog"><div class="prog-row"><div class="prog-t"><span class="lb">Objednáno</span>'+ft(o.createdAt)+'</div><div class="prog-t r"><span class="lb">Doručit do</span>'+ft(db)+'</div></div><div class="prog-bar'+(isSinning?' sinning':'')+'"><div class="prog-fill'+(st==='DELIVERED'?' done':remClass)+'" id="p-'+id+'" data-s="'+cr.getTime()+'" data-e="'+db.getTime()+'"></div><div class="prog-time'+remClass+'" id="pt-'+id+'">'+remText+'</div></div></div><div class="cd-c"><div class="cr"><div><div class="cn">'+eh(o.customerName||'Neznámý')+'</div><div class="cp">'+eh(fp(o.customerPhone))+'</div></div><div class="qa">'+(o.customerPhone?'<button class="qb tel" data-tel="'+ea(o.customerPhone)+'"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></button>':'')+(o.deliveryAddress?'<button class="qb nav" data-nav="'+ea(o.deliveryAddress)+'"><svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></button>':'')+'</div></div>'+(o.deliveryAddress?'<div class="adr"><div class="adr-i"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div class="adr-t" data-nav="'+ea(o.deliveryAddress)+'">'+eh(o.deliveryAddress)+'</div></div>':'')+'</div>'+(items.length?'<button class="tgl"><span>Položky ('+items.length+')</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button><div class="cd-it">'+ih+'</div>':'')+'<div class="cd-f"><div class="pb '+pC+'"><svg viewBox="0 0 24 24">'+pI+'</svg>'+pL+'</div><div><div class="tl">Celkem</div><div class="tv">'+price.toLocaleString('cs')+' Kč</div></div></div>'+act+'</div>';
+  return'<div class="'+cls+'" id="c-'+id+'" data-glow="'+(isGlow?'1':'0')+'" data-courier="'+(o.courier||'')+'" style="animation-delay:'+i*.03+'s">'+'<div class="rest-bar"><div class="rest-bar-name" data-search="'+ea(o.restaurantName||'')+'"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>'+rName+timeTypeBadge+'</div><div class="rest-bar-btns"><div class="rest-bar-pdf" data-pdf="'+id+'"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PDF</div><div class="rest-bar-sms" data-sms="'+id+'" data-phone="'+ea(o.customerPhone||'')+'"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>SMS</div><div class="rest-bar-sms2" data-sms-items="'+id+'" data-phone="'+ea(o.customerPhone||'')+'" title="SMS s položkami"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="13" y2="13"/></svg>📋</div><div class="rest-bar-sms3" data-sms-rest="'+id+'" title="SMS na restauraci"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>🍽️</div></div></div><div class="cd-h"><div class="ri"><div class="r-btns">'+(restPhone?'<button class="r-btn r-tel" data-tel="'+ea(restPhone)+'" title="Volat restauraci"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></button>':'')+'</div><div><div class="ot"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>'+ft(o.createdAt)+'</div>'+courierInfo+'</div></div><span class="bs '+SC[st]+'">'+SL[st]+'</span></div><div class="prog"><div class="prog-row"><div class="prog-t"><span class="lb">Objednáno</span>'+ft(o.createdAt)+'</div><div class="prog-t r"><span class="lb">Doručit do</span>'+ft(db)+'</div></div><div class="prog-bar'+(isSinning?' sinning':'')+'"><div class="prog-fill'+(st==='DELIVERED'?' done':remClass)+'" id="p-'+id+'" data-s="'+cr.getTime()+'" data-e="'+db.getTime()+'"></div><div class="prog-time'+remClass+'" id="pt-'+id+'">'+remText+'</div></div></div><div class="cd-c"><div class="cr"><div><div class="cn">'+eh(o.customerName||'Neznámý')+'</div><div class="cp">'+eh(fp(o.customerPhone))+'</div></div><div class="qa">'+(o.customerPhone?'<button class="qb tel" data-tel="'+ea(o.customerPhone)+'"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></button>':'')+(o.deliveryAddress?'<button class="qb nav" data-nav="'+ea(o.deliveryAddress)+'"><svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></button>':'')+'</div></div>'+(o.deliveryAddress?'<div class="adr"><div class="adr-i"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div class="adr-t" data-nav="'+ea(o.deliveryAddress)+'">'+eh(o.deliveryAddress)+'</div></div>':'')+'</div>'+(items.length?'<button class="tgl"><span>Položky ('+items.length+')</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button><div class="cd-it">'+ih+'</div>':'')+'<div class="cd-f"><div class="pb '+pC+'"><svg viewBox="0 0 24 24">'+pI+'</svg>'+pL+'</div><div><div class="tl">Celkem</div><div class="tv">'+price.toLocaleString('cs')+' Kč</div></div></div>'+act+'</div>';
 }
 
 // === PROGRESS UPDATE ===
