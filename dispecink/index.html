@@ -1079,8 +1079,8 @@ function card(o,i){
   }
   
   // Detect time slot vs ASAP:
-  // If delivery time is >90 min from order time OR delivery is scheduled for different hour block = time slot
-  var isTimeSlot=totalDeliveryMin>90||(fat&&(db.getHours()!==cr.getHours()||Math.abs(db.getTime()-cr.getTime())>5400000));
+  // If delivery time is >61 min from order time OR delivery is scheduled for different hour block = time slot
+  var isTimeSlot=totalDeliveryMin>61||(fat&&(db.getHours()!==cr.getHours()||Math.abs(db.getTime()-cr.getTime())>5400000));
   
   var nowMs=Date.now();
   var remMin=Math.round((db.getTime()-nowMs)/60000);
