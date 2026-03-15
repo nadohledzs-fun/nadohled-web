@@ -978,8 +978,8 @@ input,select{font-family:var(--ff);background:var(--bg3);color:var(--tx);border:
     <div class="loc-title">Povolit sledování polohy?</div>
     <div class="loc-desc">Aby ostatní kurýři viděli, kde se nacházíš na mapě, potřebujeme tvou polohu. Sdílení je anonymní a pouze pro tým.</div>
     <div class="loc-btns">
-      <button class="loc-btn accept" onclick="acceptLocation()">✓ Povolit</button>
-      <button class="loc-btn decline" onclick="declineLocation()">✕ Teď ne</button>
+      <button class="loc-btn accept" id="locAccept">✓ Povolit</button>
+      <button class="loc-btn decline" id="locDecline">✕ Teď ne</button>
     </div>
   </div>
 </div>
@@ -2411,10 +2411,11 @@ function showDailyReport(){
   h+='<div class="report-stat"><div class="report-stat-val good">'+repentances+'</div><div class="report-stat-lbl">👼 Pokání</div></div>';
   h+='</div>';
   h+='<div class="report-message">"'+messages[karmaLevel.cls]+'"</div>';
-  h+='<button class="report-close" onclick="closeReport()">Zavřít vysvědčení</button>';
+  h+='<button class="report-close" id="reportCloseBtn">Zavřít vysvědčení</button>';
   
   document.getElementById('reportCard').innerHTML=h;
   document.getElementById('reportOverlay').style.display='flex';
+  document.getElementById('reportCloseBtn').onclick=closeReport;
 }
 
 function closeReport(){
@@ -2680,6 +2681,9 @@ document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('togVibrate').onclick=function(){this.classList.toggle('on');S.vibrate=this.classList.contains('on');saveSettings()};
   document.getElementById('togGlow').onclick=function(){this.classList.toggle('on');S.glow=this.classList.contains('on');saveSettings()};
   document.getElementById('logoutBtn').onclick=logout;
+  // Location prompt buttons
+  document.getElementById('locAccept').onclick=acceptLocation;
+  document.getElementById('locDecline').onclick=declineLocation;
   
   initLogin();
 });
