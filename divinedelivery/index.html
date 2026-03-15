@@ -9910,13 +9910,26 @@ function checkTelegramAdminAccess() {
 function initTelegramAdmin() {
   loadTelegramConfigFromStorage();
   
-  // Zobrazit tlačítko jen pokud je správce (např. URL parametr nebo localStorage flag)
+  // Zobrazit admin tlačítko - kontrola URL parametru nebo hash
   var isAdmin = localStorage.getItem('divine_is_admin') === 'true' || 
                 window.location.search.includes('admin=1') ||
                 window.location.hash.includes('admin');
   
-  if (isAdmin) {
-    document.getElementById('tgAdminBtn').style.display = 'flex';
+  var adminBtn = document.getElementById('tgAdminBtn');
+  if (adminBtn) {
+    if (isAdmin) {
+      adminBtn.style.display = 'flex';
+      updateTelegramAdminBtnStatus();
+    }
+  }
+}
+
+// Alternativní vstup - volat z konzole: showTelegramAdmin()
+function showTelegramAdmin() {
+  localStorage.setItem('divine_is_admin', 'true');
+  var adminBtn = document.getElementById('tgAdminBtn');
+  if (adminBtn) {
+    adminBtn.style.display = 'flex';
     updateTelegramAdminBtnStatus();
   }
 }
@@ -10201,6 +10214,32 @@ function showTgToast(message, type) {
 // Inicializace při načtení stránky
 document.addEventListener('DOMContentLoaded', function() {
   initTelegramAdmin();
+  
+  // Tajný vstup do admin - 5x klik na logo nebo copyright
+  var secretClickCount = 0;
+  var secretClickTimer = null;
+  
+  document.body.addEventListener('click', function(e) {
+    // Klik na logo (brand) nebo text obsahující "Divine"
+    var target = e.target;
+    var isDivineText = target.textContent && target.textContent.includes('Divine');
+    var isBrand = target.closest('.brand') || target.closest('[class*="brand"]');
+    
+    if (isDivineText || isBrand) {
+      secretClickCount++;
+      clearTimeout(secretClickTimer);
+      
+      if (secretClickCount >= 5) {
+        secretClickCount = 0;
+        showTelegramAdmin();
+        openTelegramPanel();
+      }
+      
+      secretClickTimer = setTimeout(function() {
+        secretClickCount = 0;
+      }, 2000);
+    }
+  });
 });
 
 // System Status
