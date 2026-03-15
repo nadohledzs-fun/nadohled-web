@@ -9970,6 +9970,10 @@ function renderTelegramPanel() {
   // Dispatch input
   document.getElementById('tgDispatchInput').value = TELEGRAM_CONFIG.dispatchChatId || '';
   
+  // Brevo API key
+  var brevoKey = localStorage.getItem('divine_brevo_api_key') || '';
+  document.getElementById('brevoApiKeyInput').value = brevoKey;
+  
   // Restaurant list
   var html = '';
   TG_RESTAURANTS.forEach(function(rest) {
@@ -10190,7 +10194,13 @@ function saveTelegramConfig() {
     }
   });
   
-  // Uložit do localStorage
+  // Uložit Brevo API klíč
+  var brevoKey = document.getElementById('brevoApiKeyInput').value.trim();
+  if (brevoKey) {
+    localStorage.setItem('divine_brevo_api_key', brevoKey);
+  }
+  
+  // Uložit Telegram config do localStorage
   saveTelegramConfigToStorage();
   
   // Aktualizovat UI
@@ -10198,6 +10208,42 @@ function saveTelegramConfig() {
   updateTelegramAdminBtnStatus();
   
   showTgToast('✅ Konfigurace uložena!', 'success');
+}
+
+// Toggle Brevo key visibility
+function toggleBrevoKeyVisibility() {
+  var input = document.getElementById('brevoApiKeyInput');
+  input.type = input.type === 'password' ? 'text' : 'password';
+}
+
+// Test Brevo API
+function testBrevoApi() {
+  var apiKey = document.getElementById('brevoApiKeyInput').value.trim();
+  if (!apiKey) {
+    showTgToast('❌ Zadej API klíč', 'error');
+    return;
+  }
+  
+  showTgToast('⏳ Testuji...', '');
+  
+  fetch('https://api.brevo.com/v3/account', {
+    method: 'GET',
+    headers: {
+      'accept': 'application/json',
+      'api-key': apiKey
+    }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.email) {
+      showTgToast('✅ Brevo funguje! (' + data.email + ')', 'success');
+    } else {
+      showTgToast('❌ Neplatný API klíč', 'error');
+    }
+  })
+  .catch(function(err) {
+    showTgToast('❌ Chyba: ' + err.message, 'error');
+  });
 }
 
 // Toast notifikace
@@ -11509,11 +11555,18 @@ function sendOrderEmail(order) {
     </div>
   `;
   
+  // Načíst Brevo API klíč z localStorage
+  var brevoApiKey = localStorage.getItem('divine_brevo_api_key');
+  if (!brevoApiKey) {
+    console.log('⚠️ Brevo API klíč není nastaven - email nebude odeslán');
+    return;
+  }
+  
   fetch('https://api.brevo.com/v3/smtp/email', {
     method: 'POST',
     headers: {
       'accept': 'application/json',
-      'api-key': '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',
+      'api-key': brevoApiKey,
       'content-type': 'application/json'
     },
     body: JSON.stringify({
@@ -11794,6 +11847,25 @@ if (window.firebaseDb) {
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
             Test
           </button>
+        </div>
+      </div>
+      
+      <!-- Brevo API Key -->
+      <div class="tg-dispatch-box" style="background:linear-gradient(135deg,rgba(59,130,246,.1),rgba(37,99,235,.05));border-color:rgba(59,130,246,.3)">
+        <div class="tg-dispatch-title">
+          📧 Brevo Email API
+        </div>
+        <div class="tg-dispatch-row">
+          <input type="password" class="tg-dispatch-input" id="brevoApiKeyInput" placeholder="xkeysib-...">
+          <button class="tg-btn tg-btn-secondary" onclick="toggleBrevoKeyVisibility()">
+            👁️
+          </button>
+          <button class="tg-btn tg-btn-secondary" onclick="testBrevoApi()">
+            Test
+          </button>
+        </div>
+        <div style="font-size:11px;color:var(--txt2);margin-top:8px">
+          API klíč z <a href="https://app.brevo.com/settings/keys/api" target="_blank" style="color:#3b82f6">Brevo dashboard</a>
         </div>
       </div>
       
