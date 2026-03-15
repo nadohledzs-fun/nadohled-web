@@ -2339,6 +2339,39 @@ h4,h5,h6{font-family:var(--ff);font-weight:600}
 .tg-toast.show{opacity:1;visibility:visible}
 .tg-toast.success{background:#22c55e}
 .tg-toast.error{background:#ef4444}
+
+/* === ORDER TRACKING === */
+.order-tracking-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px}
+.order-tracking-panel{background:var(--card);border-radius:20px;width:100%;max-width:400px;overflow:hidden;box-shadow:0 25px 80px rgba(0,0,0,.4)}
+.tracking-header{background:linear-gradient(135deg,var(--pink),var(--accent));color:#fff;padding:20px;text-align:center;position:relative}
+.tracking-header h3{margin:0 0 5px;font-size:1.2rem}
+.tracking-order-number{font-family:monospace;font-size:.9rem;opacity:.9}
+.tracking-close{position:absolute;top:15px;right:15px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.2);border:none;color:#fff;font-size:18px;cursor:pointer}
+.tracking-progress{display:flex;justify-content:space-between;padding:30px 20px;position:relative}
+.tracking-progress::before{content:'';position:absolute;top:45px;left:40px;right:40px;height:3px;background:var(--border);z-index:0}
+.tracking-step{display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;z-index:1}
+.tracking-step .step-icon{width:40px;height:40px;border-radius:50%;background:var(--bg2);border:3px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .3s}
+.tracking-step .step-label{font-size:10px;color:var(--txt2);text-align:center}
+.tracking-step.completed .step-icon{background:#22c55e;border-color:#22c55e}
+.tracking-step.active .step-icon{background:var(--pink);border-color:var(--pink);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(236,72,153,.4)}50%{box-shadow:0 0 0 10px rgba(236,72,153,0)}}
+.tracking-status{padding:20px;text-align:center;border-top:1px solid var(--border)}
+.tracking-status-text{font-size:1.1rem;font-weight:600;margin-bottom:10px}
+.tracking-courier,.tracking-eta{font-size:.9rem;color:var(--txt2);margin-top:8px}
+
+/* === LOYALTY BADGE === */
+.loyalty-badge{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:20px;font-size:13px;font-weight:600}
+.loyalty-badge.free-delivery{background:linear-gradient(135deg,#22c55e,#4ade80);color:#fff;animation:glow 2s infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 10px rgba(34,197,94,.3)}50%{box-shadow:0 0 20px rgba(34,197,94,.5)}}
+.loyalty-badge.earning{background:var(--bg2);border:1px solid var(--border);color:var(--txt)}
+.loyalty-progress{display:flex;gap:4px;margin-top:6px}
+.loyalty-dot{width:20px;height:20px;border-radius:50%;background:var(--bg2);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px}
+.loyalty-dot.filled{background:var(--pink);border-color:var(--pink);color:#fff}
+.loyalty-dot.next{border-color:#22c55e;animation:pulse-green 1.5s infinite}
+@keyframes pulse-green{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{box-shadow:0 0 0 6px rgba(34,197,94,0)}}
+.checkout-loyalty{background:linear-gradient(135deg,rgba(34,197,94,.1),rgba(74,222,128,.05));border:1px solid rgba(34,197,94,.3);border-radius:12px;padding:16px;margin-bottom:16px}
+.checkout-loyalty-title{font-weight:700;color:#22c55e;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.checkout-loyalty-text{font-size:13px;color:var(--txt2)}
 </style>
 
 <!-- Firebase SDK -->
@@ -9901,6 +9934,201 @@ function initializeFirebase() {
   }
 }
 
+// ===== VĚRNOSTNÍ SYSTÉM - KAŽDÁ 5. OBJEDNÁVKA DOPRAVA ZDARMA =====
+
+// Získání zákaznického ID (email hash nebo phone)
+function getCustomerId(email, phone) {
+  // Použijeme email jako primární identifikátor
+  var id = (email || phone || '').toLowerCase().trim();
+  // Jednoduchý hash
+  var hash = 0;
+  for (var i = 0; i < id.length; i++) {
+    hash = ((hash << 5) - hash) + id.charCodeAt(i);
+    hash |= 0;
+  }
+  return 'CUST-' + Math.abs(hash).toString(36).toUpperCase();
+}
+
+// Načtení počtu objednávek zákazníka
+function getCustomerOrderCount(customerId) {
+  if (!firebaseDb) {
+    // Fallback na localStorage
+    var data = JSON.parse(localStorage.getItem('divine_loyalty_' + customerId) || '{"count":0}');
+    return Promise.resolve(data.count || 0);
+  }
+  
+  return firebaseDb.collection('customers').doc(customerId).get()
+    .then(function(doc) {
+      if (doc.exists) {
+        return doc.data().orderCount || 0;
+      }
+      return 0;
+    })
+    .catch(function() { return 0; });
+}
+
+// Aktualizace počtu objednávek zákazníka
+function updateCustomerOrderCount(customerId, email, phone) {
+  if (!firebaseDb) {
+    // Fallback na localStorage
+    var key = 'divine_loyalty_' + customerId;
+    var data = JSON.parse(localStorage.getItem(key) || '{"count":0}');
+    data.count = (data.count || 0) + 1;
+    data.lastOrder = new Date().toISOString();
+    data.email = email;
+    data.phone = phone;
+    localStorage.setItem(key, JSON.stringify(data));
+    return Promise.resolve(data.count);
+  }
+  
+  return firebaseDb.collection('customers').doc(customerId).set({
+    customerId: customerId,
+    email: email,
+    phone: phone,
+    orderCount: firebase.firestore.FieldValue.increment(1),
+    lastOrderAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  }, { merge: true })
+  .then(function() {
+    return getCustomerOrderCount(customerId);
+  });
+}
+
+// Kontrola zda má zákazník nárok na dopravu zdarma
+function checkFreeDelivery(email, phone) {
+  var customerId = getCustomerId(email, phone);
+  
+  return getCustomerOrderCount(customerId).then(function(count) {
+    // Každá 5. objednávka = doprava zdarma (5., 10., 15., ...)
+    var nextOrder = count + 1;
+    var hasFreeDelivery = (nextOrder % 5 === 0);
+    var ordersUntilFree = 5 - (nextOrder % 5);
+    if (ordersUntilFree === 5) ordersUntilFree = 0;
+    
+    return {
+      customerId: customerId,
+      orderCount: count,
+      nextOrderNumber: nextOrder,
+      hasFreeDelivery: hasFreeDelivery,
+      ordersUntilFree: ordersUntilFree
+    };
+  });
+}
+
+// ===== ORDER TRACKING =====
+
+// Načtení stavu objednávky v reálném čase
+function trackOrder(orderNumber) {
+  if (!firebaseDb) {
+    return null;
+  }
+  
+  return firebaseDb.collection('orders').doc(orderNumber)
+    .onSnapshot(function(doc) {
+      if (doc.exists) {
+        var order = doc.data();
+        updateTrackingUI(order);
+      }
+    });
+}
+
+// Aktualizace tracking UI
+function updateTrackingUI(order) {
+  var trackingPanel = document.getElementById('orderTrackingPanel');
+  if (!trackingPanel) return;
+  
+  var status = order.status || 'PENDING';
+  var statusInfo = {
+    'PENDING': { icon: '⏳', text: 'Čekáme na potvrzení', step: 1 },
+    'CONFIRMED': { icon: '✅', text: 'Restaurace přijala', step: 2 },
+    'PREPARING': { icon: '👨‍🍳', text: 'Připravuje se', step: 2 },
+    'ASSIGNED': { icon: '🚗', text: 'Kurýr na cestě k restauraci', step: 3 },
+    'PICKED': { icon: '📦', text: 'Kurýr vyzvedl objednávku', step: 4 },
+    'DELIVERING': { icon: '🛵', text: 'Na cestě k vám', step: 4 },
+    'DELIVERED': { icon: '🎉', text: 'Doručeno!', step: 5 }
+  };
+  
+  var info = statusInfo[status] || statusInfo['PENDING'];
+  
+  // Aktualizovat progress bar
+  var steps = trackingPanel.querySelectorAll('.tracking-step');
+  steps.forEach(function(step, idx) {
+    step.classList.remove('active', 'completed');
+    if (idx + 1 < info.step) {
+      step.classList.add('completed');
+    } else if (idx + 1 === info.step) {
+      step.classList.add('active');
+    }
+  });
+  
+  // Aktualizovat status text
+  var statusText = trackingPanel.querySelector('.tracking-status-text');
+  if (statusText) {
+    statusText.innerHTML = info.icon + ' ' + info.text;
+  }
+  
+  // Kurýr info
+  if (order.courier) {
+    var courierInfo = trackingPanel.querySelector('.tracking-courier');
+    if (courierInfo) {
+      courierInfo.innerHTML = '🚗 Kurýr: <strong>' + order.courier + '</strong>';
+      courierInfo.style.display = 'block';
+    }
+  }
+  
+  // Estimated time
+  if (order.estimatedDelivery) {
+    var eta = new Date(order.estimatedDelivery);
+    var etaText = trackingPanel.querySelector('.tracking-eta');
+    if (etaText) {
+      etaText.innerHTML = '⏱️ Předpokládané doručení: <strong>' + 
+        eta.toLocaleTimeString('cs-CZ', {hour: '2-digit', minute: '2-digit'}) + '</strong>';
+    }
+  }
+}
+
+// Zobrazení tracking panelu
+function showOrderTracking(orderNumber) {
+  var trackingHtml = '<div class="order-tracking-overlay" id="orderTrackingOverlay">' +
+    '<div class="order-tracking-panel" id="orderTrackingPanel">' +
+    '<div class="tracking-header">' +
+    '<h3>🚗 Sledování objednávky</h3>' +
+    '<div class="tracking-order-number">' + orderNumber + '</div>' +
+    '<button class="tracking-close" onclick="closeOrderTracking()">✕</button>' +
+    '</div>' +
+    '<div class="tracking-progress">' +
+    '<div class="tracking-step" data-step="1"><span class="step-icon">📝</span><span class="step-label">Objednáno</span></div>' +
+    '<div class="tracking-step" data-step="2"><span class="step-icon">👨‍🍳</span><span class="step-label">Příprava</span></div>' +
+    '<div class="tracking-step" data-step="3"><span class="step-icon">🚗</span><span class="step-label">Kurýr</span></div>' +
+    '<div class="tracking-step" data-step="4"><span class="step-icon">🛵</span><span class="step-label">Na cestě</span></div>' +
+    '<div class="tracking-step" data-step="5"><span class="step-icon">🎉</span><span class="step-label">Doručeno</span></div>' +
+    '</div>' +
+    '<div class="tracking-status">' +
+    '<div class="tracking-status-text">⏳ Načítám...</div>' +
+    '<div class="tracking-courier" style="display:none"></div>' +
+    '<div class="tracking-eta"></div>' +
+    '</div>' +
+    '</div>' +
+    '</div>';
+  
+  document.body.insertAdjacentHTML('beforeend', trackingHtml);
+  
+  // Start tracking
+  if (firebaseDb) {
+    window.currentTrackingUnsubscribe = trackOrder(orderNumber);
+  }
+}
+
+function closeOrderTracking() {
+  var overlay = document.getElementById('orderTrackingOverlay');
+  if (overlay) {
+    overlay.remove();
+  }
+  if (window.currentTrackingUnsubscribe) {
+    window.currentTrackingUnsubscribe();
+  }
+}
+
 // Uložení objednávky do Firestore
 function saveOrderToFirestore(order) {
   if (!firebaseDb) {
@@ -9965,6 +10193,728 @@ function updateOrderInFirestore(orderId, updates) {
 
 // Inicializace Firebase při načtení stránky
 loadFirebaseConfig();
+
+// ===== VĚRNOSTNÍ SYSTÉM (každá 5. objednávka bez poplatku za dopravu) =====
+
+var LOYALTY_THRESHOLD = 5; // Každá 5. objednávka
+
+// Načtení zákaznických dat z Firestore
+function getCustomerData(email) {
+  if (!firebaseDb || !email) {
+    return Promise.resolve(null);
+  }
+  
+  var customerId = email.toLowerCase().replace(/[^a-z0-9]/g, '_');
+  
+  return firebaseDb.collection('customers').doc(customerId).get()
+    .then(function(doc) {
+      if (doc.exists) {
+        return doc.data();
+      }
+      return { email: email, orderCount: 0, totalSpent: 0, freeDeliveries: 0 };
+    })
+    .catch(function(error) {
+      console.error('Error loading customer:', error);
+      return null;
+    });
+}
+
+// Aktualizace zákaznických dat
+function updateCustomerData(email, orderTotal) {
+  if (!firebaseDb || !email) {
+    return Promise.resolve(false);
+  }
+  
+  var customerId = email.toLowerCase().replace(/[^a-z0-9]/g, '_');
+  
+  return firebaseDb.collection('customers').doc(customerId).get()
+    .then(function(doc) {
+      var data;
+      if (doc.exists) {
+        data = doc.data();
+        data.orderCount = (data.orderCount || 0) + 1;
+        data.totalSpent = (data.totalSpent || 0) + orderTotal;
+        data.lastOrderAt = new Date().toISOString();
+      } else {
+        data = {
+          email: email,
+          orderCount: 1,
+          totalSpent: orderTotal,
+          freeDeliveries: 0,
+          createdAt: new Date().toISOString(),
+          lastOrderAt: new Date().toISOString()
+        };
+      }
+      
+      // Kontrola věrnostní slevy
+      if (data.orderCount % LOYALTY_THRESHOLD === 0) {
+        data.freeDeliveries = (data.freeDeliveries || 0) + 1;
+      }
+      
+      return firebaseDb.collection('customers').doc(customerId).set(data);
+    })
+    .then(function() {
+      console.log('✅ Customer data updated');
+      return true;
+    })
+    .catch(function(error) {
+      console.error('❌ Customer update error:', error);
+      return false;
+    });
+}
+
+// Kontrola nároku na bezplatné doručení
+function checkFreeDeliveryEligibility(email) {
+  return getCustomerData(email).then(function(data) {
+    if (!data) return { eligible: false, nextFreeIn: LOYALTY_THRESHOLD };
+    
+    var orderCount = data.orderCount || 0;
+    var remaining = LOYALTY_THRESHOLD - (orderCount % LOYALTY_THRESHOLD);
+    var isEligible = remaining === LOYALTY_THRESHOLD && orderCount > 0;
+    
+    return {
+      eligible: isEligible,
+      orderCount: orderCount,
+      nextFreeIn: isEligible ? 0 : remaining,
+      totalSpent: data.totalSpent || 0
+    };
+  });
+}
+
+// Zobrazení věrnostního statusu
+function showLoyaltyStatus(email) {
+  checkFreeDeliveryEligibility(email).then(function(status) {
+    var loyaltyEl = document.getElementById('loyaltyStatus');
+    if (!loyaltyEl) return;
+    
+    if (status.eligible) {
+      loyaltyEl.innerHTML = '<div style="background:linear-gradient(135deg,#22c55e,#4ade80);color:#fff;padding:12px;border-radius:10px;text-align:center;margin-bottom:12px">' +
+        '<strong>🎉 GRATULUJEME!</strong><br>' +
+        'Toto je vaše ' + (status.orderCount + 1) + '. objednávka - <strong>DOPRAVA ZDARMA!</strong>' +
+        '</div>';
+      // Automaticky aplikovat slevu
+      applyFreeDelivery();
+    } else if (status.orderCount > 0) {
+      loyaltyEl.innerHTML = '<div style="background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);color:#92400e;padding:10px;border-radius:10px;text-align:center;margin-bottom:12px;font-size:13px">' +
+        '⭐ Věrnostní program: Ještě <strong>' + status.nextFreeIn + '</strong> objednávk' + (status.nextFreeIn === 1 ? 'a' : (status.nextFreeIn < 5 ? 'y' : 'ek')) + ' do dopravy ZDARMA!' +
+        '</div>';
+    }
+  });
+}
+
+// Aplikace bezplatné dopravy
+var freeDeliveryApplied = false;
+
+function applyFreeDelivery() {
+  freeDeliveryApplied = true;
+  updateCartTotals();
+  
+  var deliveryEl = document.getElementById('cartDelivery');
+  if (deliveryEl) {
+    deliveryEl.innerHTML = '<span style="text-decoration:line-through;color:#888">49 Kč</span> <span style="color:#22c55e;font-weight:700">ZDARMA</span>';
+  }
+}
+
+// ===== TRACKOVÁNÍ OBJEDNÁVKY =====
+
+var currentTrackingOrderId = null;
+var trackingUnsubscribe = null;
+
+// Sledování objednávky v reálném čase
+function trackOrder(orderId) {
+  if (!firebaseDb || !orderId) {
+    return;
+  }
+  
+  // Zrušit předchozí listener
+  if (trackingUnsubscribe) {
+    trackingUnsubscribe();
+  }
+  
+  currentTrackingOrderId = orderId;
+  
+  // Real-time listener na změny objednávky
+  trackingUnsubscribe = firebaseDb.collection('orders').doc(orderId)
+    .onSnapshot(function(doc) {
+      if (doc.exists) {
+        var order = doc.data();
+        updateTrackingUI(order);
+      }
+    }, function(error) {
+      console.error('Tracking error:', error);
+    });
+}
+
+// Aktualizace UI pro trackování
+function updateTrackingUI(order) {
+  var trackingEl = document.getElementById('orderTrackingStatus');
+  if (!trackingEl) return;
+  
+  var statusMap = {
+    'PENDING': { icon: '⏳', text: 'Čeká na potvrzení', progress: 10, color: '#fbbf24' },
+    'CONFIRMED': { icon: '✅', text: 'Potvrzeno', progress: 25, color: '#22c55e' },
+    'PREPARING': { icon: '👨‍🍳', text: 'Připravuje se', progress: 40, color: '#f97316' },
+    'READY': { icon: '📦', text: 'Připraveno k vyzvednutí', progress: 55, color: '#3b82f6' },
+    'ASSIGNED': { icon: '🚗', text: 'Kurýr přiřazen: ' + (order.courier || ''), progress: 65, color: '#8b5cf6' },
+    'PICKED': { icon: '🏃', text: 'Kurýr vyzvedl objednávku', progress: 80, color: '#ec4899' },
+    'DELIVERING': { icon: '🚀', text: 'Na cestě k vám!', progress: 90, color: '#ef4444' },
+    'DELIVERED': { icon: '🎉', text: 'Doručeno!', progress: 100, color: '#22c55e' }
+  };
+  
+  var status = statusMap[order.status] || statusMap['PENDING'];
+  
+  trackingEl.innerHTML = 
+    '<div style="background:var(--bg2);border-radius:12px;padding:16px;margin-top:16px">' +
+    '  <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">' +
+    '    <span style="font-size:32px">' + status.icon + '</span>' +
+    '    <div>' +
+    '      <div style="font-weight:700;font-size:16px">' + status.text + '</div>' +
+    '      <div style="font-size:12px;color:var(--txt2)">Objednávka ' + order._id + '</div>' +
+    '    </div>' +
+    '  </div>' +
+    '  <div style="background:var(--bg);border-radius:20px;height:8px;overflow:hidden">' +
+    '    <div style="width:' + status.progress + '%;height:100%;background:' + status.color + ';border-radius:20px;transition:width .5s ease"></div>' +
+    '  </div>' +
+    '  <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--txt2)">' +
+    '    <span>Přijato</span>' +
+    '    <span>Připravuje se</span>' +
+    '    <span>Na cestě</span>' +
+    '    <span>Doručeno</span>' +
+    '  </div>' +
+    '</div>';
+  
+  // Vibrace při změně statusu
+  if ('vibrate' in navigator && order.status === 'PICKED') {
+    navigator.vibrate([200, 100, 200]);
+  }
+}
+
+// Načtení objednávky pro trackování podle ID
+function loadOrderForTracking(orderId) {
+  if (!firebaseDb) {
+    return Promise.resolve(null);
+  }
+  
+  return firebaseDb.collection('orders').doc(orderId).get()
+    .then(function(doc) {
+      if (doc.exists) {
+        return doc.data();
+      }
+      return null;
+    })
+    .catch(function(error) {
+      console.error('Error loading order:', error);
+      return null;
+    });
+}
+
+// ===== ADDRESS AUTOCOMPLETE (Nominatim + Mapy.cz fallback) =====
+
+var addressDebounceTimer = null;
+var selectedAddressValid = false;
+var selectedAddressData = null;
+
+function initAddressAutocomplete() {
+  var input = document.getElementById('checkoutAddress');
+  var suggestions = document.getElementById('addressSuggestions');
+  
+  if (!input || !suggestions) return;
+  
+  input.addEventListener('input', function() {
+    selectedAddressValid = false;
+    selectedAddressData = null;
+    input.style.borderColor = '';
+    var query = this.value.trim();
+    
+    clearTimeout(addressDebounceTimer);
+    
+    if (query.length < 3) {
+      suggestions.classList.remove('show');
+      return;
+    }
+    
+    addressDebounceTimer = setTimeout(function() {
+      searchAddress(query);
+    }, 350);
+  });
+  
+  input.addEventListener('blur', function() {
+    setTimeout(function() {
+      suggestions.classList.remove('show');
+      // Validovat při opuštění pole
+      if (!selectedAddressValid && input.value.length > 5) {
+        validateManualAddress(input.value);
+      }
+    }, 250);
+  });
+  
+  // Prevent form submission with invalid address
+  input.form && input.form.addEventListener('submit', function(e) {
+    if (!selectedAddressValid) {
+      e.preventDefault();
+      input.style.borderColor = '#ef4444';
+      showAddressError('Prosím vyberte adresu ze seznamu návrhů');
+    }
+  });
+}
+
+function searchAddress(query) {
+  var suggestions = document.getElementById('addressSuggestions');
+  
+  // Přidat region pro lepší výsledky v ČR
+  var searchQuery = query;
+  if (!query.toLowerCase().includes('česk') && !query.toLowerCase().includes('czech')) {
+    searchQuery += ', Česká republika';
+  }
+  
+  // Nominatim API (OpenStreetMap - zdarma, bez API klíče)
+  var url = 'https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&countrycodes=cz&q=' + encodeURIComponent(searchQuery);
+  
+  fetch(url, {
+    headers: {
+      'Accept-Language': 'cs'
+    }
+  })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data && data.length > 0) {
+        renderAddressSuggestions(data);
+      } else {
+        // Fallback na lokální města
+        renderFallbackSuggestions(query);
+      }
+    })
+    .catch(function() {
+      renderFallbackSuggestions(query);
+    });
+}
+
+function renderAddressSuggestions(items) {
+  var suggestions = document.getElementById('addressSuggestions');
+  var html = '';
+  
+  items.forEach(function(item) {
+    var addr = item.address || {};
+    var displayName = '';
+    
+    // Sestavit čitelnou adresu
+    if (addr.house_number && addr.road) {
+      displayName = addr.road + ' ' + addr.house_number;
+    } else if (addr.road) {
+      displayName = addr.road;
+    } else {
+      displayName = item.display_name.split(',')[0];
+    }
+    
+    var city = addr.city || addr.town || addr.village || addr.municipality || '';
+    var postcode = addr.postcode || '';
+    
+    var fullAddress = displayName + (city ? ', ' + city : '') + (postcode ? ' ' + postcode : '');
+    
+    html += '<div class="address-suggestion" data-address="' + escapeAttr(fullAddress) + '" ' +
+            'data-lat="' + item.lat + '" data-lon="' + item.lon + '" ' +
+            'data-city="' + escapeAttr(city) + '" data-postcode="' + escapeAttr(postcode) + '">';
+    html += '<div style="font-weight:600">' + escapeHtml(displayName) + '</div>';
+    if (city) {
+      html += '<div style="font-size:12px;color:#888">' + escapeHtml(city) + (postcode ? ', ' + postcode : '') + '</div>';
+    }
+    html += '</div>';
+  });
+  
+  suggestions.innerHTML = html;
+  suggestions.classList.add('show');
+  
+  suggestions.querySelectorAll('.address-suggestion').forEach(function(el) {
+    el.addEventListener('mousedown', function(e) {
+      e.preventDefault(); // Prevent blur
+      var input = document.getElementById('checkoutAddress');
+      input.value = this.dataset.address;
+      selectedAddressValid = true;
+      selectedAddressData = {
+        address: this.dataset.address,
+        lat: parseFloat(this.dataset.lat),
+        lon: parseFloat(this.dataset.lon),
+        city: this.dataset.city,
+        postcode: this.dataset.postcode
+      };
+      input.style.borderColor = '#22c55e';
+      suggestions.classList.remove('show');
+      
+      // Uložit GPS a validovat zónu
+      sessionStorage.setItem('delivery_lat', this.dataset.lat);
+      sessionStorage.setItem('delivery_lon', this.dataset.lon);
+      sessionStorage.setItem('delivery_city', this.dataset.city);
+      
+      validateDeliveryZone(this.dataset.city);
+    });
+  });
+}
+
+function renderFallbackSuggestions(query) {
+  var suggestions = document.getElementById('addressSuggestions');
+  
+  // Základní validace pro česká města v oblasti rozvozu
+  var zones = [
+    { name: 'Milovice', variants: ['milovice', 'milovicích'] },
+    { name: 'Lysá nad Labem', variants: ['lysá', 'lysa', 'lysé', 'lyse'] },
+    { name: 'Benátky nad Jizerou', variants: ['benátky', 'benatky'] },
+    { name: 'Stará Lysá', variants: ['stará lysá', 'stara lysa'] },
+    { name: 'Stratov', variants: ['stratov'] },
+    { name: 'Čelákovice', variants: ['čelákovice', 'celakovice'] }
+  ];
+  
+  var queryLower = query.toLowerCase();
+  var matches = zones.filter(function(zone) {
+    return zone.variants.some(function(v) { return queryLower.includes(v); });
+  });
+  
+  if (matches.length > 0 && /\d+/.test(query)) {
+    // Má číslo a město - pravděpodobně platná adresa
+    var html = '';
+    matches.forEach(function(zone) {
+      var addr = query.replace(/,?\s*(česk[áa])?.*$/i, '') + ', ' + zone.name;
+      html += '<div class="address-suggestion" data-address="' + escapeAttr(addr) + '" data-city="' + zone.name + '">';
+      html += '<div style="font-weight:600">' + escapeHtml(query) + '</div>';
+      html += '<div style="font-size:12px;color:#888">' + zone.name + '</div>';
+      html += '</div>';
+    });
+    suggestions.innerHTML = html;
+    suggestions.classList.add('show');
+    
+    suggestions.querySelectorAll('.address-suggestion').forEach(function(el) {
+      el.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        document.getElementById('checkoutAddress').value = this.dataset.address;
+        selectedAddressValid = true;
+        selectedAddressData = { address: this.dataset.address, city: this.dataset.city };
+        document.getElementById('checkoutAddress').style.borderColor = '#22c55e';
+        suggestions.classList.remove('show');
+        validateDeliveryZone(this.dataset.city);
+      });
+    });
+  } else {
+    suggestions.innerHTML = '<div style="padding:12px;color:#888;text-align:center;font-size:13px">' +
+      '📍 Zadejte adresu včetně čísla popisného<br>' +
+      '<small>Oblast rozvozu: Milovice, Lysá n.L., Benátky, Stratov</small>' +
+      '</div>';
+    suggestions.classList.add('show');
+  }
+}
+
+function validateManualAddress(address) {
+  // Základní validace ručně zadané adresy
+  var hasNumber = /\d+/.test(address);
+  var hasCity = /(milovice|lysá|lysa|benátky|benatky|stratov|čelákovice|celakovice|stará lysá)/i.test(address);
+  
+  if (hasNumber && hasCity) {
+    selectedAddressValid = true;
+    document.getElementById('checkoutAddress').style.borderColor = '#22c55e';
+  } else {
+    selectedAddressValid = false;
+    document.getElementById('checkoutAddress').style.borderColor = '#f97316';
+  }
+}
+
+function validateDeliveryZone(city) {
+  var zones = {
+    'Milovice': { fee: 49, time: 25 },
+    'Lysá nad Labem': { fee: 49, time: 30 },
+    'Benátky nad Jizerou': { fee: 59, time: 35 },
+    'Stará Lysá': { fee: 59, time: 35 },
+    'Stratov': { fee: 69, time: 40 },
+    'Čelákovice': { fee: 69, time: 45 }
+  };
+  
+  // Najít odpovídající zónu
+  var cityLower = (city || '').toLowerCase();
+  var matchedZone = null;
+  
+  for (var zoneName in zones) {
+    if (cityLower.includes(zoneName.toLowerCase()) || zoneName.toLowerCase().includes(cityLower)) {
+      matchedZone = { name: zoneName, ...zones[zoneName] };
+      break;
+    }
+  }
+  
+  if (matchedZone) {
+    console.log('✅ Zóna:', matchedZone.name, '- Doprava:', matchedZone.fee, 'Kč');
+    sessionStorage.setItem('delivery_zone', matchedZone.name);
+    sessionStorage.setItem('delivery_fee', matchedZone.fee);
+    sessionStorage.setItem('delivery_time', matchedZone.time);
+    
+    // Aktualizovat poplatek za dopravu
+    var deliveryEl = document.getElementById('cartDelivery');
+    if (deliveryEl && !freeDeliveryApplied) {
+      deliveryEl.textContent = matchedZone.fee + ' Kč';
+    }
+  } else {
+    console.log('⚠️ Město mimo zónu rozvozu:', city);
+  }
+}
+
+function showAddressError(message) {
+  var input = document.getElementById('checkoutAddress');
+  var errorEl = document.getElementById('addressError');
+  
+  if (!errorEl) {
+    errorEl = document.createElement('div');
+    errorEl.id = 'addressError';
+    errorEl.style.cssText = 'color:#ef4444;font-size:12px;margin-top:4px';
+    input.parentNode.appendChild(errorEl);
+  }
+  
+  errorEl.textContent = message;
+  setTimeout(function() {
+    if (errorEl) errorEl.textContent = '';
+  }, 5000);
+}
+
+function validateAddress(address) {
+  // Kontrola zda adresa obsahuje číslo popisné a město
+  var hasNumber = /\d+/.test(address);
+  var hasCityMatch = /(milovice|lysá|benátky|stará lysá|stratov|čelákovice)/i.test(address);
+  
+  if (!hasNumber || !hasCityMatch) {
+    selectedAddressValid = false;
+    return false;
+  }
+  
+  selectedAddressValid = true;
+  return true;
+}
+
+function escapeHtml(text) {
+  var div = document.createElement('div');
+  div.textContent = text || '';
+  return div.innerHTML;
+}
+
+function escapeAttr(text) {
+  return (text || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+// ===== VĚRNOSTNÍ SYSTÉM =====
+// Každá 5. objednávka = doprava zdarma
+
+var LOYALTY_THRESHOLD = 5; // Každá 5. objednávka
+
+function getCustomerId(email, phone) {
+  // Vytvořit jedinečné ID zákazníka z emailu nebo telefonu
+  return (email || phone || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function loadCustomerLoyalty(customerId) {
+  if (!firebaseDb || !customerId) {
+    return Promise.resolve({ orderCount: 0, freeDelivery: false });
+  }
+  
+  return firebaseDb.collection('customers').doc(customerId).get()
+    .then(function(doc) {
+      if (doc.exists) {
+        var data = doc.data();
+        var orderCount = data.orderCount || 0;
+        var freeDelivery = ((orderCount + 1) % LOYALTY_THRESHOLD === 0);
+        return {
+          orderCount: orderCount,
+          freeDelivery: freeDelivery,
+          nextFreeIn: LOYALTY_THRESHOLD - ((orderCount + 1) % LOYALTY_THRESHOLD)
+        };
+      }
+      return { orderCount: 0, freeDelivery: false, nextFreeIn: LOYALTY_THRESHOLD - 1 };
+    })
+    .catch(function(error) {
+      console.error('Loyalty load error:', error);
+      return { orderCount: 0, freeDelivery: false };
+    });
+}
+
+function updateCustomerLoyalty(customerId, email, phone) {
+  if (!firebaseDb || !customerId) return Promise.resolve();
+  
+  return firebaseDb.collection('customers').doc(customerId).set({
+    email: email || '',
+    phone: phone || '',
+    orderCount: firebase.firestore.FieldValue.increment(1),
+    lastOrderAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  }, { merge: true })
+    .then(function() {
+      console.log('✅ Customer loyalty updated:', customerId);
+    })
+    .catch(function(error) {
+      console.error('❌ Loyalty update error:', error);
+    });
+}
+
+function checkLoyaltyOnCheckout() {
+  var email = document.getElementById('checkoutEmail').value.trim();
+  var phone = document.getElementById('checkoutPhone').value.trim();
+  var customerId = getCustomerId(email, phone);
+  
+  if (!customerId) return;
+  
+  loadCustomerLoyalty(customerId).then(function(loyalty) {
+    var loyaltyBanner = document.getElementById('loyaltyBanner');
+    if (!loyaltyBanner) {
+      // Vytvořit banner
+      var banner = document.createElement('div');
+      banner.id = 'loyaltyBanner';
+      banner.style.cssText = 'background:linear-gradient(135deg,#fef3c7,#fde68a);border:1px solid #f59e0b;border-radius:12px;padding:14px;margin-bottom:16px;text-align:center;';
+      
+      var step1 = document.getElementById('checkoutStep1');
+      if (step1) {
+        step1.insertBefore(banner, step1.firstChild);
+      }
+      loyaltyBanner = banner;
+    }
+    
+    if (loyalty.freeDelivery) {
+      loyaltyBanner.innerHTML = '🎉 <strong>DOPRAVA ZDARMA!</strong><br><small>Toto je vaše ' + (loyalty.orderCount + 1) + '. objednávka - máte dopravu zdarma!</small>';
+      loyaltyBanner.style.background = 'linear-gradient(135deg,#d1fae5,#a7f3d0)';
+      loyaltyBanner.style.borderColor = '#10b981';
+      
+      // Aplikovat slevu
+      window.loyaltyFreeDelivery = true;
+      updateCartTotals();
+    } else {
+      var nextFree = LOYALTY_THRESHOLD - ((loyalty.orderCount + 1) % LOYALTY_THRESHOLD);
+      if (nextFree === LOYALTY_THRESHOLD) nextFree = 0;
+      
+      loyaltyBanner.innerHTML = '⭐ Věrnostní program: <strong>' + (loyalty.orderCount + 1) + '/' + LOYALTY_THRESHOLD + '</strong> objednávek<br><small>Ještě ' + nextFree + ' objednávky do dopravy zdarma!</small>';
+      window.loyaltyFreeDelivery = false;
+    }
+  });
+}
+
+// ===== ORDER TRACKING =====
+
+function generateTrackingCode(orderId) {
+  // Krátký kód pro sledování
+  return orderId.replace('DD-', '').substring(0, 8).toUpperCase();
+}
+
+function getOrderTrackingUrl(orderId) {
+  var trackingCode = generateTrackingCode(orderId);
+  return window.location.origin + '/divinedelivery/?track=' + trackingCode;
+}
+
+function initOrderTracking() {
+  // Kontrola URL parametru pro tracking
+  var params = new URLSearchParams(window.location.search);
+  var trackCode = params.get('track');
+  
+  if (trackCode) {
+    showOrderTracking(trackCode);
+  }
+}
+
+function showOrderTracking(trackCode) {
+  // Najít objednávku podle tracking kódu
+  if (!firebaseDb) {
+    alert('Sledování není dostupné. Zkuste to později.');
+    return;
+  }
+  
+  // Hledat objednávku
+  firebaseDb.collection('orders')
+    .where('_id', '>=', 'DD-' + trackCode)
+    .where('_id', '<=', 'DD-' + trackCode + '\uf8ff')
+    .limit(1)
+    .get()
+    .then(function(snapshot) {
+      if (snapshot.empty) {
+        showTrackingModal(null);
+        return;
+      }
+      
+      var order = snapshot.docs[0].data();
+      showTrackingModal(order);
+      
+      // Real-time updates
+      firebaseDb.collection('orders').doc(order._id)
+        .onSnapshot(function(doc) {
+          if (doc.exists) {
+            showTrackingModal(doc.data());
+          }
+        });
+    })
+    .catch(function(error) {
+      console.error('Tracking error:', error);
+      showTrackingModal(null);
+    });
+}
+
+function showTrackingModal(order) {
+  var existingModal = document.getElementById('trackingModal');
+  if (existingModal) existingModal.remove();
+  
+  var modal = document.createElement('div');
+  modal.id = 'trackingModal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px;';
+  
+  if (!order) {
+    modal.innerHTML = '<div style="background:#fff;border-radius:20px;padding:30px;text-align:center;max-width:400px;"><h2>😕 Objednávka nenalezena</h2><p>Zkontrolujte sledovací kód.</p><button onclick="this.closest(\'#trackingModal\').remove()" style="margin-top:20px;padding:12px 30px;background:var(--pink);color:#fff;border:none;border-radius:10px;font-weight:600;cursor:pointer;">Zavřít</button></div>';
+    document.body.appendChild(modal);
+    return;
+  }
+  
+  var statusSteps = [
+    { key: 'PENDING', label: 'Přijato', icon: '📋' },
+    { key: 'CONFIRMED', label: 'Potvrzeno', icon: '✅' },
+    { key: 'ASSIGNED', label: 'Kurýr přiřazen', icon: '🚗' },
+    { key: 'PICKED', label: 'Vyzvednuto', icon: '📦' },
+    { key: 'DELIVERED', label: 'Doručeno', icon: '🎉' }
+  ];
+  
+  var currentStatus = (order.status || 'PENDING').toUpperCase();
+  var currentIdx = statusSteps.findIndex(function(s) { return s.key === currentStatus; });
+  if (currentIdx < 0) currentIdx = 0;
+  
+  var stepsHtml = statusSteps.map(function(step, idx) {
+    var done = idx <= currentIdx;
+    var active = idx === currentIdx;
+    return '<div style="display:flex;align-items:center;gap:12px;padding:12px 0;' + (done ? 'opacity:1' : 'opacity:.4') + '">' +
+      '<div style="width:40px;height:40px;border-radius:50%;background:' + (active ? 'var(--pink)' : (done ? '#10b981' : '#e5e5e5')) + ';display:grid;place-items:center;font-size:18px;' + (active ? 'animation:pulse 1.5s infinite' : '') + '">' + step.icon + '</div>' +
+      '<div><div style="font-weight:600;' + (active ? 'color:var(--pink)' : '') + '">' + step.label + '</div></div>' +
+      '</div>';
+  }).join('');
+  
+  var courierInfo = order.courier ? '<div style="background:#f0fdf4;border:1px solid #10b981;border-radius:12px;padding:14px;margin-top:16px;"><strong>🚗 Kurýr:</strong> ' + order.courier + '</div>' : '';
+  
+  modal.innerHTML = '<div style="background:#fff;border-radius:20px;padding:30px;max-width:450px;width:100%;">' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">' +
+    '<h2 style="margin:0;">📍 Sledování objednávky</h2>' +
+    '<button onclick="this.closest(\'#trackingModal\').remove();history.replaceState(null,\'\',location.pathname)" style="width:36px;height:36px;border-radius:50%;border:none;background:#f5f5f5;cursor:pointer;font-size:18px;">×</button>' +
+    '</div>' +
+    '<div style="background:#f8f8f8;border-radius:12px;padding:14px;margin-bottom:20px;">' +
+    '<div style="font-size:12px;color:#888;">Objednávka</div>' +
+    '<div style="font-weight:700;font-size:18px;">' + order.orderNumber + '</div>' +
+    '<div style="font-size:14px;color:#666;">' + order.restaurantName + '</div>' +
+    '</div>' +
+    '<div style="border-left:2px solid #e5e5e5;margin-left:20px;padding-left:20px;">' + stepsHtml + '</div>' +
+    courierInfo +
+    '<div style="text-align:center;margin-top:20px;font-size:13px;color:#888;">Stránka se automaticky aktualizuje</div>' +
+    '</div>';
+  
+  document.body.appendChild(modal);
+}
+
+// Inicializace address autocomplete a tracking při načtení
+document.addEventListener('DOMContentLoaded', function() {
+  initAddressAutocomplete();
+  initOrderTracking();
+  
+  // Kontrola věrnosti při změně emailu/telefonu
+  var emailInput = document.getElementById('checkoutEmail');
+  var phoneInput = document.getElementById('checkoutPhone');
+  
+  if (emailInput) {
+    emailInput.addEventListener('blur', checkLoyaltyOnCheckout);
+  }
+  if (phoneInput) {
+    phoneInput.addEventListener('blur', checkLoyaltyOnCheckout);
+  }
+});
 
 // ===== TELEGRAM ADMIN PANEL - FRONTEND ONLY =====
 // Funguje na GitHub Pages bez Node.js serveru
@@ -11505,6 +12455,21 @@ function submitOrder() {
   var note = document.getElementById('checkoutNote').value;
   var payment = document.querySelector('input[name="payment"]:checked').value;
   
+  // Validate address - must be selected from suggestions
+  if (!selectedAddressValid && address.length > 5) {
+    var hasNumber = /\d+/.test(address);
+    var hasCity = /(milovice|lysá|lysa|benátky|benatky|stratov|čelákovice|celakovice|stará lysá)/i.test(address);
+    if (!hasNumber || !hasCity) {
+      alert('Prosím vyberte adresu ze seznamu návrhů nebo zadejte kompletní adresu včetně čísla popisného a města.');
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg> Odeslat objednávku';
+      goToCheckoutStep(1);
+      document.getElementById('checkoutAddress').style.borderColor = '#ef4444';
+      document.getElementById('checkoutAddress').focus();
+      return;
+    }
+  }
+  
   // Validate
   if (!email || !phone || !address) {
     alert('Prosím vyplňte všechna povinná pole.');
@@ -11523,103 +12488,164 @@ function submitOrder() {
     return;
   }
   
-  submitBtn.innerHTML = '<svg class="animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/></svg> Odesílám...';
+  submitBtn.innerHTML = '<svg class="animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/></svg> Kontroluji věrnostní program...';
   
-  // Generate order number
-  var orderNumber = 'DD-' + Date.now().toString(36).toUpperCase();
+  // Check loyalty status
+  var customerId = getCustomerId(email, phone);
   
-  // Build order object
-  var menu = DIVINE_MENUS[divineCart.restaurantId];
-  
-  // Calculate delivery info
-  var deliveryInfo = calculateDeliveryTime(divineCart.restaurantId, address);
-  var deliveryFee = deliveryInfo.fee;
-  
-  var subtotal = 0;
-  divineCart.items.forEach(function(item) {
-    subtotal += item.price * item.quantity;
-  });
-  
-  var order = {
-    orderNumber: orderNumber,
-    restaurantId: divineCart.restaurantId,
-    restaurantName: menu ? menu.name : 'Restaurant',
-    items: divineCart.items,
-    subtotal: subtotal,
-    deliveryFee: deliveryFee,
-    total: subtotal + deliveryFee,
-    customer: {
-      email: email,
-      phone: phone,
-      address: address,
-      note: note
-    },
-    payment: payment,
-    status: 'confirmed',
-    createdAt: new Date().toISOString(),
-    deliveryInfo: deliveryInfo
-  };
-  
-  // Calculate estimated delivery time
-  var now = new Date();
-  var estimatedDelivery = new Date(now.getTime() + deliveryInfo.totalTime * 60000);
-  var estimatedTimeStr = estimatedDelivery.toLocaleTimeString('cs-CZ', {hour: '2-digit', minute: '2-digit'});
-  
-  // Process order - all in parallel
-  Promise.all([
-    // 1. Save to Firebase (for dashboard)
-    sendOrderToDashboard(order, deliveryInfo),
+  checkFreeDelivery(email, phone).then(function(loyaltyInfo) {
     
-    // 2. Send email notification
-    sendOrderEmailAsync(order),
+    submitBtn.innerHTML = '<svg class="animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/></svg> Odesílám...';
     
-    // 3. Notify restaurant via Telegram
-    notifyRestaurantTelegram(order, deliveryInfo),
+    // Generate order number
+    var orderNumber = 'DD-' + Date.now().toString(36).toUpperCase();
     
-    // 4. Notify dispatch/couriers via Telegram
-    notifyDispatchTelegram(order, deliveryInfo)
+    // Build order object
+    var menu = DIVINE_MENUS[divineCart.restaurantId];
     
-  ]).then(function() {
-    // Update success screen with delivery time
-    document.getElementById('orderNumber').textContent = orderNumber;
+    // Calculate delivery info
+    var deliveryInfo = calculateDeliveryTime(divineCart.restaurantId, address);
+    var deliveryFee = deliveryInfo.fee;
     
-    // Add delivery time info to success screen
-    var successInfo = document.getElementById('orderSuccessInfo');
-    if (successInfo) {
-      successInfo.innerHTML = '<div class="delivery-estimate">' +
-        '<div class="delivery-estimate-icon">🚗</div>' +
-        '<div class="delivery-estimate-text">' +
+    // Apply free delivery if eligible
+    var freeDeliveryApplied = false;
+    if (loyaltyInfo.hasFreeDelivery) {
+      freeDeliveryApplied = true;
+      deliveryFee = 0;
+    }
+    
+    var subtotal = 0;
+    divineCart.items.forEach(function(item) {
+      subtotal += item.price * item.quantity;
+    });
+    
+    var order = {
+      orderNumber: orderNumber,
+      restaurantId: divineCart.restaurantId,
+      restaurantName: menu ? menu.name : 'Restaurant',
+      items: divineCart.items,
+      subtotal: subtotal,
+      deliveryFee: deliveryFee,
+      originalDeliveryFee: deliveryInfo.fee,
+      freeDeliveryApplied: freeDeliveryApplied,
+      total: subtotal + deliveryFee,
+      customer: {
+        email: email,
+        phone: phone,
+        address: address,
+        note: note
+      },
+      customerId: customerId,
+      loyaltyOrderNumber: loyaltyInfo.nextOrderNumber,
+      payment: payment,
+      status: 'confirmed',
+      createdAt: new Date().toISOString(),
+      deliveryInfo: deliveryInfo
+    };
+    
+    // Calculate estimated delivery time
+    var now = new Date();
+    var estimatedDelivery = new Date(now.getTime() + deliveryInfo.totalTime * 60000);
+    var estimatedTimeStr = estimatedDelivery.toLocaleTimeString('cs-CZ', {hour: '2-digit', minute: '2-digit'});
+    
+    // Process order - all in parallel
+    Promise.all([
+      // 1. Save to Firebase (for dashboard)
+      sendOrderToDashboard(order, deliveryInfo),
+      
+      // 2. Send email notification
+      sendOrderEmailAsync(order),
+      
+      // 3. Notify restaurant via Telegram
+      notifyRestaurantTelegram(order, deliveryInfo),
+      
+      // 4. Notify dispatch/couriers via Telegram
+      notifyDispatchTelegram(order, deliveryInfo),
+      
+      // 5. Update customer loyalty count
+      updateCustomerOrderCount(customerId, email, phone)
+      
+    ]).then(function() {
+      // Update success screen with delivery time
+      document.getElementById('orderNumber').textContent = orderNumber;
+      
+      // Add delivery time info to success screen
+      var successInfo = document.getElementById('orderSuccessInfo');
+      if (successInfo) {
+        var loyaltyHtml = '';
+        
+        if (freeDeliveryApplied) {
+          loyaltyHtml = '<div class="loyalty-badge free-delivery" style="margin-bottom:15px">' +
+            '🎉 Doprava ZDARMA! (ušetřeno ' + order.originalDeliveryFee + ' Kč)' +
+            '</div>';
+        } else {
+          var nextFreeIn = 5 - (loyaltyInfo.nextOrderNumber % 5);
+          if (nextFreeIn === 5) nextFreeIn = 0;
+          if (nextFreeIn > 0) {
+            loyaltyHtml = '<div class="checkout-loyalty" style="margin-bottom:15px">' +
+              '<div class="checkout-loyalty-title">🎁 Věrnostní program</div>' +
+              '<div class="checkout-loyalty-text">Ještě ' + nextFreeIn + ' ' + 
+              (nextFreeIn === 1 ? 'objednávka' : (nextFreeIn < 5 ? 'objednávky' : 'objednávek')) + 
+              ' do dopravy ZDARMA!</div>' +
+              '<div class="loyalty-progress">';
+            for (var i = 1; i <= 5; i++) {
+              var orderInCycle = loyaltyInfo.nextOrderNumber % 5 || 5;
+              if (i < orderInCycle) {
+                loyaltyHtml += '<div class="loyalty-dot filled">✓</div>';
+              } else if (i === orderInCycle) {
+                loyaltyHtml += '<div class="loyalty-dot filled">✓</div>';
+              } else {
+                loyaltyHtml += '<div class="loyalty-dot">' + i + '</div>';
+              }
+            }
+            loyaltyHtml += '</div></div>';
+          }
+        }
+        
+        successInfo.innerHTML = loyaltyHtml +
+          '<div class="delivery-estimate">' +
+          '<div class="delivery-estimate-icon">🚗</div>' +
+          '<div class="delivery-estimate-text">' +
           '<div class="delivery-estimate-label">Předpokládaný čas doručení</div>' +
           '<div class="delivery-estimate-time">' + estimatedTimeStr + '</div>' +
           '<div class="delivery-estimate-note">cca ' + deliveryInfo.totalTime + ' minut</div>' +
-        '</div>' +
-      '</div>';
-    }
-    
-    // Show success
-    goToCheckoutStep(3);
-    
-    // Increment active orders
-    DELIVERY_SYSTEM.currentActiveOrders++;
-    
-    // Clear cart
-    divineCart = { items: [], restaurantId: null };
-    updateCartDisplay();
-    
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg> Odeslat objednávku';
+          '</div>' +
+          '</div>' +
+          '<button class="checkout-next" onclick="showOrderTracking(\'' + orderNumber + '\')" style="margin-top:15px;background:linear-gradient(135deg,#3b82f6,#60a5fa)">' +
+          '📍 Sledovat objednávku' +
+          '</button>';
+      }
+      
+      // Show success
+      goToCheckoutStep(3);
+      
+      // Increment active orders
+      DELIVERY_SYSTEM.currentActiveOrders++;
+      
+      // Clear cart
+      divineCart = { items: [], restaurantId: null };
+      updateCartDisplay();
+      
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg> Odeslat objednávku';
+      
+    }).catch(function(err) {
+      console.error('Order error:', err);
+      // Still show success to customer (order was likely placed)
+      document.getElementById('orderNumber').textContent = orderNumber;
+      goToCheckoutStep(3);
+      
+      divineCart = { items: [], restaurantId: null };
+      updateCartDisplay();
+      
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg> Odeslat objednávku';
+    });
     
   }).catch(function(err) {
-    console.error('Order error:', err);
-    // Still show success to customer (order was likely placed)
-    document.getElementById('orderNumber').textContent = orderNumber;
-    goToCheckoutStep(3);
-    
-    divineCart = { items: [], restaurantId: null };
-    updateCartDisplay();
-    
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg> Odeslat objednávku';
+    console.error('Loyalty check error:', err);
+    // Pokračovat bez loyalty
+    submitBtn.click();
   });
 }
 
@@ -11975,9 +13001,12 @@ if (window.firebaseDb) {
           </div>
         </div>
         
+        <!-- Věrnostní systém status -->
+        <div id="loyaltyStatus"></div>
+        
         <div class="form-group" id="guestEmailGroup">
           <label class="form-label">E-mail pro potvrzení *</label>
-          <input type="email" class="form-input" id="checkoutEmail" placeholder="vas@email.cz" required>
+          <input type="email" class="form-input" id="checkoutEmail" placeholder="vas@email.cz" required oninput="checkLoyaltyOnEmailChange(this.value)">
         </div>
         
         <div class="form-group">
