@@ -1229,6 +1229,7 @@ function logout(){S.courier=null;localStorage.removeItem('dd_courier');clearInte
 // === FIREBASE ===
 var firebaseApp = null;
 var firebaseDb = null;
+var chatUnsubscribe = null;
 
 function initFirebase() {
   try {
@@ -1243,6 +1244,10 @@ function initFirebase() {
         }
         firebaseDb = firebase.firestore();
         console.log('✅ Firebase initialized in dashboard');
+        
+        // Spustit real-time listener pro chat
+        initChatListener();
+        
         return true;
       }
     }
@@ -1250,6 +1255,54 @@ function initFirebase() {
     console.error('Firebase init error:', e);
   }
   return false;
+}
+
+// ===== FIRESTORE ORDERS =====
+
+// Uložení objednávky do Firestore (pro Wix/GloriaFood objednávky)
+function saveOrderToFirestore(order) {
+  if (!firebaseDb) return Promise.resolve(null);
+  
+  // Normalizovat ID
+  var orderId = order._id || order.id || ('WIX-' + Date.now());
+  
+  // Připravit data pro Firestore
+  var orderData = {
+    _id: orderId,
+    orderNumber: order.orderNumber || orderId,
+    restaurantId: order.restaurantId || order.restaurant_id || '',
+    restaurantName: order.restaurantName || order.restaurant_name || '',
+    restaurant_phone: order.restaurant_phone || '',
+    customerName: order.customerName || order.customer_name || '',
+    customerPhone: order.customerPhone || order.customer_phone || '',
+    customerEmail: order.customerEmail || order.customer_email || '',
+    deliveryAddress: order.deliveryAddress || order.delivery_address || '',
+    items: order.items || [],
+    totalPrice: order.totalPrice || order.total_price || 0,
+    paymentMethod: order.paymentMethod || order.payment_method || '',
+    status: order.status || 'PENDING',
+    courier: order.courier || null,
+    createdAt: order.createdAt || order.created_at || new Date().toISOString(),
+    fulfillment_time: order.fulfillment_time || order.deliveryTime || 45,
+    deliveryZone: order.deliveryZone || '',
+    notes: order.notes || order.customer_notes || '',
+    source: order.source || 'wix-gloriafood',
+    // Tracking
+    pickedAt: order.pickedAt || null,
+    deliveredAt: order.deliveredAt || null,
+    // Loyalty
+    customerId: order.customerId || null
+  };
+  
+  return firebaseDb.collection('orders').doc(orderId).set(orderData, { merge: true })
+    .then(function() {
+      console.log('✅ Order synced to Firestore:', orderId);
+      return orderData;
+    })
+    .catch(function(error) {
+      console.error('❌ Firestore save error:', error);
+      return null;
+    });
 }
 
 // Načtení objednávek z Firestore
@@ -1278,7 +1331,7 @@ function loadOrdersFromFirestore() {
           var twoHoursAgo = new Date();
           twoHoursAgo.setHours(twoHoursAgo.getHours() - 2);
           if (deliveredAt > twoHoursAgo) {
-            orders.push(order); // Zobrazit nedávno doručené
+            orders.push(order);
           }
         }
       });
@@ -1296,6 +1349,8 @@ function updateOrderInFirestore(orderId, updates) {
   if (!firebaseDb) {
     return Promise.resolve(false);
   }
+  
+  updates.updatedAt = new Date().toISOString();
   
   return firebaseDb.collection('orders').doc(orderId).update(updates)
     .then(function() {
@@ -1323,6 +1378,168 @@ function deleteOrderFromFirestore(orderId) {
       console.error('❌ Firestore delete error:', error);
       return false;
     });
+}
+
+// ===== FIRESTORE CHAT =====
+
+function initChatListener() {
+  if (!firebaseDb || chatUnsubscribe) return;
+  
+  // Real-time listener pro chat
+  var today = new Date().toISOString().split('T')[0];
+  
+  chatUnsubscribe = firebaseDb.collection('chat')
+    .where('date', '==', today)
+    .orderBy('timestamp', 'asc')
+    .onSnapshot(function(snapshot) {
+      var messages = [];
+      snapshot.forEach(function(doc) {
+        messages.push(doc.data());
+      });
+      S.chatMessages = messages;
+      renderChatMessages();
+      updateChatBadge();
+    }, function(error) {
+      console.error('Chat listener error:', error);
+    });
+}
+
+function sendChatMessage(text) {
+  if (!firebaseDb || !text.trim()) return Promise.resolve(false);
+  
+  var msg = {
+    id: 'msg_' + Date.now(),
+    text: text.trim(),
+    sender: S.courier,
+    timestamp: new Date().toISOString(),
+    date: new Date().toISOString().split('T')[0]
+  };
+  
+  return firebaseDb.collection('chat').doc(msg.id).set(msg)
+    .then(function() {
+      console.log('✅ Chat message sent');
+      return true;
+    })
+    .catch(function(error) {
+      console.error('❌ Chat send error:', error);
+      return false;
+    });
+}
+
+function loadChatMessages() {
+  if (!firebaseDb) {
+    // Fallback na localStorage
+    var today = new Date().toISOString().split('T')[0];
+    var key = 'dd_chat_' + today;
+    S.chatMessages = JSON.parse(localStorage.getItem(key) || '[]');
+    renderChatMessages();
+    return;
+  }
+  
+  // Firebase realtime listener
+  var today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  firebaseDb.collection('chat')
+    .where('timestamp', '>=', today.toISOString())
+    .orderBy('timestamp', 'asc')
+    .onSnapshot(function(snapshot) {
+      S.chatMessages = [];
+      snapshot.forEach(function(doc) {
+        S.chatMessages.push(doc.data());
+      });
+      renderChatMessages();
+      updateChatBadge();
+    }, function(error) {
+      console.error('Chat listener error:', error);
+    });
+}
+
+function sendChatMessage(text, orderId) {
+  if (!text || !text.trim()) return;
+  
+  var msg = {
+    id: 'msg_' + Date.now(),
+    sender: S.courier,
+    text: text.trim(),
+    orderId: orderId || null,
+    timestamp: new Date().toISOString()
+  };
+  
+  if (firebaseDb) {
+    firebaseDb.collection('chat').doc(msg.id).set(msg)
+      .then(function() {
+        console.log('✅ Chat message sent');
+      })
+      .catch(function(error) {
+        console.error('❌ Chat send error:', error);
+        toast('❌ Chyba odesílání');
+      });
+  } else {
+    // Fallback localStorage
+    var today = new Date().toISOString().split('T')[0];
+    var key = 'dd_chat_' + today;
+    var messages = JSON.parse(localStorage.getItem(key) || '[]');
+    messages.push(msg);
+    localStorage.setItem(key, JSON.stringify(messages));
+    S.chatMessages = messages;
+    renderChatMessages();
+  }
+  
+  // Clear input
+  var input = document.getElementById('chatInput');
+  if (input) input.value = '';
+}
+
+function updateChatBadge() {
+  var badge = document.getElementById('chatBadge');
+  if (!badge) return;
+  
+  // Počet nepřečtených zpráv (zprávy od jiných za posledních 5 minut)
+  var fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+  var unread = S.chatMessages.filter(function(m) {
+    return m.sender !== S.courier && m.timestamp > fiveMinAgo;
+  }).length;
+  
+  if (unread > 0) {
+    badge.textContent = unread;
+    badge.style.display = 'block';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function renderChatMessages() {
+  var container = document.getElementById('chatMessages');
+  if (!container) return;
+  
+  if (!S.chatMessages || S.chatMessages.length === 0) {
+    container.innerHTML = '<div style="text-align:center;color:var(--tx3);padding:20px;font-size:12px">Žádné zprávy</div>';
+    return;
+  }
+  
+  var html = '';
+  S.chatMessages.forEach(function(msg) {
+    var isMine = msg.sender === S.courier;
+    var time = new Date(msg.timestamp).toLocaleTimeString('cs-CZ', {hour:'2-digit', minute:'2-digit'});
+    
+    html += '<div class="chat-msg ' + (isMine ? 'mine' : '') + '">';
+    html += '<div class="chat-msg-header">';
+    html += '<span class="chat-msg-sender">' + (msg.sender || 'Anonym') + '</span>';
+    html += '<span class="chat-msg-time">' + time + '</span>';
+    html += '</div>';
+    html += '<div class="chat-msg-text">' + escapeHtml(msg.text) + '</div>';
+    html += '</div>';
+  });
+  
+  container.innerHTML = html;
+  container.scrollTop = container.scrollHeight;
+}
+
+function escapeHtml(text) {
+  var div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
 }
 
 // Inicializovat Firebase při startu
@@ -1373,57 +1590,60 @@ function updateDivineOrder(orderId, updates) {
 }
 
 function fetchO(){
-  // Priorita: Firestore > localStorage > Wix API
+  // Kombinovat Firestore + Wix API a synchronizovat
   
-  // Pokud máme Firebase, použít ho
   if (firebaseDb) {
-    return loadOrdersFromFirestore().then(function(firestoreOrders) {
-      if (firestoreOrders.length > 0) {
-        S.errs = 0;
-        cn('on');
-        return firestoreOrders;
-      }
-      // Fallback na localStorage
-      var localOrders = loadDivineOrders();
-      if (localOrders.length > 0) {
-        cn('on');
-        return localOrders;
-      }
-      // Fallback na Wix API
-      return apic('/activeOrders').then(function(d) {
-        S.errs = 0;
-        cn('on');
-        return d.items || [];
-      }).catch(function() {
-        S.errs++;
-        cn(S.errs >= 3 ? 'off' : 'w');
-        return [];
+    // Načíst obojí paralelně
+    return Promise.all([
+      loadOrdersFromFirestore(),
+      apic('/activeOrders').then(function(d) { return d.items || []; }).catch(function() { return []; })
+    ]).then(function(results) {
+      var firestoreOrders = results[0];
+      var wixOrders = results[1];
+      
+      S.errs = 0;
+      cn('on');
+      
+      // Synchronizovat Wix objednávky do Firestore
+      var firestoreIds = new Set(firestoreOrders.map(function(o) { return o._id; }));
+      
+      wixOrders.forEach(function(wo) {
+        if (!firestoreIds.has(wo._id)) {
+          // Nová Wix objednávka - uložit do Firestore
+          saveOrderToFirestore(wo);
+          firestoreOrders.push(wo);
+          console.log('📥 Synced Wix order to Firestore:', wo._id);
+        }
       });
+      
+      // Aktualizovat status existujících Wix objednávek ve Firestore
+      wixOrders.forEach(function(wo) {
+        var existing = firestoreOrders.find(function(fo) { return fo._id === wo._id; });
+        if (existing && existing.status !== wo.status) {
+          updateOrderInFirestore(wo._id, { 
+            status: wo.status, 
+            courier: wo.courier,
+            updatedAt: new Date().toISOString()
+          });
+        }
+      });
+      
+      return firestoreOrders;
+    }).catch(function(error) {
+      console.error('fetchO error:', error);
+      S.errs++;
+      cn(S.errs >= 3 ? 'off' : 'w');
+      return loadDivineOrders();
     });
   }
   
-  // Bez Firebase - localStorage + Wix API
-  var divineOrders = loadDivineOrders();
-  
+  // Bez Firebase - pouze Wix API
   return apic('/activeOrders').then(function(d){
     S.errs=0;cn('on');
-    var wixOrders = d.items||[];
-    
-    var combined = divineOrders.slice();
-    wixOrders.forEach(function(wo) {
-      if (!combined.some(function(o) { return o._id === wo._id; })) {
-        combined.push(wo);
-      }
-    });
-    
-    return combined;
+    return d.items||[];
   }).catch(function(){
     S.errs++;cn(S.errs>=3?'off':'w');
-    if (divineOrders.length > 0) {
-      cn('on');
-      return divineOrders;
-    }
-    return null;
+    return loadDivineOrders();
   });
 }
 function cn(s){var d=document.getElementById('cD'),t=document.getElementById('cT');d.className='dot';if(s==='on')t.textContent='Online';else{d.classList.add('off');t.textContent=s==='w'?'Pomalé…':'Offline'}}
@@ -2737,55 +2957,34 @@ function addRepentance(courier){
   localStorage.setItem(key,JSON.stringify(data));
 }
 
-// === CHAT ===
+// === CHAT (Firebase) ===
 var chatMessages=[];
 var chatLastRead=0;
 var selectedOrderForChat=null;
-var chatPollInterval=null;
 
 function showChat(){
   document.getElementById('CP').classList.add('show');
-  loadChatMessages();
+  // Chat messages are loaded via Firebase real-time listener
   renderChat();
   markChatAsRead();
-  // Start polling for new messages
-  if(chatPollInterval)clearInterval(chatPollInterval);
-  chatPollInterval=setInterval(function(){
-    loadChatMessages();
-    renderChat();
-  },3000);
 }
 
 function hideChat(){
   document.getElementById('CP').classList.remove('show');
-  if(chatPollInterval)clearInterval(chatPollInterval);
 }
 
-function loadChatMessages(){
-  var today=new Date().toISOString().split('T')[0];
-  var key='dd_chat_'+today;
-  chatMessages=JSON.parse(localStorage.getItem(key)||'[]');
-}
-
-function saveChatMessages(){
-  var today=new Date().toISOString().split('T')[0];
-  var key='dd_chat_'+today;
-  // Keep only last 100 messages
-  if(chatMessages.length>100)chatMessages=chatMessages.slice(-100);
-  localStorage.setItem(key,JSON.stringify(chatMessages));
-}
-
-function sendChatMessage(){
+function sendChatMsg(){
   var input=document.getElementById('chatInput');
   var text=input.value.trim();
   if(!text)return;
   
   var msg={
-    id:Date.now(),
-    courier:S.courier,
+    id:'msg_'+Date.now(),
+    sender:S.courier,
     text:text,
-    time:Date.now(),
-    orderId:selectedOrderForChat
+    timestamp:new Date().toISOString(),
+    date:new Date().toISOString().split('T')[0],
+    orderId:selectedOrderForChat||null
   };
   
   // Add order info if tagged
@@ -2797,34 +2996,52 @@ function sendChatMessage(){
     }
   }
   
-  chatMessages.push(msg);
-  saveChatMessages();
+  // Send to Firebase
+  if(firebaseDb){
+    firebaseDb.collection('chat').doc(msg.id).set(msg)
+      .then(function(){
+        console.log('✅ Chat message sent to Firebase');
+      })
+      .catch(function(err){
+        console.error('❌ Chat send error:', err);
+        toast('❌ Nepodařilo se odeslat');
+      });
+  }else{
+    // Fallback localStorage
+    var today=new Date().toISOString().split('T')[0];
+    var key='dd_chat_'+today;
+    var msgs=JSON.parse(localStorage.getItem(key)||'[]');
+    msgs.push(msg);
+    if(msgs.length>100)msgs=msgs.slice(-100);
+    localStorage.setItem(key,JSON.stringify(msgs));
+    chatMessages=msgs;
+    renderChat();
+  }
   
   input.value='';
   selectedOrderForChat=null;
   document.getElementById('chatOrderPicker').style.display='none';
   document.getElementById('chatTagBtn').classList.remove('active');
-  
-  renderChat();
-  scrollChatToBottom();
 }
 
 function renderChat(){
   var container=document.getElementById('chatMessages');
+  var messages = S.chatMessages || chatMessages || [];
   
-  if(chatMessages.length===0){
+  if(messages.length===0){
     container.innerHTML='<div class="chat-empty"><div class="chat-empty-icon">💬</div><div class="chat-empty-text">Zatím žádné zprávy.<br>Buď první!</div></div>';
     return;
   }
   
   var h='';
-  chatMessages.forEach(function(msg){
-    var isMine=msg.courier===S.courier;
-    var timeStr=new Date(msg.time).toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'});
-    var karma=getKarmaLevel(getKarma(msg.courier));
+  messages.forEach(function(msg){
+    var isMine=(msg.sender||msg.courier)===S.courier;
+    var timeStr=new Date(msg.timestamp||msg.time).toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'});
+    var senderName=msg.sender||msg.courier||'Anonym';
+    var karma=getKarmaLevel(getKarma(senderName));
     
     h+='<div class="chat-msg '+(isMine?'mine':'other')+'">';
-    h+='<div class="chat-msg-header"><span class="chat-msg-name">'+karma.e+' '+msg.courier+'</span><span class="chat-msg-time">'+timeStr+'</span></div>';
+    h+='<div class="chat-msg-header"><span class="chat-msg-name">'+karma.e+' '+senderName+'</span><span class="chat-msg-time">'+timeStr+'</span></div>';
     h+='<div class="chat-msg-text">'+eh(msg.text)+'</div>';
     if(msg.orderId&&msg.orderName){
       h+='<div class="chat-msg-order" data-order="'+msg.orderId+'">📦 '+eh(msg.orderName)+'</div>';
@@ -2838,7 +3055,6 @@ function renderChat(){
   container.querySelectorAll('.chat-msg-order').forEach(function(el){
     el.onclick=function(){
       var orderId=this.dataset.order;
-      // Navigate to orders and highlight
       hideChat();
       document.querySelectorAll('.ni').forEach(function(x){x.classList.remove('on')});
       document.getElementById('navOrders').classList.add('on');
@@ -2852,10 +3068,8 @@ function renderChat(){
       },100);
     };
   });
-}
-
-function scrollChatToBottom(){
-  var container=document.getElementById('chatMessages');
+  
+  // Scroll to bottom
   container.scrollTop=container.scrollHeight;
 }
 
@@ -2864,7 +3078,6 @@ function toggleOrderPicker(){
   var btn=document.getElementById('chatTagBtn');
   
   if(picker.style.display==='none'){
-    // Show picker with active orders
     var activeOrders=S.orders.filter(function(o){return ns(o.status)!=='DELIVERED'});
     if(activeOrders.length===0){
       toast('📦 Žádné aktivní objednávky');
@@ -2883,7 +3096,6 @@ function toggleOrderPicker(){
     picker.style.display='block';
     btn.classList.add('active');
     
-    // Bind clicks
     picker.querySelectorAll('.chat-picker-item').forEach(function(el){
       el.onclick=function(){
         selectedOrderForChat=this.dataset.id;
@@ -2908,8 +3120,13 @@ function markChatAsRead(){
 }
 
 function updateChatBadge(){
+  var messages = S.chatMessages || chatMessages || [];
   var lastRead=parseInt(localStorage.getItem('dd_chat_read_'+S.courier)||'0');
-  var unread=chatMessages.filter(function(m){return m.time>lastRead&&m.courier!==S.courier}).length;
+  var unread=messages.filter(function(m){
+    var time = new Date(m.timestamp||m.time).getTime();
+    var sender = m.sender||m.courier;
+    return time>lastRead && sender!==S.courier;
+  }).length;
   var badge=document.getElementById('chatBadge');
   if(unread>0){
     badge.textContent=unread>9?'9+':unread;
