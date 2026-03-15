@@ -284,18 +284,25 @@ input,select{font-family:var(--ff);background:var(--bg3);color:var(--tx);border:
 .prog-fill.done{background:linear-gradient(90deg,#059669,var(--ok))}
 .prog-fill.done::after{display:none}
 
-/* SINNING state - blood effect */
-.prog-fill.sinning{background:linear-gradient(90deg,#450a0a,#7f1d1d,#991b1b,#b91c1c,#dc2626);animation:bloodPulse 1s ease-in-out infinite,bloodFlow 2s linear infinite;background-size:200% 100%}
-.prog-fill.sinning::after{background:linear-gradient(90deg,transparent,rgba(220,38,38,.4),transparent);animation:bloodDrip .8s ease-in-out infinite}
-@keyframes bloodPulse{0%,100%{opacity:1;box-shadow:0 0 10px rgba(220,38,38,.5)}50%{opacity:.85;box-shadow:0 0 20px rgba(220,38,38,.8),0 0 30px rgba(153,27,27,.4)}}
-@keyframes bloodFlow{0%{background-position:0% 50%}100%{background-position:200% 50%}}
-@keyframes bloodDrip{0%{transform:translateX(-100%) scaleY(1)}50%{transform:translateX(0%) scaleY(1.2)}100%{transform:translateX(100%) scaleY(1)}}
-.prog-bar.sinning{border-color:rgba(220,38,38,.5);box-shadow:0 0 15px rgba(220,38,38,.3)}
+/* SINNING state - HELLFIRE blood effect */
+.prog-fill.sinning{background:linear-gradient(90deg,#450a0a,#7f1d1d,#991b1b,#b91c1c,#dc2626,#b91c1c,#991b1b,#7f1d1d,#450a0a);animation:bloodPulse .8s ease-in-out infinite,bloodFlow 3s linear infinite,hellShake .1s linear infinite;background-size:400% 100%}
+.prog-fill.sinning::after{background:linear-gradient(90deg,transparent,rgba(255,100,100,.6),rgba(255,200,100,.3),rgba(255,100,100,.6),transparent);animation:fireWave 1.5s ease-in-out infinite}
+@keyframes bloodPulse{0%,100%{opacity:1;box-shadow:0 0 15px rgba(220,38,38,.6),inset 0 0 10px rgba(0,0,0,.5)}50%{opacity:.9;box-shadow:0 0 30px rgba(220,38,38,.9),0 0 50px rgba(153,27,27,.5),inset 0 0 15px rgba(255,100,0,.3)}}
+@keyframes bloodFlow{0%{background-position:0% 50%}100%{background-position:400% 50%}}
+@keyframes fireWave{0%{transform:translateX(-100%) scaleY(1);opacity:.8}50%{transform:translateX(0%) scaleY(1.5);opacity:1}100%{transform:translateX(100%) scaleY(1);opacity:.8}}
+@keyframes hellShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-1px)}75%{transform:translateX(1px)}}
+.prog-bar.sinning{border-color:rgba(220,38,38,.7);box-shadow:0 0 20px rgba(220,38,38,.4),0 0 40px rgba(220,38,38,.2);animation:barPulse 1s ease-in-out infinite}
+@keyframes barPulse{0%,100%{box-shadow:0 0 20px rgba(220,38,38,.4)}50%{box-shadow:0 0 35px rgba(220,38,38,.7),0 0 60px rgba(255,100,0,.3)}}
+
+/* Sinning card glow */
+.cd:has(.prog-fill.sinning){animation:cardHellGlow 1.5s ease-in-out infinite;border-color:rgba(220,38,38,.5)!important}
+@keyframes cardHellGlow{0%,100%{box-shadow:0 0 20px rgba(220,38,38,.2)}50%{box-shadow:0 0 40px rgba(220,38,38,.4),0 0 60px rgba(255,100,0,.2)}}
 
 .prog-time{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:11px;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.5);white-space:nowrap;z-index:2}
 .prog-time.outside{color:var(--tx2);text-shadow:none}
-.prog-time.sinning{font-size:9px;animation:sinText 1.5s ease-in-out infinite}
-@keyframes sinText{0%,100%{color:#fff;text-shadow:0 0 5px rgba(220,38,38,.8)}50%{color:#fca5a5;text-shadow:0 0 10px rgba(220,38,38,1),0 0 20px rgba(220,38,38,.5)}}
+.prog-time.sinning{font-size:9px;animation:sinText 1s ease-in-out infinite,textShake .15s linear infinite}
+@keyframes sinText{0%,100%{color:#fff;text-shadow:0 0 8px rgba(220,38,38,.9),0 0 15px rgba(255,100,0,.5)}50%{color:#fca5a5;text-shadow:0 0 15px rgba(220,38,38,1),0 0 30px rgba(255,100,0,.7)}}
+@keyframes textShake{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(calc(-50% + 1px),calc(-50% - 1px))}}
 
 /* Customer section */
 .cd-c{padding:9px 10px;background:rgba(0,0,0,.18)}
@@ -555,24 +562,17 @@ input,select{font-family:var(--ff);background:var(--bg3);color:var(--tx);border:
 
 /* Map Panel */
 .map-container{height:calc(100vh - 120px);display:flex;flex-direction:column}
-.map-legend{display:flex;flex-wrap:wrap;gap:8px;padding:10px 14px;background:var(--bgE);border-bottom:1px solid var(--bdr2)}
-.map-legend-item{display:flex;align-items:center;gap:6px;font-size:11px}
-.map-legend-dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--bg)}
-.map-legend-name{font-weight:600}
-.map-legend-time{font-size:9px;color:var(--tx3)}
-.map-canvas{flex:1;position:relative;background:linear-gradient(135deg,#1a1a2e,#16213e);overflow:hidden}
-.map-placeholder{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--tx3);font-size:14px}
+.map-legend{display:flex;flex-wrap:wrap;gap:10px;padding:12px 14px;background:var(--bgE);border-bottom:1px solid var(--bdr2)}
+.map-legend-item{display:flex;align-items:center;gap:8px;font-size:11px;background:var(--bg3);padding:6px 10px;border-radius:var(--r);border:1px solid var(--bdr2)}
+.map-legend-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--bg);flex-shrink:0}
+.map-legend-info{display:flex;flex-direction:column;gap:1px}
+.map-legend-name{font-weight:700;font-size:12px}
+.map-legend-city{font-size:9px;color:var(--tx2)}
+.map-legend-time{font-size:8px;color:var(--tx3)}
+.map-iframe{flex:1;border:none;border-radius:0}
 .map-controls{display:flex;gap:8px;padding:10px 14px;background:var(--bg2);border-top:1px solid var(--bdr2)}
 .map-btn{flex:1;padding:12px;border-radius:var(--r);background:var(--bg3);border:1px solid var(--bdr2);color:var(--tx);font-weight:700;font-size:12px}
 .map-btn:active{transform:scale(.98)}
-
-/* Map markers */
-.map-marker{position:absolute;transform:translate(-50%,-50%);z-index:10}
-.map-marker-dot{width:24px;height:24px;border-radius:50%;border:3px solid var(--bg);box-shadow:0 2px 10px rgba(0,0,0,.5);display:grid;place-items:center;font-size:10px;font-weight:700;color:#fff}
-.map-marker-dot.pulsing{animation:markerPulse 2s ease-in-out infinite}
-@keyframes markerPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.4)}50%{box-shadow:0 0 0 10px rgba(255,255,255,0)}}
-.map-marker-label{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:4px;background:var(--bg);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;white-space:nowrap;border:1px solid var(--bdr2)}
-.map-marker.me .map-marker-dot{border-color:var(--gold);box-shadow:0 0 15px rgba(251,191,36,.5)}
 
 /* Courier colors for map */
 .marker-marek{background:#EF4444}
@@ -581,6 +581,36 @@ input,select{font-family:var(--ff);background:var(--bg3);color:var(--tx);border:
 .marker-tomas{background:#F59E0B}
 .marker-matej{background:#8B5CF6}
 .marker-milan{background:#EC4899}
+
+/* Courier karma details on card */
+.courier-karma-details{font-size:8px;color:var(--tx3);display:flex;gap:6px;margin-top:2px}
+.courier-karma-details span{display:flex;align-items:center;gap:2px}
+.karma-good{color:#34D399}
+.karma-bad{color:#F87171}
+
+/* Report Card (Vysvědčení) */
+.report-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:20000;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .5s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.report-card{background:linear-gradient(135deg,#1a1a2e,#0f0f1a);border:2px solid var(--red);border-radius:16px;max-width:340px;width:100%;padding:24px;text-align:center;animation:slideUp .5s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.report-title{font-size:24px;font-weight:700;margin-bottom:4px;background:linear-gradient(135deg,var(--red-b),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.report-subtitle{font-size:11px;color:var(--tx3);margin-bottom:20px}
+.report-avatar{width:80px;height:80px;border-radius:50%;margin:0 auto 16px;display:grid;place-items:center;font-size:40px;border:3px solid var(--bdr)}
+.report-avatar.seraph{background:linear-gradient(135deg,#8B5CF6,#A78BFA);border-color:#8B5CF6}
+.report-avatar.angel{background:linear-gradient(135deg,#60A5FA,#93C5FD);border-color:#60A5FA}
+.report-avatar.human{background:linear-gradient(135deg,#9CA3AF,#D1D5DB);border-color:#9CA3AF}
+.report-avatar.devil{background:linear-gradient(135deg,#F59E0B,#FBBF24);border-color:#F59E0B}
+.report-avatar.demon{background:linear-gradient(135deg,#EF4444,#F87171);border-color:#EF4444}
+.report-rank{font-size:20px;font-weight:700;margin-bottom:4px}
+.report-karma{font-size:12px;color:var(--tx2);margin-bottom:20px}
+.report-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+.report-stat{background:var(--bg3);border-radius:var(--r);padding:12px 8px}
+.report-stat-val{font-size:20px;font-weight:700}
+.report-stat-val.good{color:#34D399}
+.report-stat-val.bad{color:#F87171}
+.report-stat-lbl{font-size:9px;color:var(--tx3);margin-top:2px}
+.report-message{font-size:13px;color:var(--tx2);margin-bottom:20px;font-style:italic}
+.report-close{width:100%;padding:14px;border-radius:var(--r);background:linear-gradient(135deg,var(--red),var(--red-b));color:#fff;font-weight:700;font-size:14px}
 
 /* Rank badges */
 .rank-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:var(--rr);font-size:8px;font-weight:700}
@@ -832,22 +862,6 @@ input,select{font-family:var(--ff);background:var(--bg3);color:var(--tx);border:
   <div class="panel-scroll" id="ppContent"></div>
 </div>
 
-<!-- MAP / TRACKING -->
-<div class="panel" id="MP">
-  <div class="panel-hdr" style="color:var(--info)">
-    <h2>📍 Mapa kurýrů</h2>
-    <button class="panel-close" id="mpClose">✕</button>
-  </div>
-  <div class="map-controls">
-    <button class="map-btn" id="mapToggleTracking">📍 Zapnout sledování</button>
-    <div class="map-status" id="mapStatus">Sledování vypnuto</div>
-  </div>
-  <div class="map-container" id="mapContainer">
-    <div class="map-canvas" id="mapCanvas"></div>
-    <div class="map-legend" id="mapLegend"></div>
-  </div>
-</div>
-
 <!-- SUMMARY -->
 <div class="panel" id="SUM">
   <div class="panel-hdr" style="color:var(--info)">
@@ -865,14 +879,17 @@ input,select{font-family:var(--ff);background:var(--bg3);color:var(--tx);border:
   </div>
   <div class="map-container">
     <div class="map-legend" id="mapLegend"></div>
-    <div class="map-canvas" id="mapCanvas">
-      <div class="map-placeholder">📍 Načítám polohy...</div>
-    </div>
+    <iframe id="mapIframe" class="map-iframe" src="about:blank"></iframe>
     <div class="map-controls">
-      <button class="map-btn" id="mapMyLoc">📍 Moje poloha</button>
+      <button class="map-btn" id="mapMyLoc">📍 Zapnout sledování</button>
       <button class="map-btn" id="mapRefresh">🔄 Obnovit</button>
     </div>
   </div>
+</div>
+
+<!-- REPORT CARD (Vysvědčení) -->
+<div class="report-overlay" id="reportOverlay" style="display:none">
+  <div class="report-card" id="reportCard"></div>
 </div>
 
 <script>
@@ -1349,10 +1366,13 @@ function card(o,i){
   }
   
   var cls='cd'+(taken?' taken':'');
-  // Courier info with color class and karma title
+  // Courier info with color class and detailed karma
   var courierCls=o.courier?C.COLORS[o.courier]||'':'';
   var courierKarma=o.courier?getKarmaLevel(getKarma(o.courier)):{e:'👼',n:'Anděl'};
-  var courierInfo=o.courier?'<div class="courier-info '+courierCls+'">'+courierKarma.e+' '+eh(o.courier)+' <span class="courier-title">'+courierKarma.n+'</span></div>':'';
+  var courierKarmaVal=o.courier?Math.round(getKarma(o.courier)):50;
+  var courierSins=o.courier?getSins(o.courier):0;
+  var courierRepent=o.courier?getRepentances(o.courier):0;
+  var courierInfo=o.courier?'<div class="courier-info '+courierCls+'">'+courierKarma.e+' '+eh(o.courier)+' <span class="courier-title">'+courierKarma.n+'</span></div><div class="courier-karma-details"><span>⚖️'+courierKarmaVal+'</span><span class="karma-bad">😈'+courierSins+'</span><span class="karma-good">👼'+courierRepent+'</span></div>':'';
   var rName=eh(o.restaurantName||'Restaurace');
   var restPhone=getRestPhone(o.restaurantName)||o.restaurant_phone||'';
   var restCallBtn=restPhone?'<div class="rest-bar-call" data-tel="'+ea(restPhone)+'" title="Volat restauraci"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>':'';
@@ -1661,8 +1681,9 @@ function submitModal(){
         toast('😈 Pozdní doručení! Karma -','3000');
       }else if(timeLeft>=5){
         // Early delivery (5+ min before deadline) - move karma towards Seraf (-5 karma = better)
+        addRepentance(o.courier);
         adjustKarma(o.courier,-5);
-        toast('👼 Včasné doručení! Karma +','2000');
+        toast('👼 Včasné doručení! Pokání +','2000');
       }
     }
     apic('/markDelivered',{method:'POST',body:{orderId:id,deliveredAmount:amt}}).then(function(){toast('✅ Doručeno!');poll()}).catch(function(){toast('❌ Chyba')});
@@ -2058,45 +2079,76 @@ function setFont(font){
 // === MAP / COURIER TRACKING ===
 var mapInterval=null;
 var myPosition=null;
-var MARKER_COLORS={Marek:'marker-marek',Tonda:'marker-tonda',Kuba:'marker-kuba','Tomáš':'marker-tomas','Matěj':'marker-matej',Milan:'marker-milan'};
+var trackingEnabled=false;
+var watchId=null;
+var MARKER_COLORS_HEX={Marek:'#EF4444',Tonda:'#3B82F6',Kuba:'#10B981','Tomáš':'#F59E0B','Matěj':'#8B5CF6',Milan:'#EC4899'};
 
-// Milovice area bounds (approx)
-var MAP_BOUNDS={minLat:50.19,maxLat:50.28,minLng:14.82,maxLng:15.02};
+// City detection from coordinates
+var CITIES=[
+  {name:'Milovice',lat:50.226,lng:14.886,r:0.02},
+  {name:'Lysá nad Labem',lat:50.201,lng:14.833,r:0.025},
+  {name:'Benátky nad Jizerou',lat:50.291,lng:14.823,r:0.02},
+  {name:'Čelákovice',lat:50.161,lng:14.751,r:0.02},
+  {name:'Brandýs nad Labem',lat:50.186,lng:14.659,r:0.02},
+  {name:'Nymburk',lat:50.186,lng:15.041,r:0.025},
+  {name:'Poděbrady',lat:50.142,lng:15.118,r:0.02},
+  {name:'Sadská',lat:50.205,lng:14.987,r:0.015}
+];
+
+function getCityFromCoords(lat,lng){
+  for(var i=0;i<CITIES.length;i++){
+    var c=CITIES[i];
+    var d=Math.sqrt(Math.pow(lat-c.lat,2)+Math.pow(lng-c.lng,2));
+    if(d<c.r)return c.name;
+  }
+  return'Neznámá oblast';
+}
 
 function showMap(){
   document.getElementById('MP').classList.add('show');
-  startTracking();
   renderMap();
 }
 
-function startTracking(){
-  if(!('geolocation' in navigator)){
-    toast('⚠️ Geolokace není podporována');
-    return;
+function toggleTracking(){
+  if(trackingEnabled){
+    // Stop tracking
+    if(watchId)navigator.geolocation.clearWatch(watchId);
+    trackingEnabled=false;
+    document.getElementById('mapMyLoc').textContent='📍 Zapnout sledování';
+    toast('📍 Sledování vypnuto');
+  }else{
+    // Start tracking
+    if(!('geolocation' in navigator)){
+      toast('⚠️ Geolokace není podporována');
+      return;
+    }
+    trackingEnabled=true;
+    document.getElementById('mapMyLoc').textContent='🔴 Sledování aktivní';
+    toast('📍 Sledování zapnuto');
+    
+    watchId=navigator.geolocation.watchPosition(function(pos){
+      myPosition={lat:pos.coords.latitude,lng:pos.coords.longitude,time:Date.now()};
+      saveMyPosition();
+      renderMap();
+    },function(err){
+      toast('⚠️ Chyba GPS: '+err.message);
+    },{enableHighAccuracy:true,maximumAge:10000,timeout:15000});
   }
   
-  // Watch my position
-  navigator.geolocation.watchPosition(function(pos){
-    myPosition={lat:pos.coords.latitude,lng:pos.coords.longitude,time:Date.now()};
-    // Save to localStorage for other couriers to see
-    saveMyPosition();
-    renderMap();
-  },function(err){
-    console.log('Geolocation error:',err);
-  },{enableHighAccuracy:true,maximumAge:10000,timeout:15000});
-  
-  // Poll other positions
+  // Poll for updates
   if(mapInterval)clearInterval(mapInterval);
   mapInterval=setInterval(renderMap,5000);
 }
 
 function saveMyPosition(){
   if(!myPosition||!S.courier)return;
+  var city=getCityFromCoords(myPosition.lat,myPosition.lng);
   var key='dd_pos_'+S.courier;
   localStorage.setItem(key,JSON.stringify({
     courier:S.courier,
     lat:myPosition.lat,
     lng:myPosition.lng,
+    city:city,
     time:Date.now()
   }));
 }
@@ -2109,8 +2161,8 @@ function getAllPositions(){
     if(data){
       try{
         var p=JSON.parse(data);
-        // Only show if updated within last 5 minutes
-        if(Date.now()-p.time<300000){
+        // Only show if updated within last 10 minutes
+        if(Date.now()-p.time<600000){
           positions.push(p);
         }
       }catch(e){}
@@ -2120,68 +2172,111 @@ function getAllPositions(){
 }
 
 function renderMap(){
-  var canvas=document.getElementById('mapCanvas');
   var legend=document.getElementById('mapLegend');
+  var iframe=document.getElementById('mapIframe');
   var positions=getAllPositions();
   
-  // Render legend
+  // Render legend with city info
   var legendHtml='';
   positions.forEach(function(p){
     var ago=Math.round((Date.now()-p.time)/1000);
     var agoText=ago<60?ago+'s':Math.round(ago/60)+'m';
-    var colorClass=MARKER_COLORS[p.courier]||'marker-marek';
+    var color=MARKER_COLORS_HEX[p.courier]||'#EF4444';
     var karma=getKarmaLevel(getKarma(p.courier));
-    legendHtml+='<div class="map-legend-item"><div class="map-legend-dot '+colorClass+'"></div><span class="map-legend-name">'+p.courier+'</span><span>'+karma.e+'</span><span class="map-legend-time">'+agoText+'</span></div>';
+    var city=p.city||'Neznámá';
+    var isMe=p.courier===S.courier;
+    legendHtml+='<div class="map-legend-item'+(isMe?' me':'')+'" style="'+(isMe?'border-color:var(--gold)':'')+'"><div class="map-legend-dot" style="background:'+color+'"></div><div class="map-legend-info"><div class="map-legend-name">'+p.courier+' '+karma.e+'</div><div class="map-legend-city">📍 '+city+'</div><div class="map-legend-time">⏱️ '+agoText+' ago</div></div></div>';
   });
-  legend.innerHTML=legendHtml||'<div style="color:var(--tx3);font-size:11px">Žádný kurýr online</div>';
+  legend.innerHTML=legendHtml||'<div style="color:var(--tx3);font-size:11px;padding:10px">Žádný kurýr online. Zapni sledování!</div>';
   
-  // Render markers
+  // Build OpenStreetMap URL with markers
   if(positions.length===0){
-    canvas.innerHTML='<div class="map-placeholder">📍 Žádná aktivní poloha<br><small>Zapni polohu v prohlížeči</small></div>';
+    // Default view of Milovice area
+    iframe.src='https://www.openstreetmap.org/export/embed.html?bbox=14.82,50.19,15.02,50.28&layer=mapnik';
     return;
   }
   
-  // Calculate bounds
-  var minLat=MAP_BOUNDS.minLat,maxLat=MAP_BOUNDS.maxLat;
-  var minLng=MAP_BOUNDS.minLng,maxLng=MAP_BOUNDS.maxLng;
+  // Calculate center and bounds
+  var sumLat=0,sumLng=0;
+  positions.forEach(function(p){sumLat+=p.lat;sumLng+=p.lng});
+  var centerLat=sumLat/positions.length;
+  var centerLng=sumLng/positions.length;
   
-  // Expand bounds to fit all markers
-  positions.forEach(function(p){
-    if(p.lat<minLat)minLat=p.lat-0.01;
-    if(p.lat>maxLat)maxLat=p.lat+0.01;
-    if(p.lng<minLng)minLng=p.lng-0.01;
-    if(p.lng>maxLng)maxLng=p.lng+0.01;
+  // Create markers string for OSM
+  var markers='';
+  positions.forEach(function(p,i){
+    if(i>0)markers+='%7C';
+    markers+=p.lat+','+p.lng;
   });
   
-  var latRange=maxLat-minLat;
-  var lngRange=maxLng-minLng;
-  var canvasW=canvas.offsetWidth;
-  var canvasH=canvas.offsetHeight;
-  
-  var markersHtml='';
-  positions.forEach(function(p){
-    var x=((p.lng-minLng)/lngRange)*canvasW;
-    var y=canvasH-((p.lat-minLat)/latRange)*canvasH;
-    var colorClass=MARKER_COLORS[p.courier]||'marker-marek';
-    var isMe=p.courier===S.courier;
-    var karma=getKarmaLevel(getKarma(p.courier));
-    
-    markersHtml+='<div class="map-marker'+(isMe?' me':'')+'" style="left:'+x+'px;top:'+y+'px">';
-    markersHtml+='<div class="map-marker-dot pulsing '+colorClass+'">'+karma.e+'</div>';
-    markersHtml+='<div class="map-marker-label">'+p.courier+'</div>';
-    markersHtml+='</div>';
-  });
-  
-  canvas.innerHTML=markersHtml;
+  // Use OSM embed with center
+  var bbox=(centerLng-0.08)+','+(centerLat-0.04)+','+(centerLng+0.08)+','+(centerLat+0.04);
+  iframe.src='https://www.openstreetmap.org/export/embed.html?bbox='+bbox+'&layer=mapnik&marker='+centerLat+','+centerLng;
 }
 
-function centerOnMe(){
-  if(myPosition){
-    renderMap();
-    toast('📍 Moje poloha');
-  }else{
-    toast('⚠️ Poloha nenalezena');
+// === DAILY REPORT (Vysvědčení) at 21:00 ===
+function checkDailyReport(){
+  var now=new Date();
+  var hour=now.getHours();
+  var today=now.toISOString().split('T')[0];
+  var reportKey='dd_report_shown_'+today;
+  
+  // Show report at 21:00 if not shown yet
+  if(hour>=21&&!localStorage.getItem(reportKey)){
+    localStorage.setItem(reportKey,'1');
+    showDailyReport();
   }
+}
+
+function showDailyReport(){
+  var karma=getKarma(S.courier);
+  var karmaLevel=getKarmaLevel(karma);
+  var sins=getSins(S.courier);
+  var repentances=getRepentances(S.courier);
+  var todayOrders=S.todayOrders.filter(function(o){return o.courier===S.courier}).length;
+  
+  var messages={
+    seraph:'Jsi pravý anděl doručování! Zákazníci tě milují. 💜',
+    angel:'Skvělá práce! Většina zákazníků dostala jídlo včas. 👼',
+    human:'Průměrný den. Zítra to zvládneš lépe! 🧑',
+    devil:'Trochu jsi hřešil... Zkus být rychlejší! 😈',
+    demon:'Pekelný den! Zákazníci čekali moc dlouho. 👹'
+  };
+  
+  var h='<div class="report-title">📜 Denní vysvědčení</div>';
+  h+='<div class="report-subtitle">'+new Date().toLocaleDateString('cs-CZ',{weekday:'long',day:'numeric',month:'long'})+'</div>';
+  h+='<div class="report-avatar '+karmaLevel.cls+'">'+karmaLevel.e+'</div>';
+  h+='<div class="report-rank">'+karmaLevel.n+'</div>';
+  h+='<div class="report-karma">Karma: '+Math.round(karma)+'/100</div>';
+  h+='<div class="report-stats">';
+  h+='<div class="report-stat"><div class="report-stat-val">'+todayOrders+'</div><div class="report-stat-lbl">Objednávek</div></div>';
+  h+='<div class="report-stat"><div class="report-stat-val bad">'+sins+'</div><div class="report-stat-lbl">😈 Hříchů</div></div>';
+  h+='<div class="report-stat"><div class="report-stat-val good">'+repentances+'</div><div class="report-stat-lbl">👼 Pokání</div></div>';
+  h+='</div>';
+  h+='<div class="report-message">"'+messages[karmaLevel.cls]+'"</div>';
+  h+='<button class="report-close" onclick="closeReport()">Zavřít vysvědčení</button>';
+  
+  document.getElementById('reportCard').innerHTML=h;
+  document.getElementById('reportOverlay').style.display='flex';
+}
+
+function closeReport(){
+  document.getElementById('reportOverlay').style.display='none';
+}
+
+// Track repentances (early deliveries)
+function getRepentances(courier){
+  var today=new Date().toISOString().split('T')[0];
+  var key='dd_repent_'+today;
+  var data=JSON.parse(localStorage.getItem(key)||'{}');
+  return data[courier]||0;
+}
+function addRepentance(courier){
+  var today=new Date().toISOString().split('T')[0];
+  var key='dd_repent_'+today;
+  var data=JSON.parse(localStorage.getItem(key)||'{}');
+  data[courier]=(data[courier]||0)+1;
+  localStorage.setItem(key,JSON.stringify(data));
 }
 
 // === INIT ===
@@ -2210,8 +2305,11 @@ document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('ppClose').onclick=function(){document.getElementById('PP').classList.remove('show')};
   document.getElementById('mpClose').onclick=function(){document.getElementById('MP').classList.remove('show');if(mapInterval)clearInterval(mapInterval)};
   // Map controls
-  document.getElementById('mapMyLoc').onclick=centerOnMe;
+  document.getElementById('mapMyLoc').onclick=toggleTracking;
   document.getElementById('mapRefresh').onclick=function(){renderMap();toast('🔄 Obnoveno')};
+  // Check daily report every minute
+  setInterval(checkDailyReport,60000);
+  checkDailyReport();
   // Modal
   document.getElementById('MX').onclick=closeModal;
   document.getElementById('MG').onclick=submitModal;
