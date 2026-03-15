@@ -612,6 +612,64 @@ input,select{font-family:var(--ff);background:var(--bg3);color:var(--tx);border:
 .report-message{font-size:13px;color:var(--tx2);margin-bottom:20px;font-style:italic}
 .report-close{width:100%;padding:14px;border-radius:var(--r);background:linear-gradient(135deg,var(--red),var(--red-b));color:#fff;font-weight:700;font-size:14px}
 
+/* Location Prompt */
+.loc-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:20001;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .3s ease}
+.loc-card{background:linear-gradient(135deg,#1a1a2e,#0f0f1a);border:2px solid var(--info);border-radius:16px;max-width:320px;width:100%;padding:28px;text-align:center;animation:slideUp .4s ease}
+.loc-card.success{border-color:var(--ok)}
+.loc-icon{font-size:48px;margin-bottom:16px}
+.loc-title{font-size:20px;font-weight:700;margin-bottom:10px;color:var(--tx)}
+.loc-desc{font-size:13px;color:var(--tx2);line-height:1.5;margin-bottom:20px}
+.loc-btns{display:flex;gap:10px}
+.loc-btn{flex:1;padding:14px;border-radius:var(--r);font-weight:700;font-size:14px;cursor:pointer}
+.loc-btn.accept{background:linear-gradient(135deg,#059669,var(--ok));color:#fff}
+.loc-btn.decline{background:var(--bg3);border:1px solid var(--bdr2);color:var(--tx2)}
+.loc-btn:active{transform:scale(.97)}
+.loc-overlay.success .loc-card{border-color:var(--ok)}
+.loc-overlay.success .loc-icon{animation:pulse 1s ease infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+
+/* Chat */
+.chat-container{display:flex;flex-direction:column;height:calc(100vh - 120px)}
+.chat-messages{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+.chat-msg{max-width:85%;padding:10px 12px;border-radius:12px;font-size:13px;line-height:1.4;animation:msgIn .2s ease}
+@keyframes msgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.chat-msg.mine{align-self:flex-end;background:linear-gradient(135deg,var(--red-d),var(--red));color:#fff;border-bottom-right-radius:4px}
+.chat-msg.other{align-self:flex-start;background:var(--bg3);border:1px solid var(--bdr2);border-bottom-left-radius:4px}
+.chat-msg-header{display:flex;align-items:center;gap:6px;margin-bottom:4px;font-size:10px}
+.chat-msg-name{font-weight:700}
+.chat-msg.mine .chat-msg-name{color:rgba(255,255,255,.8)}
+.chat-msg.other .chat-msg-name{color:var(--rose)}
+.chat-msg-time{opacity:.6}
+.chat-msg-text{word-wrap:break-word}
+.chat-msg-order{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;background:rgba(255,255,255,.15);font-size:11px;font-weight:600;margin-top:6px;cursor:pointer}
+.chat-msg.other .chat-msg-order{background:rgba(196,30,30,.15);color:var(--rose)}
+.chat-msg-order:hover{opacity:.8}
+
+.chat-order-picker{position:absolute;bottom:60px;left:0;right:0;background:var(--bg2);border-top:1px solid var(--bdr2);max-height:200px;overflow-y:auto;animation:slideUp .2s ease}
+.chat-picker-header{padding:10px 14px;font-size:11px;font-weight:700;color:var(--tx3);border-bottom:1px solid var(--bdr2)}
+.chat-picker-list{padding:8px}
+.chat-picker-item{padding:10px 12px;border-radius:var(--r);background:var(--bg3);border:1px solid var(--bdr2);margin-bottom:6px;cursor:pointer;font-size:12px}
+.chat-picker-item:hover{border-color:var(--info);background:rgba(96,165,250,.1)}
+.chat-picker-item:last-child{margin-bottom:0}
+.chat-picker-rest{font-weight:700;margin-bottom:2px}
+.chat-picker-addr{font-size:10px;color:var(--tx3)}
+
+.chat-input-row{display:flex;gap:8px;padding:12px;background:var(--bg2);border-top:1px solid var(--bdr2)}
+.chat-tag-btn{width:44px;height:44px;border-radius:var(--r);background:var(--bg3);border:1px solid var(--bdr2);font-size:18px;display:grid;place-items:center}
+.chat-tag-btn:active{transform:scale(.95)}
+.chat-tag-btn.active{background:rgba(196,30,30,.2);border-color:var(--rose)}
+.chat-input{flex:1;padding:12px;border-radius:var(--r);background:var(--bgE);border:1px solid var(--bdr2);color:var(--tx);font-size:14px}
+.chat-input:focus{border-color:var(--info);outline:none}
+.chat-send-btn{width:44px;height:44px;border-radius:var(--r);background:linear-gradient(135deg,var(--red),var(--red-b));color:#fff;font-size:18px;display:grid;place-items:center}
+.chat-send-btn:active{transform:scale(.95)}
+
+.chat-badge{position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;border-radius:8px;background:var(--red);color:#fff;font-size:9px;font-weight:700;display:grid;place-items:center;padding:0 4px}
+.ni{position:relative}
+
+.chat-empty{text-align:center;padding:40px 20px;color:var(--tx3)}
+.chat-empty-icon{font-size:40px;margin-bottom:12px}
+.chat-empty-text{font-size:13px}
+
 /* Rank badges */
 .rank-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:var(--rr);font-size:8px;font-weight:700}
 .rank-badge.angel{background:rgba(255,255,255,.1);color:var(--tx2)}
@@ -728,6 +786,7 @@ input,select{font-family:var(--ff);background:var(--bg3);color:var(--tx);border:
 <nav class="bn" id="BN" style="display:none">
   <div class="bn-in">
     <button class="ni on" id="navOrders"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg><span>Objednávky</span></button>
+    <button class="ni" id="navChat"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span>Chat</span><span class="chat-badge" id="chatBadge" style="display:none">0</span></button>
     <button class="ni" id="navProfile"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Profil</span></button>
     <button class="ni" id="navHist"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Historie</span></button>
     <button class="ni" id="navSummary"><svg viewBox="0 0 24 24"><path d="M21 12h-8"/><path d="M21 6h-8"/><path d="M21 18h-8"/><path d="M3 12h2"/><path d="M3 6h2"/><path d="M3 18h2"/><circle cx="8" cy="12" r="1"/><circle cx="8" cy="6" r="1"/><circle cx="8" cy="18" r="1"/></svg><span>Souhrn</span></button>
@@ -862,6 +921,26 @@ input,select{font-family:var(--ff);background:var(--bg3);color:var(--tx);border:
   <div class="panel-scroll" id="ppContent"></div>
 </div>
 
+<!-- CHAT -->
+<div class="panel" id="CP">
+  <div class="panel-hdr" style="color:var(--rose)">
+    <h2>💬 Kurýrní chat</h2>
+    <button class="panel-close" id="cpClose">✕</button>
+  </div>
+  <div class="chat-container">
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-order-picker" id="chatOrderPicker" style="display:none">
+      <div class="chat-picker-header">📦 Vyber objednávku k označení:</div>
+      <div class="chat-picker-list" id="chatPickerList"></div>
+    </div>
+    <div class="chat-input-row">
+      <button class="chat-tag-btn" id="chatTagBtn" title="Označit objednávku">📦</button>
+      <input type="text" class="chat-input" id="chatInput" placeholder="Napiš zprávu..." maxlength="500">
+      <button class="chat-send-btn" id="chatSendBtn">➤</button>
+    </div>
+  </div>
+</div>
+
 <!-- SUMMARY -->
 <div class="panel" id="SUM">
   <div class="panel-hdr" style="color:var(--info)">
@@ -890,6 +969,28 @@ input,select{font-family:var(--ff);background:var(--bg3);color:var(--tx);border:
 <!-- REPORT CARD (Vysvědčení) -->
 <div class="report-overlay" id="reportOverlay" style="display:none">
   <div class="report-card" id="reportCard"></div>
+</div>
+
+<!-- LOCATION PROMPT -->
+<div class="loc-overlay" id="locPrompt" style="display:none">
+  <div class="loc-card">
+    <div class="loc-icon">📍</div>
+    <div class="loc-title">Povolit sledování polohy?</div>
+    <div class="loc-desc">Aby ostatní kurýři viděli, kde se nacházíš na mapě, potřebujeme tvou polohu. Sdílení je anonymní a pouze pro tým.</div>
+    <div class="loc-btns">
+      <button class="loc-btn accept" onclick="acceptLocation()">✓ Povolit</button>
+      <button class="loc-btn decline" onclick="declineLocation()">✕ Teď ne</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOCATION SUCCESS -->
+<div class="loc-overlay success" id="locSuccess" style="display:none">
+  <div class="loc-card success">
+    <div class="loc-icon">✅</div>
+    <div class="loc-title">Poloha aktivní!</div>
+    <div class="loc-desc">Děkujeme! Tvá poloha je nyní viditelná na mapě.<br><strong>🗺️ Mapa</strong> je dole v navigační liště.</div>
+  </div>
 </div>
 
 <script>
@@ -1062,6 +1163,62 @@ function showApp(){
   document.getElementById('navAdmin').style.display=S.isAdmin?'flex':'none';
   loadSettings();
   startPoll();
+  
+  // Ask for location permission if not already granted
+  setTimeout(askLocationPermission,1500);
+}
+
+function askLocationPermission(){
+  // Check if we already asked today
+  var today=new Date().toISOString().split('T')[0];
+  var askedKey='dd_loc_asked_'+today+'_'+S.courier;
+  if(localStorage.getItem(askedKey))return;
+  
+  // Check if geolocation is available
+  if(!('geolocation' in navigator))return;
+  
+  // Show location prompt
+  document.getElementById('locPrompt').style.display='flex';
+}
+
+function acceptLocation(){
+  document.getElementById('locPrompt').style.display='none';
+  var today=new Date().toISOString().split('T')[0];
+  localStorage.setItem('dd_loc_asked_'+today+'_'+S.courier,'1');
+  
+  // Start tracking
+  if(!('geolocation' in navigator)){
+    toast('⚠️ Geolokace není podporována');
+    return;
+  }
+  
+  navigator.geolocation.getCurrentPosition(function(pos){
+    myPosition={lat:pos.coords.latitude,lng:pos.coords.longitude,time:Date.now()};
+    saveMyPosition();
+    trackingEnabled=true;
+    
+    // Show success message
+    document.getElementById('locSuccess').style.display='flex';
+    setTimeout(function(){
+      document.getElementById('locSuccess').style.display='none';
+    },4000);
+    
+    // Start continuous tracking
+    watchId=navigator.geolocation.watchPosition(function(p){
+      myPosition={lat:p.coords.latitude,lng:p.coords.longitude,time:Date.now()};
+      saveMyPosition();
+    },function(){},{enableHighAccuracy:true,maximumAge:15000,timeout:20000});
+    
+  },function(err){
+    toast('⚠️ Nepodařilo se získat polohu: '+err.message);
+  },{enableHighAccuracy:true,timeout:10000});
+}
+
+function declineLocation(){
+  document.getElementById('locPrompt').style.display='none';
+  var today=new Date().toISOString().split('T')[0];
+  localStorage.setItem('dd_loc_asked_'+today+'_'+S.courier,'declined');
+  toast('📍 Polohu můžeš zapnout v Mapě');
 }
 function logout(){S.courier=null;localStorage.removeItem('dd_courier');clearInterval(S.timer);S.orders=[];S.ids.clear();S.glowIds.clear();S.first=true;['HDR','TB','SC','BN'].forEach(function(id){document.getElementById(id).style.display='none'});document.getElementById('LS').classList.remove('gone');showLogin()}
 
@@ -1103,7 +1260,7 @@ function startPoll(){loadTodayOrders();loadSins();poll();S.timer=setInterval(pol
 function playSound(){try{var ctx=new(window.AudioContext||window.webkitAudioContext)();for(var i=0;i<3;i++){var s=ctx.currentTime+i*.25;var o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(880+i*220,s);g.gain.setValueAtTime(.2,s);g.gain.exponentialRampToValueAtTime(.01,s+.2);o.connect(g);g.connect(ctx.destination);o.start(s);o.stop(s+.2)}}catch(e){}}
 
 // === RENDER ===
-function render(){rStats();rFilters();rOrders();uProgAll();updateRank()}
+function render(){rStats();rFilters();rOrders();uProgAll();updateRank();loadChatMessages();updateChatBadge()}
 function updateRank(){var r=getRank(getCount(S.courier));document.getElementById('meR').textContent=r.e}
 
 function rStats(){
@@ -2279,6 +2436,188 @@ function addRepentance(courier){
   localStorage.setItem(key,JSON.stringify(data));
 }
 
+// === CHAT ===
+var chatMessages=[];
+var chatLastRead=0;
+var selectedOrderForChat=null;
+var chatPollInterval=null;
+
+function showChat(){
+  document.getElementById('CP').classList.add('show');
+  loadChatMessages();
+  renderChat();
+  markChatAsRead();
+  // Start polling for new messages
+  if(chatPollInterval)clearInterval(chatPollInterval);
+  chatPollInterval=setInterval(function(){
+    loadChatMessages();
+    renderChat();
+  },3000);
+}
+
+function hideChat(){
+  document.getElementById('CP').classList.remove('show');
+  if(chatPollInterval)clearInterval(chatPollInterval);
+}
+
+function loadChatMessages(){
+  var today=new Date().toISOString().split('T')[0];
+  var key='dd_chat_'+today;
+  chatMessages=JSON.parse(localStorage.getItem(key)||'[]');
+}
+
+function saveChatMessages(){
+  var today=new Date().toISOString().split('T')[0];
+  var key='dd_chat_'+today;
+  // Keep only last 100 messages
+  if(chatMessages.length>100)chatMessages=chatMessages.slice(-100);
+  localStorage.setItem(key,JSON.stringify(chatMessages));
+}
+
+function sendChatMessage(){
+  var input=document.getElementById('chatInput');
+  var text=input.value.trim();
+  if(!text)return;
+  
+  var msg={
+    id:Date.now(),
+    courier:S.courier,
+    text:text,
+    time:Date.now(),
+    orderId:selectedOrderForChat
+  };
+  
+  // Add order info if tagged
+  if(selectedOrderForChat){
+    var order=S.orders.find(function(o){return o._id===selectedOrderForChat});
+    if(order){
+      msg.orderName=order.restaurantName;
+      msg.orderAddr=(order.deliveryAddress||'').substring(0,30);
+    }
+  }
+  
+  chatMessages.push(msg);
+  saveChatMessages();
+  
+  input.value='';
+  selectedOrderForChat=null;
+  document.getElementById('chatOrderPicker').style.display='none';
+  document.getElementById('chatTagBtn').classList.remove('active');
+  
+  renderChat();
+  scrollChatToBottom();
+}
+
+function renderChat(){
+  var container=document.getElementById('chatMessages');
+  
+  if(chatMessages.length===0){
+    container.innerHTML='<div class="chat-empty"><div class="chat-empty-icon">💬</div><div class="chat-empty-text">Zatím žádné zprávy.<br>Buď první!</div></div>';
+    return;
+  }
+  
+  var h='';
+  chatMessages.forEach(function(msg){
+    var isMine=msg.courier===S.courier;
+    var timeStr=new Date(msg.time).toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'});
+    var karma=getKarmaLevel(getKarma(msg.courier));
+    
+    h+='<div class="chat-msg '+(isMine?'mine':'other')+'">';
+    h+='<div class="chat-msg-header"><span class="chat-msg-name">'+karma.e+' '+msg.courier+'</span><span class="chat-msg-time">'+timeStr+'</span></div>';
+    h+='<div class="chat-msg-text">'+eh(msg.text)+'</div>';
+    if(msg.orderId&&msg.orderName){
+      h+='<div class="chat-msg-order" data-order="'+msg.orderId+'">📦 '+eh(msg.orderName)+'</div>';
+    }
+    h+='</div>';
+  });
+  
+  container.innerHTML=h;
+  
+  // Bind order clicks
+  container.querySelectorAll('.chat-msg-order').forEach(function(el){
+    el.onclick=function(){
+      var orderId=this.dataset.order;
+      // Navigate to orders and highlight
+      hideChat();
+      document.querySelectorAll('.ni').forEach(function(x){x.classList.remove('on')});
+      document.getElementById('navOrders').classList.add('on');
+      setTimeout(function(){
+        var card=document.getElementById('c-'+orderId);
+        if(card){
+          card.scrollIntoView({behavior:'smooth',block:'center'});
+          card.style.boxShadow='0 0 20px var(--info)';
+          setTimeout(function(){card.style.boxShadow=''},2000);
+        }
+      },100);
+    };
+  });
+}
+
+function scrollChatToBottom(){
+  var container=document.getElementById('chatMessages');
+  container.scrollTop=container.scrollHeight;
+}
+
+function toggleOrderPicker(){
+  var picker=document.getElementById('chatOrderPicker');
+  var btn=document.getElementById('chatTagBtn');
+  
+  if(picker.style.display==='none'){
+    // Show picker with active orders
+    var activeOrders=S.orders.filter(function(o){return ns(o.status)!=='DELIVERED'});
+    if(activeOrders.length===0){
+      toast('📦 Žádné aktivní objednávky');
+      return;
+    }
+    
+    var h='';
+    activeOrders.forEach(function(o){
+      h+='<div class="chat-picker-item" data-id="'+o._id+'">';
+      h+='<div class="chat-picker-rest">'+eh(o.restaurantName||'Restaurace')+'</div>';
+      h+='<div class="chat-picker-addr">'+eh((o.deliveryAddress||'').substring(0,40))+'</div>';
+      h+='</div>';
+    });
+    
+    document.getElementById('chatPickerList').innerHTML=h;
+    picker.style.display='block';
+    btn.classList.add('active');
+    
+    // Bind clicks
+    picker.querySelectorAll('.chat-picker-item').forEach(function(el){
+      el.onclick=function(){
+        selectedOrderForChat=this.dataset.id;
+        var order=S.orders.find(function(o){return o._id===selectedOrderForChat});
+        document.getElementById('chatInput').placeholder='Zpráva o: '+(order?order.restaurantName:'objednávce');
+        picker.style.display='none';
+        document.getElementById('chatInput').focus();
+      };
+    });
+  }else{
+    picker.style.display='none';
+    btn.classList.remove('active');
+    selectedOrderForChat=null;
+    document.getElementById('chatInput').placeholder='Napiš zprávu...';
+  }
+}
+
+function markChatAsRead(){
+  chatLastRead=Date.now();
+  localStorage.setItem('dd_chat_read_'+S.courier,chatLastRead.toString());
+  updateChatBadge();
+}
+
+function updateChatBadge(){
+  var lastRead=parseInt(localStorage.getItem('dd_chat_read_'+S.courier)||'0');
+  var unread=chatMessages.filter(function(m){return m.time>lastRead&&m.courier!==S.courier}).length;
+  var badge=document.getElementById('chatBadge');
+  if(unread>0){
+    badge.textContent=unread>9?'9+':unread;
+    badge.style.display='grid';
+  }else{
+    badge.style.display='none';
+  }
+}
+
 // === INIT ===
 document.addEventListener('DOMContentLoaded',function(){
   // Password
@@ -2290,7 +2629,8 @@ document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('bS').onclick=function(){S.snd=!S.snd;this.classList.toggle('on',S.snd);saveSettings();toast(S.snd?'🔔 Zvuk zapnut':'🔕 Vypnut')};
   document.getElementById('bR').onclick=function(){poll();toast('🔄 Obnoveno')};
   // Nav
-  document.getElementById('navOrders').onclick=function(){document.querySelectorAll('.ni').forEach(function(x){x.classList.remove('on')});this.classList.add('on');document.getElementById('HP').classList.remove('show');document.getElementById('AP').classList.remove('show');document.getElementById('SP').classList.remove('show');document.getElementById('SUM').classList.remove('show');document.getElementById('PP').classList.remove('show');document.getElementById('MP').classList.remove('show')};
+  document.getElementById('navOrders').onclick=function(){document.querySelectorAll('.ni').forEach(function(x){x.classList.remove('on')});this.classList.add('on');document.getElementById('HP').classList.remove('show');document.getElementById('AP').classList.remove('show');document.getElementById('SP').classList.remove('show');document.getElementById('SUM').classList.remove('show');document.getElementById('PP').classList.remove('show');document.getElementById('MP').classList.remove('show');document.getElementById('CP').classList.remove('show')};
+  document.getElementById('navChat').onclick=function(){document.querySelectorAll('.ni').forEach(function(x){x.classList.remove('on')});this.classList.add('on');showChat()};
   document.getElementById('navProfile').onclick=function(){document.querySelectorAll('.ni').forEach(function(x){x.classList.remove('on')});this.classList.add('on');showProfile()};
   document.getElementById('navHist').onclick=function(){document.querySelectorAll('.ni').forEach(function(x){x.classList.remove('on')});this.classList.add('on');showHist()};
   document.getElementById('navSummary').onclick=function(){document.querySelectorAll('.ni').forEach(function(x){x.classList.remove('on')});this.classList.add('on');showSummary()};
@@ -2304,6 +2644,11 @@ document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('sumClose').onclick=function(){document.getElementById('SUM').classList.remove('show')};
   document.getElementById('ppClose').onclick=function(){document.getElementById('PP').classList.remove('show')};
   document.getElementById('mpClose').onclick=function(){document.getElementById('MP').classList.remove('show');if(mapInterval)clearInterval(mapInterval)};
+  document.getElementById('cpClose').onclick=function(){hideChat()};
+  // Chat controls
+  document.getElementById('chatTagBtn').onclick=toggleOrderPicker;
+  document.getElementById('chatSendBtn').onclick=sendChatMessage;
+  document.getElementById('chatInput').onkeydown=function(e){if(e.key==='Enter')sendChatMessage()};
   // Map controls
   document.getElementById('mapMyLoc').onclick=toggleTracking;
   document.getElementById('mapRefresh').onclick=function(){renderMap();toast('🔄 Obnoveno')};
