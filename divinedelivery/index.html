@@ -2340,6 +2340,10 @@ h4,h5,h6{font-family:var(--ff);font-weight:600}
 .tg-toast.success{background:#22c55e}
 .tg-toast.error{background:#ef4444}
 </style>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
@@ -9841,6 +9845,127 @@ var TELEGRAM_CONFIG = {
   }
 };
 
+// ===== FIREBASE CONFIGURATION =====
+var FIREBASE_CONFIG = null;
+var firebaseApp = null;
+var firebaseDb = null;
+
+// Načtení Firebase konfigurace z localStorage
+function loadFirebaseConfig() {
+  try {
+    var saved = localStorage.getItem('divine_firebase_config');
+    if (saved) {
+      FIREBASE_CONFIG = JSON.parse(saved);
+      initializeFirebase();
+      return true;
+    }
+  } catch (e) {
+    console.error('Failed to load Firebase config:', e);
+  }
+  return false;
+}
+
+// Uložení Firebase konfigurace
+function saveFirebaseConfig(config) {
+  try {
+    localStorage.setItem('divine_firebase_config', JSON.stringify(config));
+    FIREBASE_CONFIG = config;
+    initializeFirebase();
+    return true;
+  } catch (e) {
+    console.error('Failed to save Firebase config:', e);
+    return false;
+  }
+}
+
+// Inicializace Firebase
+function initializeFirebase() {
+  if (!FIREBASE_CONFIG || !FIREBASE_CONFIG.apiKey) {
+    console.log('⚠️ Firebase config not set');
+    return false;
+  }
+  
+  try {
+    // Kontrola zda už není inicializováno
+    if (firebase.apps.length === 0) {
+      firebaseApp = firebase.initializeApp(FIREBASE_CONFIG);
+    } else {
+      firebaseApp = firebase.apps[0];
+    }
+    firebaseDb = firebase.firestore();
+    console.log('✅ Firebase initialized');
+    return true;
+  } catch (e) {
+    console.error('❌ Firebase init error:', e);
+    return false;
+  }
+}
+
+// Uložení objednávky do Firestore
+function saveOrderToFirestore(order) {
+  if (!firebaseDb) {
+    console.log('⚠️ Firebase not initialized, saving to localStorage only');
+    return Promise.resolve(null);
+  }
+  
+  return firebaseDb.collection('orders').doc(order._id).set(order)
+    .then(function() {
+      console.log('✅ Order saved to Firestore:', order._id);
+      return order;
+    })
+    .catch(function(error) {
+      console.error('❌ Firestore save error:', error);
+      return null;
+    });
+}
+
+// Načtení aktivních objednávek z Firestore
+function loadOrdersFromFirestore() {
+  if (!firebaseDb) {
+    return Promise.resolve([]);
+  }
+  
+  var today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  return firebaseDb.collection('orders')
+    .where('createdAt', '>=', today.toISOString())
+    .orderBy('createdAt', 'desc')
+    .get()
+    .then(function(snapshot) {
+      var orders = [];
+      snapshot.forEach(function(doc) {
+        orders.push(doc.data());
+      });
+      console.log('✅ Loaded', orders.length, 'orders from Firestore');
+      return orders;
+    })
+    .catch(function(error) {
+      console.error('❌ Firestore load error:', error);
+      return [];
+    });
+}
+
+// Aktualizace objednávky ve Firestore
+function updateOrderInFirestore(orderId, updates) {
+  if (!firebaseDb) {
+    return Promise.resolve(null);
+  }
+  
+  return firebaseDb.collection('orders').doc(orderId).update(updates)
+    .then(function() {
+      console.log('✅ Order updated in Firestore:', orderId);
+      return true;
+    })
+    .catch(function(error) {
+      console.error('❌ Firestore update error:', error);
+      return false;
+    });
+}
+
+// Inicializace Firebase při načtení stránky
+loadFirebaseConfig();
+
 // ===== TELEGRAM ADMIN PANEL - FRONTEND ONLY =====
 // Funguje na GitHub Pages bez Node.js serveru
 
@@ -9973,6 +10098,26 @@ function renderTelegramPanel() {
   // Brevo API key
   var brevoKey = localStorage.getItem('divine_brevo_api_key') || '';
   document.getElementById('brevoApiKeyInput').value = brevoKey;
+  
+  // Firebase config
+  var firebaseConfigInput = document.getElementById('firebaseConfigInput');
+  var firebaseStatus = document.getElementById('firebaseStatus');
+  if (firebaseConfigInput && firebaseStatus) {
+    var savedConfig = localStorage.getItem('divine_firebase_config');
+    if (savedConfig) {
+      firebaseConfigInput.value = savedConfig;
+    }
+    // Update status
+    if (firebaseDb) {
+      firebaseStatus.textContent = '✓ Připojeno';
+      firebaseStatus.style.background = 'rgba(74,222,128,.2)';
+      firebaseStatus.style.color = '#4ade80';
+    } else {
+      firebaseStatus.textContent = 'Nepřipojeno';
+      firebaseStatus.style.background = 'rgba(239,68,68,.2)';
+      firebaseStatus.style.color = '#ef4444';
+    }
+  }
   
   // Restaurant list
   var html = '';
@@ -10244,6 +10389,73 @@ function testBrevoApi() {
   .catch(function(err) {
     showTgToast('❌ Chyba: ' + err.message, 'error');
   });
+}
+
+// Firebase admin funkce
+function saveFirebaseConfigFromAdmin() {
+  var configText = document.getElementById('firebaseConfigInput').value.trim();
+  if (!configText) {
+    showTgToast('❌ Zadej Firebase config', 'error');
+    return;
+  }
+  
+  try {
+    var config = JSON.parse(configText);
+    if (!config.apiKey || !config.projectId) {
+      showTgToast('❌ Chybí apiKey nebo projectId', 'error');
+      return;
+    }
+    
+    if (saveFirebaseConfig(config)) {
+      showTgToast('✅ Firebase config uložen!', 'success');
+      renderTelegramPanel(); // Update status
+    } else {
+      showTgToast('❌ Chyba při ukládání', 'error');
+    }
+  } catch (e) {
+    showTgToast('❌ Neplatný JSON: ' + e.message, 'error');
+  }
+}
+
+function testFirebaseConnection() {
+  var configText = document.getElementById('firebaseConfigInput').value.trim();
+  if (!configText) {
+    showTgToast('❌ Zadej Firebase config', 'error');
+    return;
+  }
+  
+  try {
+    var config = JSON.parse(configText);
+    
+    showTgToast('⏳ Připojuji k Firebase...', '');
+    
+    // Uložit a inicializovat
+    if (saveFirebaseConfig(config)) {
+      // Test zápisu
+      var testDoc = {
+        _id: 'test_' + Date.now(),
+        test: true,
+        timestamp: new Date().toISOString()
+      };
+      
+      firebaseDb.collection('orders').doc(testDoc._id).set(testDoc)
+        .then(function() {
+          // Smazat testovací dokument
+          return firebaseDb.collection('orders').doc(testDoc._id).delete();
+        })
+        .then(function() {
+          showTgToast('✅ Firebase funguje!', 'success');
+          renderTelegramPanel();
+        })
+        .catch(function(err) {
+          showTgToast('❌ Firebase chyba: ' + err.message, 'error');
+        });
+    } else {
+      showTgToast('❌ Nepodařilo se inicializovat Firebase', 'error');
+    }
+  } catch (e) {
+    showTgToast('❌ Neplatný JSON: ' + e.message, 'error');
+  }
 }
 
 // Toast notifikace
@@ -10730,13 +10942,66 @@ function sendOrderToDashboard(order, deliveryInfo) {
     source: 'divine-order' // Označení že jde z nového systému
   };
   
-  // Save to Firebase (same collection as GloriaFood orders)
-  if (window.firebaseDb && window.fbCollection && window.fbAddDoc) {
-    return window.fbAddDoc(window.fbCollection(window.firebaseDb, 'orders'), dashboardOrder);
+  // Uložit do Firestore (primární) + localStorage (záloha)
+  saveDivineOrderToLocalStorage(dashboardOrder);
+  
+  // Uložit do Firestore
+  if (firebaseDb) {
+    saveOrderToFirestore(dashboardOrder).then(function() {
+      console.log('✅ Order saved to Firestore:', dashboardOrder._id);
+    }).catch(function(err) {
+      console.error('❌ Firestore save failed:', err);
+    });
   }
   
-  console.log('Dashboard order prepared:', dashboardOrder);
+  console.log('✅ Order saved:', dashboardOrder);
   return Promise.resolve(dashboardOrder);
+}
+
+// Uložení objednávky do localStorage pro dashboard
+function saveDivineOrderToLocalStorage(order) {
+  var STORAGE_KEY = 'divine_orders_pending';
+  var orders = [];
+  
+  try {
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      orders = JSON.parse(saved);
+    }
+  } catch (e) {
+    orders = [];
+  }
+  
+  // Přidat novou objednávku
+  orders.push(order);
+  
+  // Odstranit staré objednávky (starší než 24 hodin)
+  var dayAgo = Date.now() - (24 * 60 * 60 * 1000);
+  orders = orders.filter(function(o) {
+    var created = new Date(o.createdAt).getTime();
+    return created > dayAgo;
+  });
+  
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+  
+  // Také uložit do klíče pro dnešní den (pro historii)
+  var today = new Date().toISOString().split('T')[0];
+  var todayKey = 'dd_orders_' + today;
+  var todayOrders = [];
+  try {
+    var savedToday = localStorage.getItem(todayKey);
+    if (savedToday) {
+      todayOrders = JSON.parse(savedToday);
+    }
+  } catch (e) {
+    todayOrders = [];
+  }
+  
+  // Přidat pokud ještě není
+  if (!todayOrders.some(function(o) { return o._id === order._id; })) {
+    todayOrders.push(order);
+    localStorage.setItem(todayKey, JSON.stringify(todayOrders));
+  }
 }
 
 function getRestaurantPhone(restaurantId) {
@@ -11866,6 +12131,28 @@ if (window.firebaseDb) {
         </div>
         <div style="font-size:11px;color:var(--txt2);margin-top:8px">
           API klíč z <a href="https://app.brevo.com/settings/keys/api" target="_blank" style="color:#3b82f6">Brevo dashboard</a>
+        </div>
+      </div>
+      
+      <!-- Firebase Configuration -->
+      <div class="tg-dispatch-box" style="background:linear-gradient(135deg,rgba(251,146,60,.1),rgba(234,88,12,.05));border-color:rgba(251,146,60,.3)">
+        <div class="tg-dispatch-title">
+          🔥 Firebase Databáze
+          <span id="firebaseStatus" style="margin-left:auto;font-size:12px;padding:2px 8px;border-radius:10px;background:rgba(239,68,68,.2);color:#ef4444">Nepřipojeno</span>
+        </div>
+        <div style="margin-bottom:10px">
+          <textarea class="tg-dispatch-input" id="firebaseConfigInput" placeholder='{"apiKey":"...","authDomain":"...","projectId":"..."}' style="width:100%;height:80px;font-size:11px;font-family:monospace;resize:vertical"></textarea>
+        </div>
+        <div class="tg-dispatch-row">
+          <button class="tg-btn tg-btn-secondary" style="flex:1" onclick="testFirebaseConnection()">
+            🔌 Test připojení
+          </button>
+          <button class="tg-btn tg-btn-secondary" style="flex:1" onclick="saveFirebaseConfigFromAdmin()">
+            💾 Uložit config
+          </button>
+        </div>
+        <div style="font-size:11px;color:var(--txt2);margin-top:8px">
+          Config z <a href="https://console.firebase.google.com/" target="_blank" style="color:#f97316">Firebase Console</a> → Project Settings → Your apps → Web
         </div>
       </div>
       
