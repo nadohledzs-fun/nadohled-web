@@ -719,6 +719,10 @@ input,select{font-family:var(--ff);background:var(--bg3);color:var(--tx);border:
 .courier-marker.offline .courier-marker-dot{opacity:.4}
 .courier-marker.offline .courier-marker-dot::after{display:none}
 </style>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 </head>
 <body>
 <div class="bg"></div>
@@ -1222,9 +1226,206 @@ function declineLocation(){
 }
 function logout(){S.courier=null;localStorage.removeItem('dd_courier');clearInterval(S.timer);S.orders=[];S.ids.clear();S.glowIds.clear();S.first=true;['HDR','TB','SC','BN'].forEach(function(id){document.getElementById(id).style.display='none'});document.getElementById('LS').classList.remove('gone');showLogin()}
 
+// === FIREBASE ===
+var firebaseApp = null;
+var firebaseDb = null;
+
+function initFirebase() {
+  try {
+    var saved = localStorage.getItem('divine_firebase_config');
+    if (saved) {
+      var config = JSON.parse(saved);
+      if (config.apiKey && config.projectId) {
+        if (firebase.apps.length === 0) {
+          firebaseApp = firebase.initializeApp(config);
+        } else {
+          firebaseApp = firebase.apps[0];
+        }
+        firebaseDb = firebase.firestore();
+        console.log('✅ Firebase initialized in dashboard');
+        return true;
+      }
+    }
+  } catch (e) {
+    console.error('Firebase init error:', e);
+  }
+  return false;
+}
+
+// Načtení objednávek z Firestore
+function loadOrdersFromFirestore() {
+  if (!firebaseDb) {
+    return Promise.resolve([]);
+  }
+  
+  // Načíst objednávky z posledních 24 hodin
+  var yesterday = new Date();
+  yesterday.setHours(yesterday.getHours() - 24);
+  
+  return firebaseDb.collection('orders')
+    .where('createdAt', '>=', yesterday.toISOString())
+    .orderBy('createdAt', 'desc')
+    .get()
+    .then(function(snapshot) {
+      var orders = [];
+      snapshot.forEach(function(doc) {
+        var order = doc.data();
+        // Filtrovat jen aktivní (ne DELIVERED starší než 2 hodiny)
+        if (order.status !== 'DELIVERED') {
+          orders.push(order);
+        } else {
+          var deliveredAt = new Date(order.deliveredAt || order.createdAt);
+          var twoHoursAgo = new Date();
+          twoHoursAgo.setHours(twoHoursAgo.getHours() - 2);
+          if (deliveredAt > twoHoursAgo) {
+            orders.push(order); // Zobrazit nedávno doručené
+          }
+        }
+      });
+      console.log('✅ Loaded', orders.length, 'orders from Firestore');
+      return orders;
+    })
+    .catch(function(error) {
+      console.error('❌ Firestore load error:', error);
+      return [];
+    });
+}
+
+// Aktualizace objednávky ve Firestore
+function updateOrderInFirestore(orderId, updates) {
+  if (!firebaseDb) {
+    return Promise.resolve(false);
+  }
+  
+  return firebaseDb.collection('orders').doc(orderId).update(updates)
+    .then(function() {
+      console.log('✅ Order updated in Firestore:', orderId);
+      return true;
+    })
+    .catch(function(error) {
+      console.error('❌ Firestore update error:', error);
+      return false;
+    });
+}
+
+// Smazání objednávky z Firestore
+function deleteOrderFromFirestore(orderId) {
+  if (!firebaseDb) {
+    return Promise.resolve(false);
+  }
+  
+  return firebaseDb.collection('orders').doc(orderId).delete()
+    .then(function() {
+      console.log('✅ Order deleted from Firestore:', orderId);
+      return true;
+    })
+    .catch(function(error) {
+      console.error('❌ Firestore delete error:', error);
+      return false;
+    });
+}
+
+// Inicializovat Firebase při startu
+initFirebase();
+
 // === API ===
 function apic(ep,o){return fetch(C.API+ep,{method:(o&&o.method)||'GET',headers:{'Content-Type':'application/json'},body:o&&o.body?JSON.stringify(o.body):undefined}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()})}
-function fetchO(){return apic('/activeOrders').then(function(d){S.errs=0;cn('on');return d.items||[]}).catch(function(){S.errs++;cn(S.errs>=3?'off':'w');return null})}
+
+// Načtení objednávek z localStorage (záloha)
+function loadDivineOrders(){
+  var STORAGE_KEY = 'divine_orders_pending';
+  try {
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      var orders = JSON.parse(saved);
+      return orders.filter(function(o) {
+        return o.status !== 'DELIVERED';
+      });
+    }
+  } catch (e) {
+    console.error('Failed to load divine orders:', e);
+  }
+  return [];
+}
+
+// Aktualizace Divine Order v localStorage + Firestore
+function updateDivineOrder(orderId, updates) {
+  // Aktualizovat v localStorage
+  var STORAGE_KEY = 'divine_orders_pending';
+  try {
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      var orders = JSON.parse(saved);
+      var idx = orders.findIndex(function(o) { return o._id === orderId; });
+      if (idx !== -1) {
+        for (var key in updates) {
+          orders[idx][key] = updates[key];
+        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+      }
+    }
+  } catch (e) {
+    console.error('Failed to update divine order in localStorage:', e);
+  }
+  
+  // Aktualizovat ve Firestore
+  updateOrderInFirestore(orderId, updates);
+}
+
+function fetchO(){
+  // Priorita: Firestore > localStorage > Wix API
+  
+  // Pokud máme Firebase, použít ho
+  if (firebaseDb) {
+    return loadOrdersFromFirestore().then(function(firestoreOrders) {
+      if (firestoreOrders.length > 0) {
+        S.errs = 0;
+        cn('on');
+        return firestoreOrders;
+      }
+      // Fallback na localStorage
+      var localOrders = loadDivineOrders();
+      if (localOrders.length > 0) {
+        cn('on');
+        return localOrders;
+      }
+      // Fallback na Wix API
+      return apic('/activeOrders').then(function(d) {
+        S.errs = 0;
+        cn('on');
+        return d.items || [];
+      }).catch(function() {
+        S.errs++;
+        cn(S.errs >= 3 ? 'off' : 'w');
+        return [];
+      });
+    });
+  }
+  
+  // Bez Firebase - localStorage + Wix API
+  var divineOrders = loadDivineOrders();
+  
+  return apic('/activeOrders').then(function(d){
+    S.errs=0;cn('on');
+    var wixOrders = d.items||[];
+    
+    var combined = divineOrders.slice();
+    wixOrders.forEach(function(wo) {
+      if (!combined.some(function(o) { return o._id === wo._id; })) {
+        combined.push(wo);
+      }
+    });
+    
+    return combined;
+  }).catch(function(){
+    S.errs++;cn(S.errs>=3?'off':'w');
+    if (divineOrders.length > 0) {
+      cn('on');
+      return divineOrders;
+    }
+    return null;
+  });
+}
 function cn(s){var d=document.getElementById('cD'),t=document.getElementById('cT');d.className='dot';if(s==='on')t.textContent='Online';else{d.classList.add('off');t.textContent=s==='w'?'Pomalé…':'Offline'}}
 
 // === POLL ===
@@ -1747,13 +1948,53 @@ function generatePDF(cardEl){
   else{var blob=new Blob([html],{type:'text/html'});window.open(URL.createObjectURL(blob),'_blank')}
 }
 
-function doBeru(id){apic('/assignCourier',{method:'POST',body:{orderId:id,courier:S.courier}}).then(function(){toast('✅ Je to tvoje!');poll()}).catch(function(){toast('❌ Chyba')})}
-function doTakeover(id){apic('/assignCourier',{method:'POST',body:{orderId:id,courier:S.courier}}).then(function(){toast('👑 Převzato!');poll()}).catch(function(){toast('❌ Chyba')})}
+function doBeru(id){
+  // Aktualizovat Divine Order v localStorage
+  updateDivineOrder(id, {status: 'ASSIGNED', courier: S.courier});
+  
+  // Zkusit API (pro Wix orders)
+  apic('/assignCourier',{method:'POST',body:{orderId:id,courier:S.courier}}).then(function(){
+    toast('✅ Je to tvoje!');
+    poll();
+  }).catch(function(){
+    // API selhalo, ale localStorage je aktualizovaný
+    toast('✅ Je to tvoje! (offline)');
+    // Aktualizovat lokální stav
+    var order = S.orders.find(function(o){return o._id===id});
+    if(order){
+      order.status = 'ASSIGNED';
+      order.courier = S.courier;
+    }
+    render();
+  });
+}
+
+function doTakeover(id){
+  // Aktualizovat Divine Order v localStorage
+  updateDivineOrder(id, {status: 'ASSIGNED', courier: S.courier});
+  
+  apic('/assignCourier',{method:'POST',body:{orderId:id,courier:S.courier}}).then(function(){
+    toast('👑 Převzato!');
+    poll();
+  }).catch(function(){
+    toast('👑 Převzato! (offline)');
+    var order = S.orders.find(function(o){return o._id===id});
+    if(order){
+      order.status = 'ASSIGNED';
+      order.courier = S.courier;
+    }
+    render();
+  });
+}
 
 // === DELETE ORDER (Admin only) ===
 function doDelete(id){
   if(!S.isAdmin){toast('⚠️ Pouze admin');return}
   if(!confirm('Opravdu smazat tuto objednávku?'))return;
+  
+  // Smazat z Divine Orders localStorage
+  deleteDivineOrder(id);
+  
   // Try to delete via API, but also remove locally
   apic('/deleteOrder',{method:'POST',body:{orderId:id}}).then(function(){
     toast('🗑️ Smazáno!');
@@ -1763,11 +2004,30 @@ function doDelete(id){
     render();
   }).catch(function(){
     // If API fails, still remove locally for this session
-    toast('⚠️ API chyba, smazáno lokálně');
+    toast('🗑️ Smazáno lokálně');
     S.orders=S.orders.filter(function(o){return o._id!==id});
     S.ids.delete(id);
     render();
   });
+}
+
+// Smazání Divine Order z localStorage
+function deleteDivineOrder(orderId) {
+  // Smazat z localStorage
+  var STORAGE_KEY = 'divine_orders_pending';
+  try {
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      var orders = JSON.parse(saved);
+      orders = orders.filter(function(o) { return o._id !== orderId; });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+    }
+  } catch (e) {
+    console.error('Failed to delete divine order from localStorage:', e);
+  }
+  
+  // Smazat z Firestore
+  deleteOrderFromFirestore(orderId);
 }
 
 // === LOCAL STORAGE BACKUP ===
@@ -1817,7 +2077,18 @@ function submitModal(){
   var amt=parseInt(document.getElementById('MI').value)||0,id=modalState.id,type=modalState.type;
   closeModal();
   if(type==='pick'){
-    apic('/markPicked',{method:'POST',body:{orderId:id,pickedUpAmount:amt}}).then(function(){toast('📦 Vyzvednuto!');poll()}).catch(function(){toast('❌ Chyba')});
+    // Aktualizovat Divine Order v localStorage
+    updateDivineOrder(id, {status: 'PICKED', pickedAt: new Date().toISOString()});
+    
+    apic('/markPicked',{method:'POST',body:{orderId:id,pickedUpAmount:amt}}).then(function(){
+      toast('📦 Vyzvednuto!');
+      poll();
+    }).catch(function(){
+      toast('📦 Vyzvednuto! (offline)');
+      var order = S.orders.find(function(o){return o._id===id});
+      if(order) order.status = 'PICKED';
+      render();
+    });
   }else{
     // Check if late delivery or early delivery
     var o=S.orders.find(function(x){return x._id===id});
@@ -1843,7 +2114,19 @@ function submitModal(){
         toast('👼 Včasné doručení! Pokání +','2000');
       }
     }
-    apic('/markDelivered',{method:'POST',body:{orderId:id,deliveredAmount:amt}}).then(function(){toast('✅ Doručeno!');poll()}).catch(function(){toast('❌ Chyba')});
+    
+    // Aktualizovat Divine Order v localStorage
+    updateDivineOrder(id, {status: 'DELIVERED', deliveredAt: new Date().toISOString()});
+    
+    apic('/markDelivered',{method:'POST',body:{orderId:id,deliveredAmount:amt}}).then(function(){
+      toast('✅ Doručeno!');
+      poll();
+    }).catch(function(){
+      toast('✅ Doručeno! (offline)');
+      var order = S.orders.find(function(o){return o._id===id});
+      if(order) order.status = 'DELIVERED';
+      render();
+    });
   }
 }
 
@@ -1867,7 +2150,24 @@ function openTransfer(id){
   document.getElementById('TM').classList.add('sh');
 }
 function closeTransfer(){document.getElementById('TM').classList.remove('sh');transferTarget=null}
-function submitTransfer(){if(!transferTarget||!modalState.id)return;apic('/assignCourier',{method:'POST',body:{orderId:modalState.id,courier:transferTarget}}).then(function(){toast('🔄 Předáno: '+transferTarget);closeTransfer();poll()}).catch(function(){toast('❌ Chyba')})}
+function submitTransfer(){
+  if(!transferTarget||!modalState.id)return;
+  
+  // Aktualizovat Divine Order v localStorage
+  updateDivineOrder(modalState.id, {courier: transferTarget});
+  
+  apic('/assignCourier',{method:'POST',body:{orderId:modalState.id,courier:transferTarget}}).then(function(){
+    toast('🔄 Předáno: '+transferTarget);
+    closeTransfer();
+    poll();
+  }).catch(function(){
+    toast('🔄 Předáno: '+transferTarget+' (offline)');
+    var order = S.orders.find(function(o){return o._id===modalState.id});
+    if(order) order.courier = transferTarget;
+    closeTransfer();
+    render();
+  });
+}
 
 // === HISTORY ===
 function showHist(){document.getElementById('HP').classList.add('show');var t=new Date().toISOString().split('T')[0];document.getElementById('histFrom').value=t;document.getElementById('histTo').value=t;renderHist()}
